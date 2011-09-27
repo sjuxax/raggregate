@@ -22,7 +22,7 @@ All dependencies should be automatically installed after running "python setup.p
 
 Use of virtualenv is strongly recommended.
 
-development.ini includes all available options by default; if you don't want search functionality, remove the solr.address line and raggregate will not attempt to connect to the search file. A Solr schema.xml file is included under solr/ for interested parties. If you want Facebook and Twitter integration, please include the relevant credentials (replace 'none' with real values for the corresponding keys in development.ini).
+development.ini includes all available options by default; if you don't want search functionality, remove the solr.address line and raggregate will not attempt to connect to the search server. A Solr schema.xml file is included under solr/ for interested parties. If you want Facebook and Twitter integration, please include the relevant credentials (replace 'none' with real values for the corresponding keys in development.ini).
 
 There is currently only one level of moderation, which enables site-wide editing and removal of posts and comments. This privilege must be switched manually in the database by setting is_admin True on the relevant user row(s).
 
