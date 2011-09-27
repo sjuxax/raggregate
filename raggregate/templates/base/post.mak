@@ -5,7 +5,7 @@
                 Title: <input type="text" name="title" /><br />
                 <br />
                 <b>At least one of these is required</b><br />
-                Description: <input type="text" name="description" /><br />
+                Description: <textarea name="description" cols="50" rows="10"></textarea><br />
                 URL: <input type="text" name="url" /><br />
                 <br />
                 <input type="submit" value="Post Story" /><br />
