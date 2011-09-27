@@ -1,0 +1,9 @@
+*pyc
+*~
+*egg-info/
+raggregate.db
+*swp
+/.project
+/.pydevproject
+/raggregate/static/
+/solr/
