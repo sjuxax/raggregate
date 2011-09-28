@@ -62,7 +62,7 @@ def login(request):
             username = queries.strip_all_html(prm['username'])
         if p:
             dbsession = DBSession()
-            if request.GET['act'] == 'register':
+            if request.session['safe_get']['act'] == 'register':
                 if logged_in:
                     try:
                         queries.create_user(temp_to_perm = True, extant_id = s['users.id'], username = username, password = p['password'], origination = 'site')

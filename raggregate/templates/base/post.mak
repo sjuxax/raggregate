@@ -1,5 +1,5 @@
 <%inherit file="base.mak"/>
-       % if 'new_post' in context['request'].GET:
+       % if 'new_post' in context['request'].session['safe_get']:
             <form action="post" METHOD="POST">
                 <b>${message}</b><br />
                 Title: <input type="text" name="title" /><br />

@@ -20,7 +20,7 @@ def post(request):
     s = request.session
     p = request.session['safe_post']
     r = request
-    qs = request.GET
+    qs = s['safe_get']
     s['message'] = "Post a story."
     dbsession = DBSession()
     stories = None
