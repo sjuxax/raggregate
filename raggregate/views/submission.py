@@ -15,6 +15,7 @@ from pyramid.httpexceptions import HTTPFound
 import re
 
 @view_config(renderer='post.mak', route_name='post')
+@view_config(renderer='post.mak', route_name='home')
 def post(request):
     s = request.session
     p = request.session['safe_post']
