@@ -26,6 +26,7 @@ requires = [
     'pytz',
     'pyramid-tm',
     'Markdown',
+    'sjuxax-facebook'
     ]
 
 if sys.version_info[:3] < (2,5,0):
@@ -55,5 +56,6 @@ setup(name='raggregate',
       main = raggregate:main
       """,
       paster_plugins=['pyramid'],
+      dependency_links=['http://github.com/sjuxax/python-sdk/tarball/master#egg=sjuxax-facebook']
       )
 
