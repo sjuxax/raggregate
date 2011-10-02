@@ -1,5 +1,9 @@
 <%inherit file="base.mak"/>
 
+<%block name="html_title">
+    ${story.title} on ${site_name}
+</%block>
+
 <script type="text/javascript">
 $(document).ready(function() {
     crf = $('#comment-reply-form').detach();
