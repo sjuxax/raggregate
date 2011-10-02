@@ -2,8 +2,8 @@
 
 % if edit_mode:
     <form method="POST" action="/user_info?user_id=${u.id}" enctype="multipart/form-data">
-        <input type="text" name="about_me" />
-        <input type="file" name="picture" />
+        About Me: <textarea name="about_me" cols="50" rows="10">${u.about_me | template_filters.none_as_blank}</textarea><br />
+        My Picture: <input type="file" name="picture" /><br />
         <input type="submit" value="Update" />
     </form>
     <br />
@@ -20,9 +20,9 @@
 
 <h3>${u.display_name()}</h3>
 % if u.picture:
-    Picture: <img src="/user_imgs/${u.picture_ref.filename}" />
+    Picture: <img src="/user_imgs/${u.picture_ref.filename}" /><br />
 % else:
-    Picture: None uploaded yet
+    Picture: None uploaded yet<br />
 % endif
     <br />
 About Me: ${u.about_me | template_filters.render_md,n}
