@@ -190,6 +190,18 @@
             <a href="${request.route_url('post')}"><img src="${static_base}images/logo.png" style="border: 0" /></a>
         </div>
 
+        % if success == False:
+            % if 'message' in request.session:
+                ${request.session['message']}<br />
+            % endif
+            % if code:
+                Error Code: <b>${code}</b>
+            % else:
+                Error Code: <b>Unknown</b>, please report this to an admin
+            % endif
+            <% return %>
+        % endif
+
         ## @TODO: mako offers things that make it so we don't have to special case like this
         ## we should use them some time
         % if 'post' in context['request'].url:
@@ -303,18 +315,7 @@
             </div>
 
     </div>
-##    % if message and message != '' and success == False:
-##        ${message}
-##    % else:
-        ## clearly not doing block-based inheritance right
-        ## need to come back and fix this later
-        ##% if message:
-            ##<%block name="message">
-                ##${context['message']}
-            ##</%block>
-        ##% endif
         <br />
-##    % endif
         <div id="footer">
             <br />
             <div id="footer_links"> <a href="#">About</a> &nbsp; <a href="#">FAQ</a> &nbsp; <a href="#">Contact Us</a> &nbsp; <a href="#">Privacy Policy</a> &nbsp; </div>
