@@ -42,6 +42,7 @@
         .story-controls { float: left; color: #cccccc; font-size: 24px; }
         .story-links { position: relative; left:15px; }
         .story-description { background-color: #ddd; border: 1px black solid; padding: 3px; }
+        .story-description p:last-child, .story-description p:first-child { margin: 0px; }
         .story-item { width: 600px; clear: both; }
         /* If the number of parent divs changes, this calculation must change too */
         /* The idea is to only apply this rule to .story-items after the first */
@@ -56,6 +57,7 @@
         .comment { width: 100%; overflow: hidden; margin-bottom: 5px; }
         .comment-picture { float: left; clear: left; }
         .comment-content { float: left; margin-bottom: 7px; width: 60%; }
+        .comment-content p:last-child, .comment-content p:first-child { margin: 0px; }
         .comment-username a:visited { color: #aa00ff; }
         .comment-username a { color: #0000dd; text-decoration:none; }
         .comment-controls { color: #cccccc; font-size: .7em; font-weight: bold; }
