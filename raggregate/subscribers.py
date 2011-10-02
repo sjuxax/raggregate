@@ -77,6 +77,7 @@ def user_session_handler(event):
     e['karma'] = None
     e['u'] = None
     e['logged_in_admin'] = None
+    e['logged_in'] = False
 
     e['followed_users'] = []
 
@@ -113,7 +114,8 @@ def user_session_handler(event):
         u = queries.get_user_by_id(s['users.id'])
         e['logged_in_admin'] = u.is_user_admin()
         e['u'] = u
-    else:
+        e['logged_in'] = True
+    elif 'logged_in' not in s and r.registry.settings['user.generate_anon_accounts'] == 'true':
         # do not create a new user if we are on the login page
         # this simplifies anon -> permanent transfer
         if r.url.find('login') != -1:
@@ -126,3 +128,4 @@ def user_session_handler(event):
         s['users.id'] = str(u.id)
         s['users.display_name'] = u.display_name()
         s['logged_in'] = True
+        e['logged_in'] = True

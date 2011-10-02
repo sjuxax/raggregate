@@ -14,6 +14,10 @@ def epistle(request):
     s = request.session
     p = request.session['safe_post']
 
+    if 'logged_in' not in s:
+        s['message'] = 'Sorry, you must be logged in to use the messaging feature.'
+        return {'success': False, 'code': 'ENOLOGIN'}
+
     if p and 'recipient' in p:
         if p['recipient'] == '' and p['recipient-name'] == '':
             s['message'] = "No recipient provided."

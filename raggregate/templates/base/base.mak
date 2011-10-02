@@ -69,7 +69,7 @@
     </style>
 
     <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
-
+% if logged_in:
     <script type="text/javascript">
 
         var active_down_src = "${static_base}/images/arrow-down-active.png"
@@ -184,7 +184,14 @@
             });
         });
     </script>
- 
+% else:
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.logged-in-only').click( function() { alert("You must be logged in to do that.") } );
+        });
+    </script>
+% endif
+    </script>
     <body>
         <div id="logo_bar">
             <a href="${request.route_url('post')}"><img src="${static_base}images/logo.png" style="border: 0" /></a>
@@ -233,13 +240,15 @@
                     <li class="${is_term_active('top')}"><a href="${request.route_url('post', _query = [('sort', 'top'),])}">Top</a></li>
                     <li class="${is_term_active('hot')}"><a href="${request.route_url('post', _query = [('sort', 'hot'),])}">Hot</a></li>
                     <li class="${is_term_active('contro')}"><a href="${request.route_url('post', _query = [('sort', 'contro'),])}">Controversial</a></li>
-                    <li class="${is_term_active('save')}"><a href="${request.route_url('save',)}">Saved</a></li>
-                    <li class="${is_term_active('follow')}"><a href="${request.route_url('follow')}">Followed</a></li>
-                    <li class="${is_term_active('message')}">
-                    % if new_message_num is not None:
-                        <a href="${request.route_url('epistle', box='in')}">${new_message_num} new messages</a>
-                    % else:
-                        <a href="${request.route_url('epistle', box='in')}">Messages</a>
+                    % if logged_in:
+                        <li class="${is_term_active('save')}"><a href="${request.route_url('save',)}">Saved</a></li>
+                        <li class="${is_term_active('follow')}"><a href="${request.route_url('follow')}">Followed</a></li>
+                        <li class="${is_term_active('message')}">
+                        % if new_message_num is not None:
+                            <a href="${request.route_url('epistle', box='in')}">${new_message_num} new messages</a>
+                        % else:
+                            <a href="${request.route_url('epistle', box='in')}">Messages</a>
+                        % endif
                     % endif
                     </li>
  

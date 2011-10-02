@@ -14,6 +14,8 @@ from raggregate.login_adapters import LoginAdapterExc
 def login(request):
     s = request.session
 
+    success = True
+
     # check for facebook login, provided by Facebook's JS SDK
     try:
         fb_cookie = fb.extract_from_cookie(request)
@@ -54,7 +56,6 @@ def login(request):
                     del s['last_login_status']
                 else:
                     s['message'] = "Please log in."
-        success = False
         p = request.session['safe_post']
         prm = request.session['safe_params']
         username = None
@@ -154,6 +155,11 @@ def follow(request):
     s = request.session
     p = request.session['safe_params']
     message = ''
+
+    if 'logged_in' not in s:
+        s['message'] = 'Sorry, you must be logged in to use the follow feature.'
+        return {'success': False, 'code': 'ENOLOGIN'}
+
     if 'follow_id' in p and 'logged_in' in s:
         dbsession = DBSession()
         #@TODO: replace with model-wide method to get logged-in user object

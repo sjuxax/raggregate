@@ -46,7 +46,7 @@ else:
                     ## <span class="c-body-text" id="body-${c.id}">${c.body.replace("\n", "<br />\n") | n}</span>
                     <div class="c-body-text" id="body-${c.id}">${c.body | template_filters.render_md,n}</div>
                     <div class="comment-controls">
-                    <img src="${static_base}images/${up_arrow_src}" id="upim-${c.id}" class="comment-upvote ${up_active_vote_str}" /> <span id="score-${c.id}" class="comment-score">${c.points}</span> <img src="${static_base}images/${down_arrow_src}" id="downim-${c.id}" class="comment-downvote ${down_active_vote_str}" />&nbsp; <a href="#comment" id="reply-${c.id}" class="comment-reply">Reply</a> &nbsp;  <a href="javascript:void(0)" class="follow-link" data-submitter-id="${c.submitter.id}" id="follow-${c.submitter.id}">${followed_term}</a>
+                    <img src="${static_base}images/${up_arrow_src}" id="upim-${c.id}" class="comment-upvote logged-in-only ${up_active_vote_str}" /> <span id="score-${c.id}" class="comment-score">${c.points}</span> <img src="${static_base}images/${down_arrow_src}" id="downim-${c.id}" class="comment-downvote logged-in-only ${down_active_vote_str}" />&nbsp; <a href="#comment" id="reply-${c.id}" class="comment-reply logged-in-only">Reply</a> &nbsp;  <a href="javascript:void(0)" class="follow-link logged-in-only" data-submitter-id="${c.submitter.id}" id="follow-${c.submitter.id}">${followed_term}</a>
                     % if str(c.submitter.id) == request.session['users.id'] or logged_in_admin:
                         &nbsp; <a href="${request.route_url('full', sub_id = c.submission_id, _query=[('op', 'del'), ('comment_id', str(c.id))])}">delete</a>
                     % endif

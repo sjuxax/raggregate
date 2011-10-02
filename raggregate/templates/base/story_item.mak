@@ -8,15 +8,15 @@ vote_dict = pageargs['vote_dict']
                 <%include file="vote_form.mak" args="id=s.id, direction='down', target='submission', jump_to=request.url"/>
                 <div class="story-controls">
                     % if s.id in vote_dict and 1 in vote_dict[s.id]:
-                        <div class="story-upvote active-vote"> <img id="upim-${s.id}" src="${static_base}images/arrow-up-active.png" style="padding-bottom: 2px;" /> </div>
+                        <div class="story-upvote logged-in-only active-vote"> <img id="upim-${s.id}" src="${static_base}images/arrow-up-active.png" style="padding-bottom: 2px;" /> </div>
                     % else:
-                        <div class="story-upvote"> <img id="upim-${s.id}" src="${static_base}images/arrow-up-inactive.png" style="padding-bottom: 2px;" /> </div>
+                        <div class="story-upvote logged-in-only"> <img id="upim-${s.id}" src="${static_base}images/arrow-up-inactive.png" style="padding-bottom: 2px;" /> </div>
                     % endif
                     <div class="story-score" id="score-${s.id}"> ${s.points} </div>
                     % if s.id in vote_dict and -1 in vote_dict[s.id]:
-                        <div class="story-downvote active-vote"> <img id="downim-${s.id}" src="${static_base}images/arrow-down-active.png" style="padding-top: 2px;" /> </div>
+                        <div class="story-downvote logged-in-only active-vote"> <img id="downim-${s.id}" src="${static_base}images/arrow-down-active.png" style="padding-top: 2px;" /> </div>
                     % else:
-                        <div class="story-downvote"> <img id="downim-${s.id}" src="${static_base}images/arrow-down-inactive.png" style="padding-top: 2px;" /> </div>
+                        <div class="story-downvote logged-in-only"> <img id="downim-${s.id}" src="${static_base}images/arrow-down-inactive.png" style="padding-top: 2px;" /> </div>
                     % endif
                 </div>
                 <div class="story-thumb">
@@ -33,7 +33,10 @@ vote_dict = pageargs['vote_dict']
                         if u and s in u.saved:
                             saved_term = 'unsave'
                     %>
-                    <a href="${request.route_url('full', sub_id=s.id)}">${s.comment_tally} comments</a> &nbsp; | &nbsp; <a href="javascript:void(0)" class="save-link" id="save-${s.id}">${saved_term}</a>
+                    <a href="${request.route_url('full', sub_id=s.id)}">${s.comment_tally} comments</a> &nbsp;
+                    % if logged_in:
+                        | &nbsp; <a href="javascript:void(0)" class="save-link" id="save-${s.id}">${saved_term}</a>
+                    % endif
                     % if str(s.submitter.id) == request.session['users.id'] or logged_in_admin:
                         &nbsp; | &nbsp; <a href="${request.route_url('post', _query=[('op', 'del'), ('sub_id', str(s.id))])}">delete</a>
                     % endif

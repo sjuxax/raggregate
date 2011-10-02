@@ -24,6 +24,11 @@ def post(request):
     s['message'] = "Post a story."
     dbsession = DBSession()
     stories = None
+    if 'new_post' in qs and qs['new_post'] == 'y':
+        if 'logged_in' not in s:
+            s['message'] = 'Sorry, please log in first'
+            return {'stories': [], 'success': False, 'code': 'ENOLOGIN'}
+
     if p and 'title' in p:
         if 'logged_in' not in s:
             s['message'] = 'Sorry, please log in first'

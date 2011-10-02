@@ -4,26 +4,27 @@
     ${story.title} on ${site_name}
 </%block>
 
-<script type="text/javascript">
-$(document).ready(function() {
-    crf = $('#comment-reply-form').detach();
-    $('.comment-reply').click(function(e) {
-        crf.css('display', 'block');
-        $($(e.target).closest('.comment')).append(crf);
-        $('#comment_parent').attr('value', ($(e.target).attr('id')).replace('reply-', ''));
-        $('#parent_type').attr('value', 'comment');
+% if logged_in:
+    <script type="text/javascript">
+    $(document).ready(function() {
+        crf = $('#comment-reply-form').detach();
+        $('.comment-reply').click(function(e) {
+            crf.css('display', 'block');
+            $($(e.target).closest('.comment')).append(crf);
+            $('#comment_parent').attr('value', ($(e.target).attr('id')).replace('reply-', ''));
+            $('#parent_type').attr('value', 'comment');
+        });
+        $('.comment-edit-link').click(function(e) {
+            erf = crf.clone()
+            $(erf).children('form').attr('action', '${request.route_url("full", sub_id = story.id)}?op=edit&comment_id=' + $(e.target).attr('data-comment-id'))
+            erf.css('display', 'block');
+            $($(erf).children('#reply-text')).text('Edit your Reply...')
+            $(erf).find('#body-textarea').attr('value', $($(e.target).closest('.comment').find('.c-body-text')).text())
+            $($(e.target).closest('.comment')).append(erf);
+        });
     });
-    $('.comment-edit-link').click(function(e) {
-        erf = crf.clone()
-        $(erf).children('form').attr('action', '${request.route_url("full", sub_id = story.id)}?op=edit&comment_id=' + $(e.target).attr('data-comment-id'))
-        erf.css('display', 'block');
-        $($(erf).children('#reply-text')).text('Edit your Reply...')
-        $(erf).find('#body-textarea').attr('value', $($(e.target).closest('.comment').find('.c-body-text')).text())
-        $($(e.target).closest('.comment')).append(erf);
-    });
-
-});
-</script>
+    </script>
+% endif
 
     % if success == False:
         <h1>${message}</h1>
