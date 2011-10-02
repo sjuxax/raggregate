@@ -94,7 +94,7 @@
             }
         }
 
-        $(document).ready( 
+        $(document).ready(
             function () {
                 $('.story-upvote').click( function(e) {
                     if (!$(e.target).parent().hasClass('active-vote')) {
@@ -138,7 +138,7 @@
             }
         }
 
-        $(document).ready( 
+        $(document).ready(
             function () {
                 $('.comment-upvote').click( function(e) {
                     if (!$(e.target).hasClass('active-vote')) {
@@ -250,7 +250,7 @@
                         % endif
                     % endif
                     </li>
- 
+
                 </ul>
                 <form id="search_form" action="/search" method="GET"><input type="text" name="term" value="Search Here" /></form>
             </div>

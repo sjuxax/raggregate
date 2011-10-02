@@ -20,7 +20,7 @@
             down_active_vote_str = 'active-vote'
             down_arrow_src = 'sm-arrow-down-active.png'
 
-%>          
+%>
             <div class="comment" id="${c.id}" style="margin-left: ${margin}px;">
                 <div class="comment-picture">
 <%
