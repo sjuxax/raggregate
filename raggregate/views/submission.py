@@ -174,17 +174,21 @@ def full(request):
     p = request.session['safe_post']
     prm = request.session['safe_params']
     s = request.session
-    if 'logged_in' not in s:
-        return {'message': 'Sorry, please log in first.', 'story': {}, 'comments': {}, 'success': False, 'code': 'ENOLOGIN'}
+    logged_in = False
+
+    if 'logged_in' in s:
+        #return {'message': 'Sorry, please log in first.', 'story': {}, 'comments': {}, 'success': False, 'code': 'ENOLOGIN'}
+        logged_in = True
+
     # record the comment
-    if 'op' in prm and prm['op'] == 'del':
+    if 'op' in prm and prm['op'] == 'del' and logged_in:
         if 'comment_id' in prm:
             c = queries.get_comment_by_id(prm['comment_id'])
             if queries.is_user_allowed_admin_action(s['users.id'], str(c.id), ):
                 c.body = "[deleted]"
                 dbsession.add(c)
         s['message'] = 'Comment deleted.'
-    if 'op' in prm and prm['op'] == 'edit':
+    if 'op' in prm and prm['op'] == 'edit' and logged_in:
         if 'comment_id' in prm:
             c = queries.get_comment_by_id(prm['comment_id'])
             if queries.is_user_allowed_admin_action(s['users.id'], str(c.id), ):
@@ -192,7 +196,7 @@ def full(request):
                 dbsession.add(c)
         s['message'] = 'Comment updated.'
     else:
-        if 'body' in request.session['safe_post']:
+        if 'body' in request.session['safe_post'] and logged_in:
             c = Comment(sub_id, s['users.id'], p['comment_parent'], prm['body'])
             # send a message to a comment's immediate parent
             e = Epistle(queries.find_by_id(p['comment_parent']).submitter.id, s['users.id'], p['body'], parent_type = p['parent_type'], parent = p['comment_parent'])
@@ -205,7 +209,7 @@ def full(request):
     story_vote_dict = {}
     comment_vote_dict = {}
 
-    if 'logged_in' in s:
+    if logged_in:
         # see queries.py; these two should not be separate. #@FIXME
         story_vote_dict = queries.get_user_votes_on_submission(s['users.id'], sub_id)
         comment_vote_dict = queries.get_user_votes_on_submissions_comments(s['users.id'], sub_id)

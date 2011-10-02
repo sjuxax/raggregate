@@ -78,6 +78,8 @@ def user_session_handler(event):
     e['u'] = None
     e['logged_in_admin'] = None
 
+    e['followed_users'] = []
+
     if 'sort' in r.params:
         e['sort'] = r.params['sort']
     else:
@@ -124,5 +126,3 @@ def user_session_handler(event):
         s['users.id'] = str(u.id)
         s['users.display_name'] = u.display_name()
         s['logged_in'] = True
-        s['followed_users'] = []
-        e['followed_users'] = []
