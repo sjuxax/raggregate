@@ -20,11 +20,13 @@
 					<input type="submit" value="Login" />
 				</form>
 			</div>
-            <div id="reg_form" style="">
-				<b>Don't have an account? Register here.</b><br />
-				<form action="/login?act=register" method="POST">
-					Username: <input type="text" name="username"><br />
-					Password: <input type="password" name="password"><br />
-					<input type="submit" value="Login" />
-				</form>
-			</div>
+            % if not logged_in:
+                <div id="reg_form" style="">
+                    <b>Don't have an account? Register here.</b><br />
+                    <form action="/login?act=register" method="POST">
+                        Username: <input type="text" name="username"><br />
+                        Password: <input type="password" name="password"><br />
+                        <input type="submit" value="Login" />
+                    </form>
+                </div>
+            % endif
