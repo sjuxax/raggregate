@@ -12,6 +12,13 @@ from raggregate.login_adapters import LoginAdapterExc
 
 @view_config(renderer='login.mak', route_name='login')
 def login(request):
+    #@FIXME: this uses a request handling method with success with which I was experimenting
+    # it is not used elsewhere and is a pain to read and write
+    # success = False causes a page to stop drawing and "error out"
+    # some error conditions therefore don't set success to false because it's more convenient
+    # to draw the rest of the page.
+    #
+    # someone should adapt this to be less success-centric and read less branchy.
     s = request.session
 
     success = True
