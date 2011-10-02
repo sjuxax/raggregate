@@ -84,6 +84,18 @@ def login(request):
                         s['message'] = "This username is already registered, sorry."
                         success = False
                         dbsession.rollback()
+            elif request.session['safe_get']['act'] == 'update_pw':
+                if p['new_password'] != p['new_password_confirm']:
+                    s['message'] = 'New password doesn\'t match confirmation, please try again.'
+                else:
+                    u = queries.get_user_by_id(s['users.id'])
+                    if u.verify_pw(p['old_password']):
+                        u.password = u.hash_pw(p['new_password'])
+                        dbsession.add(u)
+                        s['message'] = 'Password updated.'
+                        success = True
+                    else:
+                        s['message'] = 'Old password invalid.'
             else:
                 try:
                     u = queries.get_user_by_name(username)
