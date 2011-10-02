@@ -16,7 +16,7 @@
                 <b>Login</b><br />
 				<form action="/login?act=login" method="POST">
 					Username: <input type="text" name="username"><br />
-					Password: <input type="text" name="password"><br />
+					Password: <input type="password" name="password"><br />
 					<input type="submit" value="Login" />
 				</form>
 			</div>
@@ -24,7 +24,7 @@
 				<b>Don't have an account? Register here.</b><br />
 				<form action="/login?act=register" method="POST">
 					Username: <input type="text" name="username"><br />
-					Password: <input type="text" name="password"><br />
+					Password: <input type="password" name="password"><br />
 					<input type="submit" value="Login" />
 				</form>
 			</div>
