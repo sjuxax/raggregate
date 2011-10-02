@@ -191,7 +191,6 @@
         });
     </script>
 % endif
-    </script>
     <body>
         <div id="logo_bar">
             <a href="${request.route_url('post')}"><img src="${static_base}images/logo.png" style="border: 0" /></a>
