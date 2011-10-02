@@ -177,12 +177,6 @@ def full(request):
     if 'logged_in' not in s:
         return {'message': 'Sorry, please log in first.', 'story': {}, 'comments': {}, 'success': False, 'code': 'ENOLOGIN'}
     # record the comment
-    if 'body' in prm:
-        #clean up the body's HTML immediately
-        # actually don't anymore, keep in database as entered by user
-        # now parsing markdown on display
-        # we need better caching to make that work more better
-        new_body = prm['body']
     if 'op' in prm and prm['op'] == 'del':
         if 'comment_id' in prm:
             c = queries.get_comment_by_id(prm['comment_id'])
@@ -194,12 +188,12 @@ def full(request):
         if 'comment_id' in prm:
             c = queries.get_comment_by_id(prm['comment_id'])
             if queries.is_user_allowed_admin_action(s['users.id'], str(c.id), ):
-                c.body = new_body
+                c.body = prm['body']
                 dbsession.add(c)
         s['message'] = 'Comment updated.'
     else:
         if 'body' in request.session['safe_post']:
-            c = Comment(sub_id, s['users.id'], p['comment_parent'], new_body)
+            c = Comment(sub_id, s['users.id'], p['comment_parent'], prm['body'])
             # send a message to a comment's immediate parent
             e = Epistle(queries.find_by_id(p['comment_parent']).submitter.id, s['users.id'], p['body'], parent_type = p['parent_type'], parent = p['comment_parent'])
             dbsession.add(e)
