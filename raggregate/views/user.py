@@ -66,8 +66,12 @@ def login(request):
             if request.session['safe_get']['act'] == 'register':
                 if logged_in:
                     try:
-                        queries.create_user(temp_to_perm = True, extant_id = s['users.id'], username = username, password = p['password'], origination = 'site')
-                        s['message'] = "Your anonymous profile has been converted, thanks."
+                        u = queries.get_user_by_id(s['users.id'])
+                        if u.temporary:
+                            queries.create_user(temp_to_perm = True, extant_id = s['users.id'], username = username, password = p['password'], origination = 'site')
+                            s['message'] = "Your anonymous profile has been converted, thanks."
+                        else:
+                            s['message'] = "You can't register while you're logged in."
                     except sqlalchemy.exc.IntegrityError:
                         s['message'] = "This username is already registered, sorry."
                         dbsession.rollback()
