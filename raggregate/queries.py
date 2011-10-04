@@ -330,13 +330,6 @@ def get_comments_by_story_id(id, organize_parentage = False, page_num = 1, per_p
         allowed_roots = [ ]
 
         for root in limited_roots:
-            # do not display deleted comments that have no children
-            # DO display deleted comments that have children
-            if root.body == '[deleted]':
-                kid_count = count_comment_children(root.id)
-                if kid_count <= 0:
-                    continue
-
             allowed_roots.append(str(root.id))
 
         structures = _build_comment_structures(all_comments, allowed_roots, tree, {})
@@ -352,6 +345,11 @@ def _build_comment_structures(all_comments, allowed_roots, tree, dex):
 
         c.parent_id = str(c.parent_id)
         if c.parent_id in allowed_roots or str(c.id) in allowed_roots:
+            # skip childless deleted comments
+            if c.body == '[deleted]':
+                kid_count = count_comment_children(c.id)
+                if kid_count <= 0:
+                    continue
             if c.parent_id not in tree:
                 tree[c.parent_id] = []
             if str(c.id) not in tree[c.parent_id]:
