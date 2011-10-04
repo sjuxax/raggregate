@@ -201,6 +201,12 @@ def full(request):
                 dbsession.add(c)
         s['message'] = 'Comment updated.'
     else:
+        if 'description-textarea' in request.session['safe_post'] and logged_in:
+            sub = queries.get_story_by_id(sub_id)
+            if queries.is_user_allowed_admin_action(s['users.id'], str(sub.id)):
+                sub.description = prm['description-textarea']
+                dbsession.add(sub)
+            s['message'] = 'Description updated.'
         if 'body' in request.session['safe_post'] and logged_in:
             c = Comment(sub_id, s['users.id'], p['comment_parent'], prm['body'])
             # send a message to a comment's immediate parent

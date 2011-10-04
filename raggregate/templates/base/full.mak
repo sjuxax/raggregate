@@ -22,6 +22,13 @@
             $(erf).find('#body-textarea').val($($(e.target).closest('.comment').find('.c-body-text')).text())
             $($(e.target).closest('.comment')).append(erf);
         });
+        sef = $('#story-edit-form').detach();
+        $('.story-edit-link').click(function(e) {
+            sefi = sef.clone()
+            sefi.css('display', 'block');
+            $('#description').replaceWith(sefi);
+        });
+
     });
     </script>
 % endif
@@ -33,6 +40,12 @@
         <div id="description" class="story-description">
             ${story.description | template_filters.render_md,n}
         </div>
+        ##@TODO: make functionality to determine whether a user is logged in on display a reusable function
+        ## I have vague memories of this but think it's on the server side, need to create a def that can
+        ## be used in the Mako templates to determine this, would be much better that way.
+        % if (logged_in and request.session['users.id'] == str(story.added_by)) or logged_in_admin:
+            <a href="javascript:void(0)" class=" story-edit-link logged-in-only ">edit this description</a><br/>
+        % endif
         <h2>Comments</h2>
         <h3> Add a new comment </h3>
         <form method="post" id="story-reply-form" action="${request.route_url('full', sub_id = story.id)}">
@@ -72,6 +85,15 @@
             <br />
             <input type="submit" value="Add Comment"></input>
         </form>
+        </div>
+
+        <div id="story-edit-form" style="clear: both; display: none;">
+            <b id="story-edit-text">Edit your description</b><br />
+            <form method="post" id="story-edit-form-real" action="${request.route_url('full', sub_id = story.id)}">
+                <textarea id="description-textarea" cols="50" rows="10" name="description-textarea">${story.description|h}</textarea>
+                <br />
+                <input type="submit" value="Edit Story"></input>
+            </form>
         </div>
 
     % endif

@@ -24,7 +24,7 @@ def clean_inputs(event):
     if request.POST:
         p = request.POST
         for i in p.items():
-            if i[0] != 'body' and i[0] != 'description':
+            if i[0] != 'body' and i[0] != 'description' and i[0] != 'description-textarea':
                 safe_i = queries.strip_all_html(i[1])
                 safe_post[i[0]] = safe_i
             else:
