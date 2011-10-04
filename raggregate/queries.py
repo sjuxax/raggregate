@@ -34,6 +34,9 @@ dbsession = sqlahelper.get_session()
 
 #one day, we should break this into files instead of sections
 
+def now_in_utc():
+    return datetime.utcnow().replace(tzinfo=pytz.utc)
+
 def get_key_from_stat(key, type = None):
     sa = dbsession.query(Stat).filter(Stat.key == key).one()
     val = json.loads(sa.value)
@@ -67,7 +70,7 @@ def calc_hot_average(timediff = timedelta(hours = 6)):
     """
     Calculate the average point assignment of stories over the last six hours.
     """
-    story_votes = dbsession.query(Vote.submission_id, func.sum(Vote.points).label('points')).filter(Vote.added_on < datetime.utcnow() and Vote.added_on > (datetime.utcnow() - timediff)).group_by(Vote.submission_id).all()
+    story_votes = dbsession.query(Vote.submission_id, func.sum(Vote.points).label('points')).filter(Vote.added_on < now_in_utc() and Vote.added_on > (now_in_utc() - timediff)).group_by(Vote.submission_id).all()
 
     aggregate = 0
     count = 0
@@ -95,7 +98,7 @@ def calc_hot_average(timediff = timedelta(hours = 6)):
         hot_avg = math.floor(hot_avg)
 
     set_key_in_stat('hot_avg', hot_avg)
-    set_key_in_stat('hot_avg_timestamp', datetime.utcnow(), type = 'datetime')
+    set_key_in_stat('hot_avg_timestamp', now_in_utc(), type = 'datetime')
 
     print("hot_avg: {0}".format(hot_avg))
 
@@ -108,25 +111,25 @@ def calc_hot_window_score(submission_id, timediff = timedelta(hours = 6)):
     @param timediff: timedelta object representing acceptable vote timeframe from now
     """
     try:
-        story_votes = dbsession.query(Vote.submission_id, func.sum(Vote.points).label('points')).filter(Vote.added_on < datetime.utcnow() and Vote.added_on > (datetime.utcnow() - timediff)).filter(Vote.submission_id == submission_id).group_by(Vote.submission_id).one()
+        story_votes = dbsession.query(Vote.submission_id, func.sum(Vote.points).label('points')).filter(Vote.added_on < now_in_utc() and Vote.added_on > (now_in_utc() - timediff)).filter(Vote.submission_id == submission_id).group_by(Vote.submission_id).one()
     except sqlalchemy.orm.exc.NoResultFound:
         # no votes on this story yet
         return 0
 
     story = get_story_by_id(submission_id)
     story.hot_window_score = story_votes.points
-    story.hot_window_score_timestamp = datetime.utcnow()
+    story.hot_window_score_timestamp = now_in_utc()
     dbsession.add(story)
     return story_votes.points
 
 def calc_all_hot_window_scores():
     # only stories from the last 48 hours are eligible for "hot" status
-    stories = dbsession.query(Submission).filter(Submission.deleted == False).filter(Submission.added_on > (datetime.utcnow() - timedelta(hours = 48))).all()
+    stories = dbsession.query(Submission).filter(Submission.deleted == False).filter(Submission.added_on > (now_in_utc() - timedelta(hours = 48))).all()
 
     for s in stories:
         calc_hot_window_score(s.id)
 
-    set_key_in_stat('mass_hot_window_timestamp', datetime.utcnow(), type = 'datetime')
+    set_key_in_stat('mass_hot_window_timestamp', now_in_utc(), type = 'datetime')
 
     dbsession.flush()
 
@@ -204,7 +207,7 @@ def get_hot_stories(timediff = timedelta(hours = 48)):
     @param timediff: timedelta object representing hot story eligibility age
     """
     hot_avg = get_key_from_stat('hot_avg')['value']
-    stories = dbsession.query(Submission).options(joinedload('submitter')).filter(Submission.deleted == False).filter(Submission.added_on > (datetime.utcnow() - timediff)).filter(Submission.hot_window_score > hot_avg).order_by(Submission.hot_window_score.desc())
+    stories = dbsession.query(Submission).options(joinedload('submitter')).filter(Submission.deleted == False).filter(Submission.added_on > (now_in_utc() - timediff)).filter(Submission.hot_window_score > hot_avg).order_by(Submission.hot_window_score.desc())
     return stories
 
 def get_controversial_stories(timediff = timedelta(hours = 48), contro_threshold = 5, contro_min = 10):
@@ -215,21 +218,21 @@ def get_controversial_stories(timediff = timedelta(hours = 48), contro_threshold
     @param contro_min: the minimum number of points required for something to appear as controversial
     @return: SA query ready to get list of stuff
     """
-    stories = dbsession.query(Submission).options(joinedload('submitter')).filter(Submission.deleted == False).filter(Submission.added_on > (datetime.utcnow() - timediff)).filter(func.abs(Submission.upvote_tally - Submission.downvote_tally) <= contro_threshold).filter(Submission.total_vote_tally > contro_min).order_by(Submission.added_on.desc())
+    stories = dbsession.query(Submission).options(joinedload('submitter')).filter(Submission.deleted == False).filter(Submission.added_on > (now_in_utc() - timediff)).filter(func.abs(Submission.upvote_tally - Submission.downvote_tally) <= contro_threshold).filter(Submission.total_vote_tally > contro_min).order_by(Submission.added_on.desc())
     return stories
 
 def count_story_votes(submission_id):
     dv_num = dbsession.query(Vote).filter(Vote.points < 0).filter(Vote.submission_id == submission_id).count()
     story = get_story_by_id(submission_id)
     story.downvote_tally = dv_num
-    story.downvote_tally_timestamp = datetime.utcnow()
+    story.downvote_tally_timestamp = now_in_utc()
 
     uv_num = dbsession.query(Vote).filter(Vote.points > 0).filter(Vote.submission_id == submission_id).count()
     story.upvote_tally = uv_num
-    story.upvote_tally_timestamp = datetime.utcnow()
+    story.upvote_tally_timestamp = now_in_utc()
 
     story.total_vote_tally = uv_num + dv_num
-    story.total_vote_timestamp = datetime.utcnow()
+    story.total_vote_timestamp = now_in_utc()
 
     dbsession.add(story)
     dbsession.flush()
@@ -241,7 +244,7 @@ def recentize_contro(recalc_timediff = timedelta(seconds = 1), age_timediff = ti
     Ensure that upvote and downvote tallies of stories added in the last age_timediff time
     are no older than recalc_timediff time. Recalculate if so, do nothing if not.
     """
-    stories = dbsession.query(Submission).filter(Submission.deleted == False).filter(Submission.added_on > (datetime.utcnow() - age_timediff)).filter(sqlalchemy.or_(sqlalchemy.or_(Submission.upvote_tally_timestamp < (datetime.utcnow() - recalc_timediff), Submission.downvote_tally_timestamp < (datetime.utcnow() - recalc_timediff)), sqlalchemy.or_(Submission.upvote_tally_timestamp == None, Submission.downvote_tally_timestamp == None))).all()
+    stories = dbsession.query(Submission).filter(Submission.deleted == False).filter(Submission.added_on > (now_in_utc() - age_timediff)).filter(sqlalchemy.or_(sqlalchemy.or_(Submission.upvote_tally_timestamp < (now_in_utc() - recalc_timediff), Submission.downvote_tally_timestamp < (now_in_utc() - recalc_timediff)), sqlalchemy.or_(Submission.upvote_tally_timestamp == None, Submission.downvote_tally_timestamp == None))).all()
     for s in stories:
         count_story_votes(s.id)
 
