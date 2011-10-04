@@ -330,6 +330,13 @@ def get_comments_by_story_id(id, organize_parentage = False, page_num = 1, per_p
         allowed_roots = [ ]
 
         for root in limited_roots:
+            # do not display deleted comments that have no children
+            # DO display deleted comments that have children
+            if root.body == '[deleted]':
+                kid_count = count_comment_children(root.id)
+                if kid_count <= 0:
+                    continue
+
             allowed_roots.append(str(root.id))
 
         structures = _build_comment_structures(all_comments, allowed_roots, tree, {})
@@ -365,6 +372,15 @@ def _build_comment_structures(all_comments, allowed_roots, tree, dex):
                 allowed_roots = structure['allowed_roots']
 
     return {'tree': tree, 'dex': dex, 'allowed_roots': allowed_roots}
+
+def count_comment_children(comment_id):
+    """
+    Counts *only* direct children of a given comment id.
+    @param comment_id: the id whose children we should count
+    @return: the number of immediate children
+    """
+    heritage = dbsession.query(Comment).filter(Comment.parent_id == comment_id).all()
+    return len(heritage)
 
 def count_sa_obj(obj):
     """
