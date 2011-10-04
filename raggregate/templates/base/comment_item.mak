@@ -52,6 +52,7 @@ else:
                     % endif
                     % if str(c.submitter.id) == request.session['users.id'] or logged_in_admin:
                         &nbsp; <a href="javascript:void(0)" data-comment-id="${c.id}" class="comment-edit-link">edit</a>
+                        <div class="c-body-md" style="display: none;" id="body-md-${c.id}">${c.body | h}</div>
                     % endif
                     </div>
                     <%include file="vote_form.mak" args="id=c.id, direction='up', target='comment', jump_to=request.url"/>

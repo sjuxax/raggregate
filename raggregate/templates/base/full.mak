@@ -19,7 +19,7 @@
             $(erf).children('form').attr('action', '${request.route_url("full", sub_id = story.id)}?op=edit&comment_id=' + $(e.target).attr('data-comment-id'))
             erf.css('display', 'block');
             $($(erf).children('#reply-text')).text('Edit your Reply...')
-            $(erf).find('#body-textarea').val($($(e.target).closest('.comment').find('.c-body-text')).text())
+            $(erf).find('#body-textarea').val($('#body-md-' + $(e.target).attr('data-comment-id')).text())
             $($(e.target).closest('.comment')).append(erf);
         });
         sef = $('#story-edit-form').detach();
