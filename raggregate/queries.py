@@ -28,6 +28,8 @@ import json
 
 import time
 
+import pytz
+
 dbsession = sqlahelper.get_session()
 
 #one day, we should break this into files instead of sections
@@ -160,7 +162,9 @@ def recentize_hots(timediff = timedelta(seconds = 1)):
     if count >= 5:
         print("\t-----WARNING WARNING WARNING-----\n\tSomething has gone tragically wrong with the hotness: AVG.\n\t-----WARNING WARNING WARNING-----")
 
-    if hot_avg_timestamp < (datetime.utcnow() - timediff):
+    hot_avg_timestamp = hot_avg_timestamp.replace(tzinfo=pytz.utc)
+
+    if hot_avg_timestamp < (now_in_utc() - timediff):
         calc_hot_average()
 
     count = 0
@@ -187,7 +191,9 @@ def recentize_hots(timediff = timedelta(seconds = 1)):
     if count >= 5:
         print("\t-----WARNING WARNING WARNING-----\n\tSomething has gone tragically wrong with the hotness: MASS.\n\t-----WARNING WARNING WARNING-----")
 
-    if mass_timestamp < (datetime.utcnow() - timediff):
+    mass_timestamp = mass_timestamp.replace(tzinfo=pytz.utc)
+
+    if mass_timestamp < (now_in_utc() - timediff):
         calc_all_hot_window_scores()
 
     return 0
