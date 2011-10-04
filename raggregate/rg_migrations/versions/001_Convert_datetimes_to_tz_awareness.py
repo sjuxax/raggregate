@@ -36,6 +36,6 @@ def downgrade(migrate_engine):
         t = eval(m).__table__
         t.metadata = meta
         for col in t.c:
-            # modify all DateTime columns to tz awareness
+            # modify all DateTime columns to tz naivety
             if type(col.type) == DateTime:
                 col.alter(type = DateTime(timezone=False))
