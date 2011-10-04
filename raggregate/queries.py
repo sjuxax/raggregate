@@ -509,9 +509,7 @@ def fuzzify_date(d):
     # django's timesince.py, because there are no apparently no other good general libraries
     # that provide this.
     from raggregate import pretty
-    import pytz
-    utc = pytz.utc
-    return pretty.date(utc.localize(d))
+    return pretty.date(d)
 
 def create_user(**kwargs):
     # @TODO: we should make this accept arbitrary kwargs that map to the u object
