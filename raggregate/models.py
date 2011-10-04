@@ -64,7 +64,7 @@ class User(Base):
     facebook_origination = Column(Boolean, default=False)
     facebook_user_id = Column(UnicodeText)
     is_admin = Column(Boolean, default=False)
-    added_on = Column(DateTime, default=sqlalchemy.sql.func.now())
+    added_on = Column(DateTime(timezone=True), default=sqlalchemy.sql.func.now())
     added_by = Column(GUID)
 
     followed = relationship("User", secondary=follows, primaryjoin=id==follows.c.followed, secondaryjoin=id==follows.c.follower, backref="follows")
@@ -130,18 +130,18 @@ class Submission(Base):
     category = Column(GUID)
     url = Column(UnicodeText)
     self_post = Column(Boolean)
-    added_on = Column(DateTime, default=sqlalchemy.sql.func.now())
+    added_on = Column(DateTime(timezone=True), default=sqlalchemy.sql.func.now())
     added_by = Column(GUID, ForeignKey('users.id'), nullable=False)
     deleted = Column(Boolean, default=False)
     invisible = Column(Boolean, default=False)
     hot_window_score = Column(Integer, default=None)
-    hot_window_score_timestamp = Column(DateTime, default=None)
+    hot_window_score_timestamp = Column(DateTime(timezone=True), default=None)
     downvote_tally = Column(Integer, default=None)
-    downvote_tally_timestamp = Column(DateTime, default=None)
+    downvote_tally_timestamp = Column(DateTime(timezone=True), default=None)
     upvote_tally = Column(Integer, default=None)
-    upvote_tally_timestamp = Column(DateTime, default=None)
+    upvote_tally_timestamp = Column(DateTime(timezone=True), default=None)
     total_vote_tally = Column(Integer)
-    total_vote_timestamp = Column(DateTime, default=None)
+    total_vote_timestamp = Column(DateTime(timezone=True), default=None)
 
     submitter = relationship("User", backref="submissions")
     votes = relationship("Vote", cascade="all, delete, delete-orphan")
@@ -189,7 +189,7 @@ class Vote(Base):
     points = Column(Integer, nullable=False, default=0)
     # 0 for none, 1 for up, -1 for down
     direction = Column(Integer, nullable=False, default=0)
-    added_on = Column(DateTime, default=sqlalchemy.sql.func.now())
+    added_on = Column(DateTime(timezone=True), default=sqlalchemy.sql.func.now())
 
     voter = relationship("User", backref="votes")
 
@@ -213,7 +213,7 @@ class Comment(Base):
     parent_id = Column(GUID, nullable=False)
     body = Column(UnicodeText, nullable=False)
     points = Column(Integer, default=0)
-    added_on = Column(DateTime, default=sqlalchemy.sql.func.now())
+    added_on = Column(DateTime(timezone=True), default=sqlalchemy.sql.func.now())
 
     submitter = relationship("User", backref="comments")
     votes = relationship("Vote", cascade="all, delete, delete-orphan")
@@ -261,7 +261,7 @@ class Epistle(Base):
     parent = Column(GUID)
     # valid parent_types are 'epistle', 'story', 'comment'
     parent_type = Column(UnicodeText, default=u'epistle')
-    added_on = Column(DateTime, default=sqlalchemy.sql.func.now())
+    added_on = Column(DateTime(timezone=True), default=sqlalchemy.sql.func.now())
 
     recipient_u = relationship("User", primaryjoin=("Epistle.recipient == User.id"))
     sender_u = relationship("User", primaryjoin=("Epistle.sender == User.id"))
@@ -317,7 +317,7 @@ class Stat(Base):
     # this table is a k-v store for statistical information.
     key = Column(UnicodeText, primary_key=True)
     value = Column(UnicodeText)
-    last_update = Column(DateTime, default=sqlalchemy.sql.func.now())
+    last_update = Column(DateTime(timezone=True), default=sqlalchemy.sql.func.now())
 
     def __init__(self, key, value):
         self.key = key
