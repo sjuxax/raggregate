@@ -29,6 +29,7 @@
 
         #main_content { padding-top:12px;
                         width: 70%;
+                        clear: both;
                         float: left; }
 
         #footer { clear: both;
