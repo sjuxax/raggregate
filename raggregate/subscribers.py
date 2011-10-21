@@ -113,6 +113,7 @@ def user_session_handler(event):
 
         u = queries.get_user_by_id(s['users.id'])
         e['logged_in_admin'] = u.is_user_admin()
+        s['logged_in_admin'] = e['logged_in_admin']
         e['u'] = u
         e['logged_in'] = True
     elif 'logged_in' not in s and r.registry.settings['user.generate_anon_accounts'] == 'true':
