@@ -1,7 +1,6 @@
 <%inherit file="base.mak"/>
         Add ban: <br />
             <form action="ban" METHOD="POST">
-                <b>${message}</b><br />
                 IP Address: <input type="text" name="ip" /><br />
                 Username: <input type="text" name="username" /><br />
                 <br />
