@@ -42,7 +42,7 @@
         .title a:visited { color: #aa00ff; }
         .story-controls { float: left; color: #cccccc; font-size: 24px; }
         .story-links { position: relative; left:15px; }
-        .story-description { background-color: #ddd; border: 1px black solid; padding: 3px; }
+        .story-description { background-color: #f6f6f6; border: 1px black solid; padding: 3px; }
         .story-description p:last-child { margin-bottom: 0px; }
         .story-description p:first-child { margin-top: 0px; }
         .story-item { width: 600px; clear: both; }
