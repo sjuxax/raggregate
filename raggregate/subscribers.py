@@ -10,10 +10,18 @@ import os
 import queries
 
 from pyramid.url import static_url
+from pyramid import httpexceptions
 
 from raggregate import template_filters
 
 dbsession = sqlahelper.get_session()
+
+def ban(event):
+    r = event.request
+    ip_ban = queries.is_ip_banned(r.remote_addr)
+
+    if ip_ban:
+        raise httpexceptions.HTTPForbidden
 
 def clean_inputs(event):
     request = event.request

@@ -8,6 +8,7 @@ from raggregate.models import initialize_sql
 
 from pyramid.events import BeforeRender
 from pyramid.events import NewRequest
+from pyramid.events import NewResponse
 from raggregate import subscribers
 
 from pyramid.request import Request
@@ -48,6 +49,7 @@ def main(global_config, **settings):
     config.add_route('home', '/')
     config.add_route('login', '/login')
     config.add_route('post', '/post')
+    config.add_route('ban', '/ban')
     config.add_route('vote', '/vote/{way}')
     config.add_route('full', '/full/{sub_id}')
     config.add_route('epistle', '/messages/{box}')
@@ -57,6 +59,7 @@ def main(global_config, **settings):
     config.add_route('twit_sign', '/twit_sign')
     config.add_route('user_info', '/user_info')
 
+    config.add_subscriber(subscribers.ban, NewResponse)
     config.add_subscriber(subscribers.user_session_handler, BeforeRender)
     config.add_subscriber(subscribers.clear_per_request_session, NewRequest)
     config.add_subscriber(subscribers.clean_inputs, NewRequest)

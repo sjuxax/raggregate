@@ -2,13 +2,18 @@ import sqlalchemy
 
 from raggregate.models import DBSession
 from raggregate.models import User
+from raggregate.models import Ban
 
 from raggregate import queries
 
 from pyramid.view import view_config
+from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPNotFound
 
 from raggregate.login_adapters import fb
 from raggregate.login_adapters import LoginAdapterExc
+
+from datetime import timedelta
 
 @view_config(renderer='login.mak', route_name='login')
 def login(request):
@@ -255,3 +260,40 @@ def user_info(request):
         dbsession.add(u)
 
     return {'edit_mode': edit_mode, 'u': u}
+
+@view_config(renderer="ban.mak", route_name="ban")
+def ban(request):
+    r = request
+    p = r.POST
+    s = request.session
+
+    if 'logged_in_admin' not in s:
+        return HTTPNotFound()
+
+    if 'ip' in p:
+        if p['ip'].strip() == '':
+            ip = None
+        else:
+            ip = p['ip']
+
+        if p['username'].strip() == '':
+            username = None
+            user_id = None
+        else:
+            username = p['username']
+
+        if p['duration'].strip() == 'infinite':
+            duration = None
+        else:
+            duration = "timedelta({0})".format(p['duration'])
+            duration = eval(duration)
+
+        if username:
+            user_id = queries.get_user_by_name(username)
+
+        b = Ban(ip = ip, username = username, duration = duration, user_id = user_id, added_by = s['users.id'])
+        dbsession = DBSession()
+        dbsession.add(b)
+
+    bans = queries.list_bans()
+    return {'bans': bans}

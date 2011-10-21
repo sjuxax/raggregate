@@ -5,6 +5,7 @@ from raggregate.models import Submission
 from raggregate.models import Comment
 from raggregate.models import Epistle
 from raggregate.models import Stat
+from raggregate.models import Ban
 
 from sqlalchemy.orm import joinedload
 from sqlalchemy.sql import func
@@ -729,3 +730,13 @@ def strip_all_html(s):
     from lxml.html import fromstring, tostring
     lx = fromstring(s)
     return tostring(lx, method="text")
+
+def list_bans():
+    return dbsession.query(Ban).all()
+
+def is_ip_banned(ip):
+    bans = dbsession.query(Ban).filter(Ban.ip == ip).filter(Ban.expires > datetime.utcnow()).all()
+    if len(bans) > 0:
+        return True
+    else:
+        return False
