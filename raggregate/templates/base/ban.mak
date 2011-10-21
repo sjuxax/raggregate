@@ -15,7 +15,8 @@
         <br />
         Old bans: <br />
         % for b in bans:
-            Added: ${b.added_on}
-            User: ${b.username}
-            IP Address: ${b.ip}
+            Added: ${b.added_on}<br />
+            User: ${b.username}<br />
+            IP Address: ${b.ip}<br />
+            <br />
         % endfor
