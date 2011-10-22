@@ -7,6 +7,7 @@
                 Input duration as a timedelta constructor. It is fed directly to the timedelta factory so do not mess around here, you can break things seriously. <br />
                 This functionality should never be exposed to a mortal because it can ruin your server. You haven't given the banhammer to anyone who hasn't earned it, have you?<br />
                 If someone non-lazy comes around this could be made safe.<br />
+                Leave this blank for infinite duration.<br />
                 Duration: <input type="text" name="duration" /><br />
                 <br />
                 <input type="submit" value="Add Ban" /><br />
