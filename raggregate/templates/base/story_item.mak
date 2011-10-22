@@ -23,7 +23,7 @@ vote_dict = pageargs['vote_dict']
                 </div>
                 <div class="story-links">
                     % if s.self_post == True:
-                        <span class="title"><a href="${request.route_url('full', sub_id=s.id)}">${s.title}</a></span><br />
+                        <span class="title"><a href="${request.route_url('full', sub_id=s.id)}">${s.title}</a></span> (self) <br />
                     % else:
                         <span class="title"><a href="${s.url}">${s.title}</a></span><br />
                     % endif
