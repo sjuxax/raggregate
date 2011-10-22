@@ -289,7 +289,7 @@ def ban(request):
             duration = eval(duration)
 
         if username:
-            user_id = queries.get_user_by_name(username)
+            user_id = queries.get_user_by_name(username).id
 
         b = Ban(ip = ip, username = username, duration = duration, user_id = user_id, added_by = s['users.id'])
         dbsession = DBSession()

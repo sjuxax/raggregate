@@ -731,12 +731,29 @@ def strip_all_html(s):
     lx = fromstring(s)
     return tostring(lx, method="text")
 
-def list_bans():
-    return dbsession.query(Ban).all()
-
-def is_ip_banned(ip):
-    bans = dbsession.query(Ban).filter(Ban.ip == ip).filter(Ban.expires > datetime.utcnow()).all()
-    if len(bans) > 0:
-        return True
+def list_bans(ip = None, username = None, active = True):
+    # if ip or username are specified, search and see if we have any current bans for these.
+    if not active:
+        bans_q = dbsession.query(Ban)
     else:
-        return False
+        bans_q = dbsession.query(Ban).filter(Ban.expires > datetime.utcnow())
+
+    if ip:
+        bans = bans_q.filter(Ban.ip == ip).all()
+        if len(bans) > 0:
+            return True
+        else:
+            return False
+
+    if username:
+        bans = bans_q.filter(Ban.username == username).all()
+        if len(bans) > 0:
+            return True
+        else:
+            return False
+
+    # if nothing is specified, just return all bans.
+    # @TODO: make this work with the active keyword mentioned yonder
+    # should work now but we use this to return every ban ever issued
+    # presently, so would need to change behavior on front-end
+    return dbsession.query(Ban).all()

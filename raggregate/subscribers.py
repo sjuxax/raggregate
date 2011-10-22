@@ -18,9 +18,14 @@ dbsession = sqlahelper.get_session()
 
 def ban(event):
     r = event.request
-    ip_ban = queries.is_ip_banned(r.remote_addr)
+    ip_ban = queries.list_bans(ip = r.remote_addr)
 
-    if ip_ban:
+    if 'logged_in' in r.session:
+        username_ban = queries.list_bans(username = queries.get_user_by_id(r.session['users.id']).name)
+    else:
+        username_ban = False
+
+    if ip_ban or username_ban:
         raise httpexceptions.HTTPForbidden
 
 def clean_inputs(event):
