@@ -58,9 +58,9 @@ def epistle(request):
     epistle_children = {}
     epistle_roots = {}
     if box == 'out':
-        ep = queries.get_epistle_roots_by_recipient_id(s['users.id'])
-    else:
         ep = queries.get_epistle_roots_by_sender_id(s['users.id'])
+    else:
+        ep = queries.get_epistle_roots_by_recipient_id(s['users.id'])
 
     for e in ep:
         e_id = str(e.id)
