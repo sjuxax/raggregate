@@ -6,6 +6,7 @@ from pyramid.response import Response
 from pyramid.view import view_config
 
 from raggregate.models import DBSession
+from raggregate.models import Epistle
 
 @view_config(renderer='epistle.mak', route_name='epistle')
 def epistle(request):
