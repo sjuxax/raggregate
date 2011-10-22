@@ -31,7 +31,7 @@ import uuid
 import os
 # for Python 3.x, this should be from urllib import parse
 # however, that change should occur automatically with 2to3
-from urlparse import urlparse
+import urlparse
 
 import sqlahelper
 
