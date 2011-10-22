@@ -38,7 +38,7 @@
     </style>
 
     <style type="text/css">
-        .title a { color: blue; font-size: 1.3em; text-decoration:none; font-weight: bold; }
+        .title a { color: blue; font-size: 1.1em; text-decoration:none; font-weight: bold; }
         .title a:visited { color: #aa00ff; }
         .domain { color: #999; font-size: 0.7em; }
         .story-controls { float: left; color: #cccccc; font-size: 24px; }
