@@ -29,6 +29,9 @@ import cryptacular.bcrypt
 
 import uuid
 import os
+# for Python 3.x, this should be from urllib import parse
+# however, that change should occur automatically with 2to3
+from urlparse import urlparse
 
 import sqlahelper
 
@@ -170,6 +173,14 @@ class Submission(Base):
         comments = DBSession.query(Comment).filter(Comment.submission_id == self.id).count()
         self.comment_tally = comments
         return comments
+
+    def get_domain_name(self):
+        if self.url:
+            dn = urlparse.urlparse(self.url).netloc
+            dn.replace('www.', '', 1)
+            return dn
+        else:
+            return ''
 
 class Vote(Base):
     __tablename__ = 'votes'

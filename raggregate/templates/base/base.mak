@@ -40,6 +40,7 @@
     <style type="text/css">
         .title a { color: blue; 1.3em; text-decoration:none; font-weight: bold; }
         .title a:visited { color: #aa00ff; }
+        .domain { color: #999; font-size: 0.7em; }
         .story-controls { float: left; color: #cccccc; font-size: 24px; }
         .story-links { position: relative; left:15px; }
         .story-description { background-color: #f6f6f6; border: 1px black solid; padding: 3px; }
