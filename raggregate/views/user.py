@@ -115,6 +115,7 @@ def login(request):
                         queries.login_user(request, u, p['password'])
                         s['message'] = "Good, logged in"
                         success = True
+                        return HTTPFound(request.route_url('post'))
                     except LoginAdapterExc:
                         s['message'] = "Incorrect password."
                         success = False
