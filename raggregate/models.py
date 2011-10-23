@@ -177,7 +177,11 @@ class Submission(Base):
     def get_domain_name(self):
         if self.url:
             dn = urlparse.urlparse(self.url).netloc
-            dn = dn.replace('www.', '', 1)
+
+            # replace preceding www. if it appears
+            if 'www.' in dn[0:4]:
+                dn = dn.replace('www.', '', 1)
+
             return dn
         else:
             return ''
