@@ -214,7 +214,7 @@
 
         ## @TODO: mako offers things that make it so we don't have to special case like this
         ## we should use them some time
-        % if 'post' in request.url:
+        % if request.route_url('post') in request.url or request.route_url('home') == request.url:
 
             <style type="text/css">
                 #home_nav_links { margin-top: 9.5px; padding: 0px; float: left; }
@@ -231,7 +231,7 @@
                     <%
                         if sort in request.params and term == request.params['sort']:
                             return 'active'
-                        elif sort not in request.params and request.url == request.route_url('post') and term == 'new':
+                        elif sort not in request.params and (request.url == request.route_url('post') or request.url == request.route_url('home') ) and term == 'new':
                             return 'active'
                         elif 'full' not in request.url and term in request.url:
                             return 'active'
