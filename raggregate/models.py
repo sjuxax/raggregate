@@ -170,7 +170,7 @@ class Submission(Base):
         return votes
 
     def tally_comments(self):
-        comments = DBSession.query(Comment).filter(Comment.submission_id == self.id).count()
+        comments = DBSession.query(Comment).filter(Comment.submission_id == self.id).filter(Comment.body != '[deleted]').count()
         self.comment_tally = comments
         return comments
 
