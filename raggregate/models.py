@@ -229,6 +229,9 @@ class Comment(Base):
     body = Column(UnicodeText, nullable=False)
     points = Column(Integer, default=0)
     added_on = Column(DateTime(timezone=True), default=sqlalchemy.sql.func.now())
+    # we really should add a status field here so we don't have to always search body
+    # for "[deleted]" to learn if a thing has been deleted or not.
+    # @TODO
 
     submitter = relationship("User", backref="comments")
     votes = relationship("Vote", cascade="all, delete, delete-orphan")
