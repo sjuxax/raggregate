@@ -77,3 +77,19 @@ class TestSubmissions(BaseTest):
         self.dbsession.flush()
         s = queries.get_story_by_id(sub.id)
         self.assertEqual(s.id, sub.id)
+
+    def test_domain_parse(self):
+        title = 'test'
+        description = 'test'
+        #@TODO: we should make this accept a fake user id in test mode at least
+        # so that we don't have huge cascading failures if create_user is broken
+        user = queries.create_user(username='test', password='test')
+
+        sub = Submission(title, description, 'http://google.com', user.id)
+        self.assertEqual('google.com', sub.get_domain_name())
+
+        sub = Submission(title, description, 'http://googlewww.com', user.id)
+        self.assertEqual('googlewww.com', sub.get_domain_name())
+
+        sub = Submission(title, description, 'https://google.com', user.id)
+        self.assertEqual('google.com', sub.get_domain_name())
