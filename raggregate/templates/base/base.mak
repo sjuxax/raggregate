@@ -214,7 +214,7 @@
 
         ## @TODO: mako offers things that make it so we don't have to special case like this
         ## we should use them some time
-        % if 'post' in context['request'].url:
+        % if 'post' in request.url:
 
             <style type="text/css">
                 #home_nav_links { margin-top: 9.5px; padding: 0px; float: left; }
