@@ -663,9 +663,9 @@ def get_epistle_by_id(id):
     return dbsession.query(Epistle).filter(Epistle.id == id).one()
 
 def mark_epistle_read(e):
-    dbsession.add(e)
     if e.unread == True:
         e.unread = False
+        dbsession.add(e)
     return e
 
 def get_unread_epistles_by_recipient_id(id):
