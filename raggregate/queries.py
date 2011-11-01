@@ -671,11 +671,25 @@ def mark_epistle_read(e):
 def get_unread_epistles_by_recipient_id(id):
     return dbsession.query(Epistle).filter(Epistle.recipient == id).filter(Epistle.unread == True).all()
 
-def get_epistle_roots_by_sender_id(id):
-    return dbsession.query(Epistle).filter(Epistle.parent_type == 'epistle').filter(Epistle.parent == None).filter(Epistle.sender == id).all()
+def get_epistle_roots(id = None, target = 'recipient', include_read = False):
+    if not id:
+        return "Sorry, you have to provide a valid ID."
 
-def get_epistle_roots_by_recipient_id(id):
-    return dbsession.query(Epistle).filter(Epistle.parent_type == 'epistle').filter(Epistle.parent == None).filter(Epistle.recipient == id).all()
+    q = dbsession.query(Epistle).filter(sqlalchemy.or_(sqlalchemy.and_(Epistle.parent_type == 'epistle', Epistle.parent == None), Epistle.parent_type != 'epistle'))
+
+    if target == 'sender' or target == 'out':
+        q = q.filter(Epistle.sender == id)
+        include_read = True
+    else:
+        q = q.filter(Epistle.recipient == id)
+
+    if target == 'read':
+        include_read = True
+
+    if not include_read:
+        q = q.filter(Epistle.unread == True)
+
+    return q.order_by(Epistle.added_on.desc()).all()
 
 def get_epistle_children(id, recursive = True):
     """

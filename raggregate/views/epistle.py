@@ -54,33 +54,23 @@ def epistle(request):
         message = 'Message sent.'
 
     box = request.matchdict['box']
-    #epistles = queries.get_epistle_by_recipient_id(s['users.id'])
+
+    ep = queries.get_epistle_roots(id=s['users.id'], target=box)
     epistle_children = {}
-    epistle_roots = {}
-    if box == 'out':
-        ep = queries.get_epistle_roots_by_sender_id(s['users.id'])
-    else:
-        ep = queries.get_epistle_roots_by_recipient_id(s['users.id'])
 
     for e in ep:
         e_id = str(e.id)
-        epistle_roots[e_id] = e
         epistle_children[e_id] = queries.get_epistle_children(e.id)
 
-    ep = queries.get_epistle_by_recipient_id(s['users.id'])
-    for e in ep:
-        if str(e.id) not in epistle_roots:
-            epistle_roots[str(e.id)] = e
-
     flat_eps = []
-    [flat_eps.append(e) for e in _unwrap_list(epistle_roots.values())]
+    [flat_eps.append(e) for e in _unwrap_list(ep)]
     [flat_eps.append(e) for e in _unwrap_list(epistle_children.values()) if len(e) > 0]
 
     for e in flat_eps:
         queries.mark_epistle_read(e)
         e = _assign_epistle_parent(e)
 
-    return {'epistles': {'roots': epistle_roots, 'children': epistle_children}, 'success': True, 'code': 0,}
+    return {'epistles': {'roots': ep, 'children': epistle_children}, 'success': True, 'code': 0,}
 
 def _unwrap_list(lst):
     for l in lst:
@@ -90,6 +80,7 @@ def _unwrap_list(lst):
             _unwrap_list(l)
 
 def _assign_epistle_parent(e):
+    #@TODO: REALLY need to put parent_info somewhere smarter, and/or not make this happen so much
     if e.parent:
         if e.parent_type == 'story':
             e.parent_info = queries.get_story_by_id(e.parent)

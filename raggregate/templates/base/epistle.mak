@@ -17,7 +17,7 @@ $(document).ready(function() {
 </style>
 
         <h2>Messages</h2>
-		% for e_root in epistles['roots'].values():
+		% for e_root in epistles['roots']:
             <div class="message">
                 % if e_root.parent_type == 'story':
                     <i>left on <a href="/full/${e_root.parent_info.id}">${e_root.parent_info.title}</a></i><br />
