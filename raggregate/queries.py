@@ -678,7 +678,7 @@ def get_epistle_roots(id = None, target = 'recipient', include_read = False):
     q = dbsession.query(Epistle).filter(sqlalchemy.or_(sqlalchemy.and_(Epistle.parent_type == 'epistle', Epistle.parent == None), Epistle.parent_type != 'epistle'))
 
     if target == 'sender' or target == 'out':
-        q = q.filter(Epistle.sender == id)
+        q = q.filter(Epistle.sender == id).filter(Epistle.parent_type == 'epistle')
         include_read = True
     else:
         q = q.filter(Epistle.recipient == id)
