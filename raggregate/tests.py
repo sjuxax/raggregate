@@ -55,6 +55,15 @@ class TestEpistles(BaseTest):
         epd = queries.get_epistle_by_recipient_id(u1.id)[0]
         self.assertEqual(ep.id, epd.id)
 
+    def test_unwrap_list_generator(self):
+        from raggregate.views.epistle import _unwrap_list
+
+        test_list = [[[1]], [2], 3, [5], [[6]], [[9]]]
+        ulist = []
+        [ulist.append(e) for e in _unwrap_list(test_list)]
+
+        self.assertEqual(ulist, [1, 2, 3, 5, 6, 9])
+
 class TestSubmissions(BaseTest):
     def test_create_submission(self):
         #@TODO: another function that should be split out of the view for easy repitition.
