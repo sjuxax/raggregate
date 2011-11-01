@@ -19,7 +19,7 @@ $(document).ready(function() {
         <h2>Messages</h2>
         <a href="${request.route_url('epistle', box='in')}">unread</a> &nbsp;
         <a href="${request.route_url('epistle', box='read')}">in</a> &nbsp;
-        <a href="${request.route_url('epistle', box='read')}">out</a> &nbsp;
+        <a href="${request.route_url('epistle', box='out')}">out</a> &nbsp;
         <br />
         <br />
 
