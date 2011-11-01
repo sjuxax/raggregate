@@ -17,6 +17,12 @@ $(document).ready(function() {
 </style>
 
         <h2>Messages</h2>
+        <a href="${request.route_url('epistle', box='in')}">unread</a> &nbsp;
+        <a href="${request.route_url('epistle', box='read')}">in</a> &nbsp;
+        <a href="${request.route_url('epistle', box='read')}">out</a> &nbsp;
+        <br />
+        <br />
+
 		% for e_root in epistles['roots']:
             <div class="message">
                 % if e_root.parent_type == 'story':
@@ -46,6 +52,9 @@ $(document).ready(function() {
            <hr />
            </div>
         % endfor
+        % if len(epistles['roots']) < 1:
+            no mail
+        % endif
         <div id="new_message" style="display:none">
             <h3>Send a Message</h3>
             <form method="post" action="/messages/out" id="reply-form">

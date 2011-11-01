@@ -250,7 +250,7 @@
                         % if new_message_num is not None:
                             <a href="${request.route_url('epistle', box='in')}">${new_message_num} new messages</a>
                         % else:
-                            <a href="${request.route_url('epistle', box='in')}">Messages</a>
+                            <a href="${request.route_url('epistle', box='read')}">Messages</a>
                         % endif
                     % endif
                     </li>
@@ -313,7 +313,7 @@
                     % if new_message_num is not None:
                         <a href="${request.route_url('epistle', box='in')}">${new_message_num} new messages</a> <br />
                     % else:
-                        <a href="${request.route_url('epistle', box='in')}">Messages</a> <br />
+                        <a href="${request.route_url('epistle', box='read')}">Messages</a> <br />
                     % endif
                     % if karma is not None:
                         Karma: <b>${karma}</b> <br />
