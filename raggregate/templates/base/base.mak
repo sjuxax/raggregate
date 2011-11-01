@@ -280,7 +280,7 @@
                         <a href="${request.route_url('login')}">Keep Temp Profile</a>&nbsp;
                     % endif
                     % if request.registry.settings['twitter.app_key'] != 'none' and request.registry.settings['twitter.app_secret'] != 'none':
-                        <a href="${request.route_url('twit_sign')}"><img src="https://si0.twimg.com/images/dev/buttons/sign-in-with-twitter-l.png" /></a>
+                        <a href="${request.route_url('twit_sign')}"><img src="https://si0.twimg.com/images/dev/buttons/sign-in-with-twitter-l.png" /></a><br />
                     % endif
                     % if request.registry.settings['facebook.app_key'] != 'none' and request.registry.settings['facebook.app_secret'] != 'none':
                         <div id="fb-root"></div>
