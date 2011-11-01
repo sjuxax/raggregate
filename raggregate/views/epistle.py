@@ -77,7 +77,8 @@ def _unwrap_list(lst):
         if type(l) != list:
             yield l
         else:
-            _unwrap_list(l)
+            for i in _unwrap_list(l):
+                yield i
 
 def _assign_epistle_parent(e):
     #@TODO: REALLY need to put parent_info somewhere smarter, and/or not make this happen so much
