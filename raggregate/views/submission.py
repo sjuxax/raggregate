@@ -81,7 +81,13 @@ def post(request):
                 else:
                     print("Illegal deletion attempted on {0}".format(story_to_del.submitter.id))
 
-    sort = 'new'
+    if 'sort.default_order' in r.registry.settings:
+        sort = r.registry.settings['sort.default_order']
+    else:
+        # default to new sort order if server-specific setting doesn't exist
+        # this should only be the case on old clones; do NOT remove default_order
+        # from the ini just because you want new by default.
+        sort = 'new'
     page_num = 1
     per_page = 30
     next_page = None
@@ -95,6 +101,8 @@ def post(request):
             sort = 'hot'
         if qs['sort'] == 'contro':
             sort = 'contro'
+        if qs['sort'] == 'new':
+            sort = 'new'
 
     if 'page_num' in qs:
         try:
