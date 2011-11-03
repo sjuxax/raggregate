@@ -102,7 +102,7 @@ def calc_hot_average(hot_point_window = timedelta(hours = 6)):
 
     return hot_avg
 
-def calc_hot_window_score(submission_id, timediff = timedelta(hours = 6)):
+def calc_hot_window_score(submission_id, hot_point_window = timedelta(hours = 6)):
     """
     Retrieve vote/score information for a given submission over hot_point_window time.
     Count votes received in the last hot_point_window time. If this is higher than normal,
