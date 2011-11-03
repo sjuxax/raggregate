@@ -44,7 +44,7 @@ def get_key_from_stat(key, type = None):
     val = json.loads(sa.value)
 
     if type == 'datetime':
-        val = datetime.fromtimestamp(val)
+        val = datetime.fromtimestamp(val).replace(tzinfo=pytz.utc)
 
     return {'key': key, 'value': val, 'sa': sa}
 
