@@ -11,6 +11,9 @@
                 <input type="submit" value="Post Story" /><br />
             </form>
         % else:
+            % if len(stories) <= 0:
+                <i>nothing to see here</i>
+            % endif
             % for s in stories:
                 <%include file="story_item.mak" args="story_obj = s, vote_dict = vote_dict" />
             % endfor
