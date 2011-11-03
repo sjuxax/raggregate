@@ -275,7 +275,6 @@ def get_story_list(page_num = 1, per_page = 30, sort = 'new', request = None):
         stories = stories.order_by(Submission.points.desc())
     if sort == 'hot':
         if request and 'sort.hot_point_window' in request.registry.settings:
-            print "AJAJAJAJAJA"
             sets = request.registry.settings
             recentize_hots(hot_point_window = realize_timedelta_constructor(sets['sort.hot_point_window']), hot_eligible_age = realize_timedelta_constructor(sets['sort.hot_eligible_age']), hot_recalc_threshold = realize_timedelta_constructor(sets['sort.hot_recalc_threshold']))
             stories = get_hot_stories(hot_eligible_age = realize_timedelta_constructor(sets['sort.hot_eligible_age'])) 
