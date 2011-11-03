@@ -67,11 +67,11 @@ def set_key_in_stat(key, value, type = None):
     dbsession.flush()
     return 0
 
-def calc_hot_average(timediff = timedelta(hours = 6)):
+def calc_hot_average(hot_point_window = timedelta(hours = 6)):
     """
-    Calculate the average point assignment of stories over the last six hours.
+    Calculate the average point assignment of stories over the last hot_point_window time.
     """
-    story_votes = dbsession.query(Vote.submission_id, func.sum(Vote.points).label('points')).filter(Vote.added_on < now_in_utc() and Vote.added_on > (now_in_utc() - timediff)).group_by(Vote.submission_id).all()
+    story_votes = dbsession.query(Vote.submission_id, func.sum(Vote.points).label('points')).filter(Vote.added_on < now_in_utc() and Vote.added_on > (now_in_utc() - hot_point_window)).group_by(Vote.submission_id).all()
 
     aggregate = 0
     count = 0
@@ -107,12 +107,15 @@ def calc_hot_average(timediff = timedelta(hours = 6)):
 
 def calc_hot_window_score(submission_id, timediff = timedelta(hours = 6)):
     """
-    Retrieve vote/score information for a given submission over timediff time.
+    Retrieve vote/score information for a given submission over hot_point_window time.
+    Count votes received in the last hot_point_window time. If this is higher than normal,
+    the story will be considered hot.
+
     @param submission_id: the submission to calculate
-    @param timediff: timedelta object representing acceptable vote timeframe from now
+    @param hot_point_window: timedelta object representing acceptable vote timeframe from now
     """
     try:
-        story_votes = dbsession.query(Vote.submission_id, func.sum(Vote.points).label('points')).filter(Vote.added_on < now_in_utc() and Vote.added_on > (now_in_utc() - timediff)).filter(Vote.submission_id == submission_id).group_by(Vote.submission_id).one()
+        story_votes = dbsession.query(Vote.submission_id, func.sum(Vote.points).label('points')).filter(Vote.added_on < now_in_utc() and Vote.added_on > (now_in_utc() - hot_point_window)).filter(Vote.submission_id == submission_id).group_by(Vote.submission_id).one()
     except sqlalchemy.orm.exc.NoResultFound:
         # no votes on this story yet
         return 0
@@ -123,9 +126,9 @@ def calc_hot_window_score(submission_id, timediff = timedelta(hours = 6)):
     dbsession.add(story)
     return story_votes.points
 
-def calc_all_hot_window_scores():
-    # only stories from the last 48 hours are eligible for "hot" status
-    stories = dbsession.query(Submission).filter(Submission.deleted == False).filter(Submission.added_on > (now_in_utc() - timedelta(hours = 48))).all()
+def calc_all_hot_window_scores(hot_eligible_age = timedelta(hours = 48)):
+    # by default, only stories from the last 48 hours are eligible for "hot" status
+    stories = dbsession.query(Submission).filter(Submission.deleted == False).filter(Submission.added_on > (now_in_utc() - hot_eligible_age)).all()
 
     for s in stories:
         calc_hot_window_score(s.id)
@@ -136,13 +139,18 @@ def calc_all_hot_window_scores():
 
     return 0
 
-def recentize_hots(timediff = timedelta(seconds = 1)):
+def recentize_hots(hot_recalc_threshold = timedelta(hours = 1), hot_point_window = None, hot_eligible_age = None):
     """
-    Recalculate hot windows/averages every timediff time.
+    Recalculate the hot page every hot_recalc_threshold time.
     This depends on the timestamp keys placed in Stat in other calls.
     """
 
     count = 0
+    def call_hot_average():
+        if hot_point_window:
+            calc_hot_average(hot_point_window)
+        else:
+            calc_hot_average()
 
     def get_hot_avg_time():
         hot_avg_timestamp = None
@@ -150,7 +158,7 @@ def recentize_hots(timediff = timedelta(seconds = 1)):
         try:
             hot_avg_timestamp = get_key_from_stat('hot_avg_timestamp', type = 'datetime')
         except sqlalchemy.orm.exc.NoResultFound:
-            calc_hot_average()
+            call_hot_average()
 
         if type(hot_avg_timestamp) == dict:
             return hot_avg_timestamp['value']
@@ -168,10 +176,16 @@ def recentize_hots(timediff = timedelta(seconds = 1)):
 
     hot_avg_timestamp = hot_avg_timestamp.replace(tzinfo=pytz.utc)
 
-    if hot_avg_timestamp < (now_in_utc() - timediff):
-        calc_hot_average()
+    if hot_avg_timestamp < (now_in_utc() - hot_recalc_threshold):
+        call_hot_average()
 
     count = 0
+
+    def call_all_hot_window_scores():
+        if hot_eligible_age:
+            calc_all_hot_window_scores(hot_eligible_age)
+        else:
+            calc_all_hot_window_scores()
 
     def get_mass_time():
         mass_timestamp = None
@@ -179,7 +193,7 @@ def recentize_hots(timediff = timedelta(seconds = 1)):
         try:
             mass_timestamp = get_key_from_stat('mass_hot_window_timestamp', type = 'datetime')
         except sqlalchemy.orm.exc.NoResultFound:
-            calc_all_hot_window_scores()
+            call_all_hot_window_scores()
 
         if type(mass_timestamp) == dict:
             return mass_timestamp['value']
@@ -197,18 +211,18 @@ def recentize_hots(timediff = timedelta(seconds = 1)):
 
     mass_timestamp = mass_timestamp.replace(tzinfo=pytz.utc)
 
-    if mass_timestamp < (now_in_utc() - timediff):
-        calc_all_hot_window_scores()
+    if mass_timestamp < (now_in_utc() - hot_recalc_threshold):
+        call_all_hot_window_scores()
 
     return 0
 
-def get_hot_stories(timediff = timedelta(hours = 48)):
+def get_hot_stories(hot_eligible_age = timedelta(hours = 48)):
     """
     Get a story list that is suitable for display as "hot".
     @param timediff: timedelta object representing hot story eligibility age
     """
     hot_avg = get_key_from_stat('hot_avg')['value']
-    stories = dbsession.query(Submission).options(joinedload('submitter')).filter(Submission.deleted == False).filter(Submission.added_on > (now_in_utc() - timediff)).filter(Submission.hot_window_score > hot_avg).order_by(Submission.hot_window_score.desc())
+    stories = dbsession.query(Submission).options(joinedload('submitter')).filter(Submission.deleted == False).filter(Submission.added_on > (now_in_utc() - hot_eligible_age)).filter(Submission.hot_window_score > hot_avg).order_by(Submission.hot_window_score.desc())
     return stories
 
 def get_controversial_stories(timediff = timedelta(hours = 48), contro_threshold = 5, contro_min = 10):
@@ -251,15 +265,26 @@ def recentize_contro(recalc_timediff = timedelta(seconds = 1), age_timediff = ti
 
     return 0
 
+def realize_timedelta_constructor(con_str):
+    """ Converts a timedelta constructor parameter list into a real timedelta.
+    @param con_str: the constructor parameters to convert"""
+    return eval("timedelta({0})".format(con_str))
+
 #stories
-def get_story_list(page_num = 1, per_page = 30, sort = 'new'):
+def get_story_list(page_num = 1, per_page = 30, sort = 'new', request = None):
     stories = dbsession.query(Submission).options(joinedload('submitter')).filter(Submission.deleted == False)
 
     if sort == 'top':
         stories = stories.order_by(Submission.points.desc())
     if sort == 'hot':
-        recentize_hots()
-        stories = get_hot_stories()
+        if request and 'sort.hot_point_window' in request.registry.settings:
+            print "AJAJAJAJAJA"
+            sets = request.registry.settings
+            recentize_hots(hot_point_window = realize_timedelta_constructor(sets['sort.hot_point_window']), hot_eligible_age = realize_timedelta_constructor(sets['sort.hot_eligible_age']), hot_recalc_threshold = realize_timedelta_constructor(sets['sort.hot_recalc_threshold']))
+            stories = get_hot_stories(hot_eligible_age = realize_timedelta_constructor(sets['sort.hot_eligible_age'])) 
+        else:
+            recentize_hots()
+            stories = get_hot_stories()
     if sort == 'new':
         stories = stories.order_by(Submission.added_on.desc())
     if sort == 'contro':

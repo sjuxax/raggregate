@@ -117,7 +117,7 @@ def post(request):
 #   if 'per_page' in qs:
 #       per_page = qs['per_page']
 
-    stories = queries.get_story_list(page_num = page_num, per_page = per_page, sort = sort)
+    stories = queries.get_story_list(page_num = page_num, per_page = per_page, sort = sort, request = request)
     max_stories = stories['max_stories']
     stories = stories['stories']
 
