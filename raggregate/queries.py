@@ -54,7 +54,7 @@ def get_key_from_stat(key, type = None):
 def set_key_in_stat(key, value, type = None):
 
     if type == 'datetime':
-        value = time.mktime(value.timetuple())
+        value = time.mktime(value.utctimetuple())
 
     try:
         sa = dbsession.query(Stat).filter(Stat.key == key).one()
