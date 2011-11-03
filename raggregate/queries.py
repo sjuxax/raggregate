@@ -22,6 +22,7 @@ from raggregate.login_adapters import LoginAdapterExc
 
 from datetime import datetime
 from datetime import timedelta
+import calendar
 
 import math
 
@@ -42,10 +43,6 @@ def get_key_from_stat(key, type = None):
     sa = dbsession.query(Stat).filter(Stat.key == key).one()
     val = json.loads(sa.value)
 
-    # NOTE: we only need to utc-ize once, which is performed at insertion
-    # if we use utcfromtimestamp() again here, we'll always be +tz-offset
-    # away from the actual time, since the time given will be double-offset
-    # tl;dr, don't use utcfromtimestamp here, normal fromtimestamp is correct
     if type == 'datetime':
         val = datetime.fromtimestamp(val)
 
@@ -54,7 +51,7 @@ def get_key_from_stat(key, type = None):
 def set_key_in_stat(key, value, type = None):
 
     if type == 'datetime':
-        value = time.mktime(value.utctimetuple())
+        value = calendar.timegm(time.gmtime(time.mktime(value.timetuple())))
 
     try:
         sa = dbsession.query(Stat).filter(Stat.key == key).one()
