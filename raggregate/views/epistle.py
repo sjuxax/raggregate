@@ -45,11 +45,13 @@ def epistle(request):
 
         if 'parent_id' not in p or p['parent_id'] == '':
             parent_id = None
+            parent_type = 'epistle'
         else:
             parent_id = p['parent_id']
+            parent_type = 'reply'
 
         body = p['body']
-        ep = Epistle(recp.id, s['users.id'], body, parent=parent_id, parent_type='epistle', subject=subject)
+        ep = Epistle(recp.id, s['users.id'], body, parent=parent_id, parent_type='reply', subject=subject)
         dbsession.add(ep)
         message = 'Message sent.'
 
@@ -87,6 +89,6 @@ def _assign_epistle_parent(e):
             e.parent_info = queries.get_story_by_id(e.parent)
         elif e.parent_type == 'comment':
             e.parent_info = queries.get_comment_by_id(e.parent)
-        elif e.parent_type == 'epistle':
+        elif e.parent_type == 'epistle' or e.parent_type == 'reply':
             e.parent_info = queries.get_epistle_by_id(e.parent)
     return e
