@@ -29,7 +29,7 @@ $(document).ready(function() {
                     <i>left on <a href="/full/${e_root.parent_info.id}">${e_root.parent_info.title}</a></i><br />
                 % elif e_root.parent_type == 'comment':
                     <i>in reply to ${e_root.parent_info.submitter.display_name()}'s comment</i><br />
-                % elif e_root.parent_type == 'epistle':
+                % elif e_root.parent_type == 'epistle' or e_root.parent_type == 'reply':
                     <h2 class="message_subject">${e_root.display_subject()}</h2>
                 % endif
                 <%def name="print_replies(e)">
