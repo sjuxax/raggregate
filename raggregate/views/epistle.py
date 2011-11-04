@@ -51,7 +51,7 @@ def epistle(request):
             parent_type = 'reply'
 
         body = p['body']
-        ep = Epistle(recp.id, s['users.id'], body, parent=parent_id, parent_type='reply', subject=subject)
+        ep = Epistle(recp.id, s['users.id'], body, parent=parent_id, parent_type=parent_type, subject=subject)
         dbsession.add(ep)
         message = 'Message sent.'
 
