@@ -38,7 +38,7 @@ $(document).ready(function() {
                     % else:
                         <b>to <a href="${request.route_url('user_info', _query = [('user_id', e.sender_u.id)])}">${e.recipient_u.display_name()}</a> sent ${fuzzify_date(e.added_on)}</b>
                     % endif
-                    <div id="${e.id}">${e.body}</div>
+                    <div id="${e.id}">${e.body | template_filters.render_md,n}</div>
                 </%def>
                 ${print_replies(e_root)}
                 <br />
