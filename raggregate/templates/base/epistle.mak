@@ -41,11 +41,9 @@ $(document).ready(function() {
                     <div id="${e.id}">${e.body | template_filters.render_md,n}</div>
                 </%def>
                 ${print_replies(e_root)}
-                <br />
                 % if str(e_root.id) in epistles['children']:
                     % for e in epistles['children'][str(e_root.id)]:
                         ${print_replies(e)}
-                        <br />
                     % endfor
                 % endif
                 <a href="#" class="reply-link" data-mid="${e_root.id}" data-uid="${e_root.sender_u.id}" data-display="${e_root.sender_u.display_name()}">Reply</a><br />
