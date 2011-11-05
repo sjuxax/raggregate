@@ -14,6 +14,8 @@ from pyramid import httpexceptions
 
 from raggregate import template_filters
 
+import cgi
+
 dbsession = sqlahelper.get_session()
 
 def ban(event):
@@ -37,6 +39,15 @@ def clean_inputs(event):
     if request.POST:
         p = request.POST
         for i in p.items():
+            # i[0] is field name, i[1] is actual object
+            # do NOT do anything to FieldStorage (POST'd files)
+            # attempting to add them to this variable results in
+            # pickling error, cgi.FieldStorage does not define
+            # __getstate__ apparently.
+            # access any posted files directly via request.POST
+            if isinstance(i[1], cgi.FieldStorage):
+                continue
+
             if i[0] != 'body' and i[0] != 'description' and i[0] != 'description-textarea':
                 safe_i = queries.strip_all_html(i[1])
                 safe_post[i[0]] = safe_i
