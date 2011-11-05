@@ -231,8 +231,8 @@ def user_info(request):
     import os
 
     r = request
-    p = r.POST
     ses = request.session
+    p = ses['safe_post']
 
     edit_mode = False
 
@@ -252,11 +252,11 @@ def user_info(request):
     if p and edit_mode:
         dbsession = DBSession()
         u.about_me = p['about_me']
-        if p['picture'] != '':
-            orig_filename = p['picture'].filename
+        if r.POST['picture'] != '':
+            orig_filename = r.POST['picture'].filename
             up_dir = r.registry.settings['user.picture_upload_directory']
 
-            u.picture = queries.add_user_picture(orig_filename, str(u.id)[:7], up_dir, p['picture'].file)
+            u.picture = queries.add_user_picture(orig_filename, str(u.id)[:7], up_dir, r.POST['picture'].file)
 
         dbsession.add(u)
 
@@ -265,8 +265,8 @@ def user_info(request):
 @view_config(renderer="ban.mak", route_name="ban")
 def ban(request):
     r = request
-    p = r.POST
     s = request.session
+    p = s['safe_post']
 
     if 'logged_in_admin' not in s:
         return HTTPNotFound()
