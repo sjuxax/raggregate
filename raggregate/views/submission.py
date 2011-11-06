@@ -200,6 +200,7 @@ def full(request):
             c = queries.get_comment_by_id(prm['comment_id'])
             if queries.is_user_allowed_admin_action(s['users.id'], str(c.id), ):
                 c.body = "[deleted]"
+                c.deleted = True
                 dbsession.add(c)
         s['message'] = 'Comment deleted.'
     if 'op' in prm and prm['op'] == 'edit' and logged_in:

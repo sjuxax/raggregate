@@ -231,10 +231,8 @@ class Comment(Base):
     points = Column(Integer, default=0)
     # unread field for epistle/mailbox display.
     unread = Column(Boolean, default=True)
+    deleted = Column(Boolean, default=False)
     added_on = Column(DateTime(timezone=True), default=sqlalchemy.sql.func.now())
-    # we really should add a status field here so we don't have to always search body
-    # for "[deleted]" to learn if a thing has been deleted or not.
-    # @TODO
 
     submitter = relationship("User", backref="comments", primaryjoin="User.id == Comment.user_id")
     recipient_u = relationship("User", primaryjoin="User.id == Comment.in_reply_to")

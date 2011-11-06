@@ -377,7 +377,7 @@ def _build_comment_structures(all_comments, allowed_roots, tree, dex):
         c.parent_id = str(c.parent_id)
         if c.parent_id in allowed_roots or str(c.id) in allowed_roots:
             # skip childless deleted comments
-            if c.body == '[deleted]':
+            if c.deleted:
                 kid_count = count_comment_children(c.id)
                 if kid_count <= 0:
                     continue
@@ -408,7 +408,7 @@ def count_comment_children(comment_id):
     @param comment_id: the id whose children we should count
     @return: the number of immediate children
     """
-    heritage = dbsession.query(Comment).filter(Comment.parent_id == comment_id).all()
+    heritage = dbsession.query(Comment).filter(Comment.parent_id == comment_id).filter(Comment.deleted == False).all()
     return len(heritage)
 
 def count_sa_obj(obj):
