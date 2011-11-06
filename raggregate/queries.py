@@ -678,7 +678,7 @@ def get_epistle_by_recipient_name(name):
 
 def get_new_message_num(id):
     user = get_user_by_id(id)
-    return dbsession.query(Epistle).filter(user.id == Epistle.recipient).filter(Epistle.unread == True).count()
+    return dbsession.query(Epistle, Comment).filter(sqlalchemy.or_(user.id == Epistle.recipient, user.id == Comment.in_reply_to)).filter(sqlalchemy.or_(Epistle.unread == True, Comment.unread == True)).count()
 
 def get_epistle_by_id(id):
     return dbsession.query(Epistle).filter(Epistle.id == id).one()
