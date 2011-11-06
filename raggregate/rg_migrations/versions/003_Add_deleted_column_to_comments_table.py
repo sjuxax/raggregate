@@ -9,7 +9,7 @@ def upgrade(migrate_engine):
     smaker = orm.sessionmaker(bind=migrate_engine)
     db = smaker()
     comments = Table('comments', meta, autoload=True)
-    deletedc = Column('deleted', Boolean, default=True)
+    deletedc = Column('deleted', Boolean, default=False)
     deletedc.create(comments)
     print "Updating deleted flag on existing comments..."
     for c in db.query(Comment).all():
