@@ -56,7 +56,7 @@ $(document).ready(function() {
            <hr />
            </div>
         % endfor
-        % if len(epistles['roots']) < 1:
+        % if len(epistles['roots']) < 1 and len(comments) < 1:
             no mail
         % endif
         <div id="new_message" style="display:none">
