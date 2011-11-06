@@ -22,7 +22,21 @@ $(document).ready(function() {
         <a href="${request.route_url('epistle', box='out')}">out</a> &nbsp;
         <br />
         <br />
-
+                <%def name="print_replies(obj, sender_id, recipient_id, sender_display_name, recipient_display_name)">
+                    % if str(recipient_id) == request.session['users.id']:
+                        <b>from <a href="${request.route_url('user_info', _query = [('user_id', sender_id)])}">${sender_display_name}</a> sent ${fuzzify_date(obj.added_on)}</b>
+                    % else:
+                        <b>to <a href="${request.route_url('user_info', _query = [('user_id', sender_id)])}">${recipient_display_name}</a> sent ${fuzzify_date(obj.added_on)}</b>
+                    % endif
+                    <div id="${obj.id}">${obj.body | template_filters.render_md,n}</div>
+                </%def>
+        % for c in comments:
+           <div class="message">
+               <i>in reply to your comment</i><br />
+               ${print_replies(c, c.submitter.id, c.recipient_u.id, c.submitter.display_name(), c.recipient_u.display_name(),)}
+               <a href="#" class="reply-link" data-mid="${c.id}" data-uid="${c.submitter.id}" data-display="${c.submitter.display_name()}">Reply</a><br />
+           </div>
+        % endfor
 		% for e_root in epistles['roots']:
             <div class="message">
                 % if e_root.parent_type == 'story':
@@ -32,18 +46,10 @@ $(document).ready(function() {
                 % elif e_root.parent_type == 'epistle' or e_root.parent_type == 'reply':
                     <h2 class="message_subject">${e_root.display_subject()}</h2>
                 % endif
-                <%def name="print_replies(e)">
-                    % if str(e.recipient_u.id) == request.session['users.id']:
-                        <b>from <a href="${request.route_url('user_info', _query = [('user_id', e.sender_u.id)])}">${e.sender_u.display_name()}</a> sent ${fuzzify_date(e.added_on)}</b>
-                    % else:
-                        <b>to <a href="${request.route_url('user_info', _query = [('user_id', e.sender_u.id)])}">${e.recipient_u.display_name()}</a> sent ${fuzzify_date(e.added_on)}</b>
-                    % endif
-                    <div id="${e.id}">${e.body | template_filters.render_md,n}</div>
-                </%def>
-                ${print_replies(e_root)}
+               ${print_replies(e_root, e_root.sender_u.id, e_root.recipient_u.id, e_root.sender_u.display_name(), e_root.recipient_u.display_name(),)}
                 % if str(e_root.id) in epistles['children']:
                     % for e in epistles['children'][str(e_root.id)]:
-                        ${print_replies(e)}
+                        ${print_replies(e, e.sender_u.id, e.recipient_u.id, e.sender_u.display_name(), e.recipient_u.display_name(),)}
                     % endfor
                 % endif
                 <a href="#" class="reply-link" data-mid="${e_root.id}" data-uid="${e_root.sender_u.id}" data-display="${e_root.sender_u.display_name()}">Reply</a><br />

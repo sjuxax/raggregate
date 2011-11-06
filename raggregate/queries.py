@@ -726,6 +726,15 @@ def get_epistle_children(id, recursive = True):
         get_epistle_children(e.id)
     return all_ep
 
+def get_unread_comments_by_user_id(id):
+    return dbsession.query(Comment).filter(sqlalchemy.and_(Comment.unread == True, Comment.in_reply_to == id)).all()
+
+def mark_comment_read(c):
+    if c.unread == True:
+        c.unread = False
+        dbsession.add(c)
+    return c
+
 #scary/inefficient general queries, using for readibility/clarity, optimize anything important
 
 def find_by_id(id):

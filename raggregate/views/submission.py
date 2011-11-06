@@ -194,6 +194,7 @@ def full(request):
         logged_in = True
 
     # record the comment
+
     if 'op' in prm and prm['op'] == 'del' and logged_in:
         if 'comment_id' in prm:
             c = queries.get_comment_by_id(prm['comment_id'])
@@ -216,10 +217,13 @@ def full(request):
                 dbsession.add(sub)
             s['message'] = 'Description updated.'
         if 'body' in request.session['safe_post'] and logged_in:
-            c = Comment(sub_id, s['users.id'], p['comment_parent'], prm['body'])
-            # send a message to a comment's immediate parent
-            e = Epistle(queries.find_by_id(p['comment_parent']).submitter.id, s['users.id'], p['body'], parent_type = p['parent_type'], parent = p['comment_parent'])
-            dbsession.add(e)
+            if p['parent_type'] == 'story':
+                in_reply_to = queries.get_story_by_id(p['comment_parent']).submitter.id
+            elif p['parent_type'] == 'comment':
+                c = queries.get_comment_by_id(p['comment_parent'])
+                in_reply_to = c.user_id
+
+            c = Comment(sub_id, s['users.id'], p['comment_parent'], prm['body'], in_reply_to = in_reply_to)
             dbsession.add(c)
             s['message'] = 'Comment added.'
     #@TODO: Stop using SA queries in views, move them to individual models

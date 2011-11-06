@@ -7,6 +7,7 @@ from pyramid.view import view_config
 
 from raggregate.models import DBSession
 from raggregate.models import Epistle
+from raggregate.models import Comment
 
 @view_config(renderer='epistle.mak', route_name='epistle')
 def epistle(request):
@@ -48,15 +49,22 @@ def epistle(request):
             parent_type = 'epistle'
         else:
             parent_id = p['parent_id']
-            parent_type = 'reply'
+            parent_obj = queries.find_by_id(parent_id)
+            if isinstance(parent_obj, Comment):
+                parent_type = 'comment'
+                c = Comment(parent_obj.submission_id, s['users.id'], parent_obj.id, p['body'], in_reply_to = parent_obj.user_id)
+                dbsession.add(c)
+            else:
+                parent_type = 'reply'
 
-        body = p['body']
-        ep = Epistle(recp.id, s['users.id'], body, parent=parent_id, parent_type=parent_type, subject=subject)
-        dbsession.add(ep)
+        if parent_type != 'comment':
+            ep = Epistle(recp.id, s['users.id'], p['body'], parent=parent_id, parent_type=parent_type, subject=subject)
+            dbsession.add(ep)
         message = 'Message sent.'
 
     box = request.matchdict['box']
 
+    comments = queries.get_unread_comments_by_user_id(s['users.id'])
     ep = queries.get_epistle_roots(id=s['users.id'], target=box)
     epistle_children = {}
 
@@ -72,7 +80,10 @@ def epistle(request):
         queries.mark_epistle_read(e)
         e = _assign_epistle_parent(e)
 
-    return {'epistles': {'roots': ep, 'children': epistle_children}, 'success': True, 'code': 0,}
+    for c in comments:
+        queries.mark_comment_read(c)
+
+    return {'epistles': {'roots': ep, 'children': epistle_children}, 'comments': comments, 'success': True, 'code': 0,}
 
 def _unwrap_list(lst):
     for l in lst:

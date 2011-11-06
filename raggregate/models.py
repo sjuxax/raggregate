@@ -226,17 +226,21 @@ class Comment(Base):
     submission_id = Column(GUID, ForeignKey('submissions.id'), nullable=False)
     user_id = Column(GUID, ForeignKey('users.id'), nullable=False)
     parent_id = Column(GUID, nullable=False)
+    in_reply_to = Column(GUID, ForeignKey('users.id'), nullable=False)
     body = Column(UnicodeText, nullable=False)
     points = Column(Integer, default=0)
+    # unread field for epistle/mailbox display.
+    unread = Column(Boolean, default=True)
     added_on = Column(DateTime(timezone=True), default=sqlalchemy.sql.func.now())
     # we really should add a status field here so we don't have to always search body
     # for "[deleted]" to learn if a thing has been deleted or not.
     # @TODO
 
-    submitter = relationship("User", backref="comments")
+    submitter = relationship("User", backref="comments", primaryjoin="User.id == Comment.user_id")
+    recipient_u = relationship("User", primaryjoin="User.id == Comment.in_reply_to")
     votes = relationship("Vote", cascade="all, delete, delete-orphan")
 
-    def __init__(self, submission_id, user_id, parent_id, body):
+    def __init__(self, submission_id, user_id, parent_id, body, in_reply_to = None):
         self.submission_id = submission_id
         self.user_id = user_id
         self.parent_id = parent_id
@@ -244,6 +248,7 @@ class Comment(Base):
             raise Exception("Please include a message.")
         else:
             self.body = body
+        self.in_reply_to = in_reply_to
 
     def tally_votes(self):
         votes = DBSession.query(Vote).filter(Vote.comment_id == self.id).all()
