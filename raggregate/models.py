@@ -226,7 +226,7 @@ class Comment(Base):
     submission_id = Column(GUID, ForeignKey('submissions.id'), nullable=False)
     user_id = Column(GUID, ForeignKey('users.id'), nullable=False)
     parent_id = Column(GUID, nullable=False)
-    in_reply_to = Column(GUID, ForeignKey('users.id'), nullable=False)
+    in_reply_to = Column(GUID, ForeignKey('users.id'), nullable=True)
     body = Column(UnicodeText, nullable=False)
     points = Column(Integer, default=0)
     # unread field for epistle/mailbox display.
