@@ -7,6 +7,7 @@ $(document).ready(function() {
         $($(e.target).closest('.message')).append(nm);
         $('#recipient-hidden').attr('value', $(e.target).attr('data-uid'));
         $('#parent_id-hidden').attr('value', $(e.target).attr('data-mid'));
+        $('#message-subject').css('display', 'none');
         $('#new-message-to').text($(e.target).attr('data-display'));
     })
 });
@@ -62,7 +63,7 @@ $(document).ready(function() {
         <div id="new_message" style="display:none">
             <h3>Send a Message</h3>
             <form method="post" action="/messages/out" id="reply-form">
-                Subject: <input type="text" name="subject" /><br />
+                <div id="message-subject">Subject: <input type="text" name="subject" /></div>
                 Message: <input type="textarea" name="body" /><br />
                 To: <span id="new-message-to">-</span><br />
                 <input type="hidden" name="recipient" id="recipient-hidden" /><br />
