@@ -58,7 +58,7 @@
 
     <style type="text/css">
         .comment { width: 100%; overflow: hidden; margin-bottom: 5px; }
-        .comment-picture { float: left; clear: left; }
+        .comment-votes-picture { float: left; padding-right: 6px; text-align: center; }
         .comment-content { float: left; margin-bottom: 7px; width: 60%; }
         .comment-content p:last-child { margin-bottom: 0px; }
         .comment-content p:first-child { margin-top: 0px; }
@@ -120,11 +120,11 @@
     </script>
     <script type="text/javascript">
 
-        var active_comm_down_src = "${static_base}/images/sm-arrow-down-active.png"
-        var down_comm_src = "${static_base}/images/sm-arrow-down-inactive.png"
+        var active_comm_down_src = "${static_base}/images/med-arrow-down-active.png"
+        var down_comm_src = "${static_base}/images/med-arrow-down-inactive.png"
 
-        var active_comm_up_src = "${static_base}/images/sm-arrow-up-active.png"
-        var up_comm_src = "${static_base}/images/sm-arrow-up-inactive.png"
+        var active_comm_up_src = "${static_base}/images/med-arrow-up-active.png"
+        var up_comm_src = "${static_base}/images/med-arrow-up-inactive.png"
 
         function update_comm_score_display (score, diff, comment_id) {
             score_int = parseInt(score);
