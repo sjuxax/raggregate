@@ -10,9 +10,12 @@ $(document).ready(function() {
         $('#message-subject').css('display', 'none');
         $('#new-message-to').text($(e.target).attr('data-display'));
     })
-    $('.your-comment-flyout').click( function(e) {
+    $('.your-comment-flyout').toggle( function(e) {
         var cid = $(e.target).attr('data-cid');
         $('#flyout-' + cid).css('display', 'block');
+    }, function(e) {
+        var cid = $(e.target).attr('data-cid');
+        $('#flyout-' + cid).css('display', 'none');
     })
 });
 </script>
