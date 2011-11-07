@@ -10,11 +10,16 @@ $(document).ready(function() {
         $('#message-subject').css('display', 'none');
         $('#new-message-to').text($(e.target).attr('data-display'));
     })
+    $('.your-comment-flyout').click( function(e) {
+        var cid = $(e.target).attr('data-cid');
+        $('#flyout-' + cid).css('display', 'block');
+    })
 });
 </script>
 
 <style type="text/css">
     .message_subject { color: red; }
+    .comment-flyout {margin: 5px; background-color:#F6F6F6; padding: 6px; width: 50%; }
 </style>
 
         <h2>Messages</h2>
@@ -33,7 +38,14 @@ $(document).ready(function() {
                 </%def>
         % for c in comments:
            <div class="message">
-               <i>in reply to your comment</i><br />
+           % if isinstance(c.load_parent(), c.__class__):
+               <i>in reply to <a href="#" class="your-comment-flyout" data-cid="${c.parent_id}">your comment</a></i><br />
+               <div id="flyout-${c.parent_id}" class="comment-flyout" style="display:none;">
+                   ${c.load_parent().body}
+               </div>
+           % else:
+                <i>in reply to <a href="${request.route_url('full', sub_id = c.load_parent().id)}">${c.load_parent().title}</a></i><br />
+           % endif
                ${print_replies(c, c.submitter.id, c.recipient_u.id, c.submitter.display_name(), c.recipient_u.display_name(),)}
                <a href="#" class="reply-link" data-mid="${c.id}" data-uid="${c.submitter.id}" data-display="public -- will be posted as a comment">Reply</a><br />
            </div>
