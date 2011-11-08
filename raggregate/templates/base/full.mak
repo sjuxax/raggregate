@@ -47,14 +47,18 @@
             <a href="javascript:void(0)" class=" story-edit-link logged-in-only ">edit this description</a><br/>
         % endif
         <h2>Comments</h2>
-        <h3> Add a new comment </h3>
-        <form method="post" id="story-reply-form" action="${request.route_url('full', sub_id = story.id)}">
-            <textarea name="body" cols="50" rows="10"></textarea>
-            <input type="hidden" name="comment_parent" id="comment_parent-story" value="${story.id}" />
-            <input type="hidden" name="parent_type" id="parent_type-story" value="story" />
-            <br />
-            <input type="submit" value="Add Comment"></input>
-        </form>
+        % if 'logged_in' in request.session:
+            <h3> Add a new comment </h3>
+            <form method="post" id="story-reply-form" action="${request.route_url('full', sub_id = story.id)}">
+                <textarea name="body" cols="50" rows="10"></textarea>
+                <input type="hidden" name="comment_parent" id="comment_parent-story" value="${story.id}" />
+                <input type="hidden" name="parent_type" id="parent_type-story" value="story" />
+                <br />
+                <input type="submit" value="Add Comment"></input>
+            </form>
+        % else:
+            You can leave a comment after you log in (use the box on the right of your screen).<br />
+        % endif
         <%def name="print_comment_tree(c, margin)">
             <%include file="comment_item.mak", args="comment = c, margin = margin, vote_dict = comment_vote_dict"/>
             <%
