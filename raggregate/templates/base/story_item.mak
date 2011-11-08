@@ -24,8 +24,10 @@ vote_dict = pageargs['vote_dict']
                 <div class="story-links">
                     % if s.self_post == True:
                     <span class="title"><a href="${request.route_url('full', sub_id=s.id)}">${s.title}</a></span> <span class="domain">(self)</span> <br />
+                    % elif request.route_url('post') in request.url:
+                    <span class="title"><a href="${request.route_url('full', sub_id=s.id)}">${s.title}</a></span> <span class="domain">(${s.get_domain_name()})</span> <br />
                     % else:
-                        <span class="title"><a href="${s.url}">${s.title}</a></span> <span class="domain">(${s.get_domain_name()})</span><br />
+                        <span class="title"><a href="${s.url}">${s.title}</a></span> <span class="domain">(${s.get_domain_name()})</span>&nbsp;<img src="${static_base}images/small-globe.png" /><br />
                     % endif
                     submitted ${fuzzify_date(s.added_on)} by <a href="${request.route_url('user_info', _query=[('user_id', s.submitter.id)])}">${s.submitter.display_name()}</a><br />
                     <%
