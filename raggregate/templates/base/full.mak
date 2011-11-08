@@ -29,9 +29,24 @@
             $('#description').replaceWith(sefi);
         });
 
+        mdtable = $('#markdown-explanation-table').detach();
+        $('.markdown-link').toggle(function(e) { 
+            mdtable.css('display', 'block');
+            $(e.target).closest('.mdholder').append(mdtable);
+        }, function(e) {
+            mdtable.css('display', 'none');
+            mdtable = mdtable.detach();
+        });
+
     });
     </script>
 % endif
+
+<style type="text/css">
+    td { border: 2px black solid; padding: 2px; }
+    th { border: 1px black solid; }
+    table {border: 2px black solid; }
+</style>
 
     % if success == False:
         <h1>${message}</h1>
@@ -47,10 +62,38 @@
             <a href="javascript:void(0)" class=" story-edit-link logged-in-only ">edit this description</a><br/>
         % endif
         <h2>Comments</h2>
+        <div id="markdown-explanation-table" style="display: none;">
+            click "markdown" again to close<br />
+            <table style="border-width: 2px;">
+                <tr>
+                    <th>Markdown</th>
+                    <th>Output</th>
+                </tr>
+                <tr>
+                    <td>*italic*</td>
+                    <td><i>italic</i></td>
+                </tr>
+                <tr>
+                    <td>**bold**</td>
+                    <td><b>bold</b></td>
+                </tr>
+                <tr>
+                    <td>link to [github](https://github.com)</td>
+                    <td>link to <a href="https://github.com">github</a></td>
+                </tr>
+                <tr>
+                    <td>>blockquote</td>
+                    <td><blockquote>blockquote</blockquote></td>
+                </tr>
+              </table>
+        </div>
         % if 'logged_in' in request.session:
             <h3> Add a new comment </h3>
             <form method="post" id="story-reply-form" action="${request.route_url('full', sub_id = story.id)}">
                 <textarea name="body" cols="50" rows="10"></textarea>
+                <div class="mdholder">
+                    <i>You can use <a href="" class="markdown-link">markdown</a> to format your comment.</i>
+                </div>
                 <input type="hidden" name="comment_parent" id="comment_parent-story" value="${story.id}" />
                 <input type="hidden" name="parent_type" id="parent_type-story" value="story" />
                 <br />
