@@ -72,6 +72,9 @@
 		% for c in comments['tree'][str(story.id)]:
             ${print_comment_tree(comments['dex'][c], 0)}
         % endfor
+        % if len(comments['tree'][str(story.id)]) < 1:
+            <i>no comments yet</i>
+        % endif
         % if next_page:
             <br />
             <a href="${request.route_url('full', sub_id = story.id, _query = [('page_num', next_page)])}">next page &rarr;</a>
