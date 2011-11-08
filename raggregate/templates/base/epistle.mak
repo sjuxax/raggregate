@@ -79,7 +79,7 @@ $(document).ready(function() {
             <h3>Send a Message</h3>
             <form method="post" action="/messages/out" id="reply-form">
                 <div id="message-subject">Subject: <input type="text" name="subject" /></div>
-                Message: <input type="textarea" name="body" /><br />
+                Message: <textarea cols="30" rows="10" name="body"></textarea><br />
                 To: <span id="new-message-to">-</span><br />
                 <input type="hidden" name="recipient" id="recipient-hidden" /><br />
                 <input type="hidden" name="parent_id" id="parent_id-hidden" /><br />
