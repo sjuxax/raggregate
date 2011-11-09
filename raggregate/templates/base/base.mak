@@ -47,11 +47,13 @@
         .story-description p:last-child { margin-bottom: 0px; }
         .story-description p:first-child { margin-top: 0px; }
         .story-item { width: 600px; clear: both; }
-        /* If the number of parent divs changes, this calculation must change too */
-        /* The idea is to only apply this rule to .story-items after the first */
-        /* But CSS doesn't support that filtering; it must be based on the number of parent divs */
-        /* without regard to class. Someone should do this better. @FIXME */
-        .story-item:nth-child(n+3) { margin-top: 30px; }
+        % if not request.route_url('full', sub_id = '') in request.url:
+            /* If the number of parent divs changes, this calculation must change too */
+            /* The idea is to only apply this rule to .story-items after the first */
+            /* But CSS doesn't support that filtering; it must be based on the number of parent divs */
+            /* without regard to class. Someone should do this better. @FIXME */
+            .story-item:nth-child(n+3) { margin-top: 30px; }
+        % endif
         .story-score { text-align: center; }
         .story-thumb { float: left; margin-left: 10px; }
     </style>
