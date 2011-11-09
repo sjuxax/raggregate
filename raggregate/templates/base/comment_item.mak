@@ -22,6 +22,7 @@
 
 %>
             <div class="comment" id="${c.id}" style="margin-left: ${margin}px;">
+                <a name="${c.id}" id="${c.id}-anchor" />
                 <div class="comment-votes-picture">
 <%
 # leave this indentation this way please
