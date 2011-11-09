@@ -237,6 +237,7 @@ class Comment(Base):
     submitter = relationship("User", backref="comments", primaryjoin="User.id == Comment.user_id")
     recipient_u = relationship("User", primaryjoin="User.id == Comment.in_reply_to")
     votes = relationship("Vote", cascade="all, delete, delete-orphan")
+    submission = relationship("Submission", backref="comments")
 
     def __init__(self, submission_id, user_id, parent_id, body, in_reply_to = None):
         self.submission_id = submission_id
