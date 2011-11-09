@@ -1,7 +1,7 @@
 <html>
     <head>
         <title><%block name="html_title">${site_name}</%block></title>
-        <script type="text/javascript" src="/static/jquery-1.6.4.min.js"></script>
+        <script type="text/javascript" src="${static_base}jquery-1.7.min.js"></script>
     </head>
     <style type="text/css">
 

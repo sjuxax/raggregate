@@ -6,6 +6,8 @@
 
 % if logged_in:
     <script type="text/javascript">
+    var md_lock = 0;
+
     $(document).ready(function() {
         crf = $('#comment-reply-form').detach();
         $('.comment-reply').click(function(e) {
@@ -30,12 +32,16 @@
         });
 
         mdtable = $('#markdown-explanation-table').detach();
-        $('.markdown-link').toggle(function(e) { 
-            mdtable.css('display', 'block');
-            $(e.target).closest('.mdholder').append(mdtable);
-        }, function(e) {
-            mdtable.css('display', 'none');
-            mdtable = mdtable.detach();
+        $('#included').on("click", ".markdown-link", function() { 
+            if (md_lock == 1) {
+                mdtable.css('display', 'none');
+                mdtable = mdtable.detach();
+                md_lock = 0;
+            } else {
+                mdtable.css('display', 'block');
+                $(this).closest('.mdholder').append(mdtable);
+                md_lock = 1;
+           }
         });
 
     });
@@ -92,7 +98,7 @@
             <form method="post" id="story-reply-form" action="${request.route_url('full', sub_id = story.id)}">
                 <textarea name="body" cols="50" rows="10"></textarea>
                 <div class="mdholder">
-                    <i>You can use <a href="" class="markdown-link">markdown</a> to format your comment.</i>
+                    <i>You can use <a href="javascript:void(0)" class="markdown-link">markdown</a> to format your comment.</i>
                 </div>
                 <input type="hidden" name="comment_parent" id="comment_parent-story" value="${story.id}" />
                 <input type="hidden" name="parent_type" id="parent_type-story" value="story" />
@@ -130,6 +136,9 @@
         <b id="reply-text">Enter your Reply</b><br />
         <form method="post" id="comment-reply-form-real" action="${request.route_url('full', sub_id = story.id)}">
             <textarea id="body-textarea" cols="50" rows="10" name="body"></textarea>
+            <div class="mdholder">
+                <i>You can use <a href="javascript:void(0)" class="markdown-link">markdown</a> to format your comment.</i>
+            </div>
             <input type="hidden" name="comment_parent" id="comment_parent" value="${story.id}" />
             <input type="hidden" name="parent_type" id="parent_type" value="story" />
             <br />
