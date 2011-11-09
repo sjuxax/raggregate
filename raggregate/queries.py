@@ -429,6 +429,14 @@ def get_comment_parent_story(id):
 def get_comment_by_id(id):
     return dbsession.query(Comment).filter(Comment.id == id).one()
 
+def get_recent_comments(num):
+    """
+    Get the last num comments.
+    @param num: number of comments to list
+    @return: list with num most recent comments as sa objects.
+    """
+    return dbsession.query(Comment).filter(Comment.deleted == False).order_by(Comment.added_on.desc()).limit(num).all()
+
 #users
 def get_user_by_id(id):
     try:

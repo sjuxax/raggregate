@@ -105,6 +105,12 @@ def user_session_handler(event):
 
     e['followed_users'] = []
 
+    if 'recent_comments.num' in r.registry.settings:
+        e['recent_comments'] = queries.get_recent_comments(r.registry.settings['recent_comments.num'])
+    else:
+        # use ten as default if server parameter is missing
+        e['recent_comments'] = queries.get_recent_comments(10)
+
     if 'sort' in r.params:
         e['sort'] = r.params['sort']
     else:

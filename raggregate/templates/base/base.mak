@@ -326,6 +326,15 @@
             <div class="right_side_box" id="submit_link">
                 <h2><a href="${request.route_url('post', _query=[('new_post', 'y')])}">Submit a Link!</a></h2>
             </div>
+            <div class="right_side_box" id="recent_comments">
+                <h2>Newest Comments</h2>
+                % for c in recent_comments:
+                    <a href="${request.route_url('user_info', _query=[('user_id', c.submitter.id)])}">${c.submitter.display_name()}</a> wrote on <a href="${request.route_url('full', sub_id=c.submission_id)}#${c.id}">${c.submission.title}</a><br />
+                % endfor
+                % if len(recent_comments) < 1:
+                    <i>nothing to see here.</i>
+                % endif
+            </div>
             </div>
 
     </div>
