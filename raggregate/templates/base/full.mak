@@ -107,6 +107,7 @@
             </form>
         % else:
             You can leave a comment after you log in (use the box on the right of your screen).<br />
+            <br />
         % endif
         <%def name="print_comment_tree(c, margin)">
             <%include file="comment_item.mak", args="comment = c, margin = margin, vote_dict = comment_vote_dict"/>
