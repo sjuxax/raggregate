@@ -326,6 +326,7 @@
             <div class="right_side_box" id="submit_link">
                 <h2><a href="${request.route_url('post', _query=[('new_post', 'y')])}">Submit a Link!</a></h2>
             </div>
+            % if 'recent_comments.enabled' in request.registry.settings and request.registry.settings['recent_comments.enabled'] == 'true':
             <div class="right_side_box" id="recent_comments">
                 <h2>Newest Comments</h2>
                 % for c in recent_comments:
@@ -335,6 +336,8 @@
                     <i>nothing to see here.</i>
                 % endif
             </div>
+            % endif
+
             </div>
 
     </div>
