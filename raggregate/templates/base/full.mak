@@ -57,6 +57,7 @@
     % if success == False:
         <h1>${message}</h1>
     % else:
+        <i>click the title to proceed to posted article; scroll down for commentary</i><br />
         <%include file="story_item.mak", args="story_obj = story, vote_dict = story_vote_dict"/>
         <div id="description" class="story-description">
             ${story.description | template_filters.render_md,n}
