@@ -249,8 +249,19 @@
                         <li class="${is_term_active('save')}"><a href="${request.route_url('save',)}">Saved</a></li>
                         <li class="${is_term_active('follow')}"><a href="${request.route_url('follow')}">Followed</a></li>
                         <li class="${is_term_active('message')}">
+                        <%def name="get_new_message_text()">
+                        <%
+                            new_message_text = None
+                            if new_message_num is not None and new_message_num > 1:
+                                new_message_text = "{num} new messages".format(num = new_message_num)
+                            elif new_message_num is not None and new_message_num == 1:
+                                new_message_text = "{num} new message".format(num = new_message_num)
+
+                            return new_message_text
+                        %>
+                        </%def>
                         % if new_message_num is not None:
-                            <a href="${request.route_url('epistle', box='in')}">${new_message_num} new messages</a>
+                            <a href="${request.route_url('epistle', box='in')}">${get_new_message_text()}</a>
                         % else:
                             <a href="${request.route_url('epistle', box='read')}">Messages</a>
                         % endif
@@ -313,7 +324,7 @@
                 % if 'logged_in' in request.session and not temp_user:
                     <span class="big_username">${request.session['users.display_name']}</span><br />
                     % if new_message_num is not None:
-                        <a href="${request.route_url('epistle', box='in')}">${new_message_num} new messages</a> <br />
+                        <a href="${request.route_url('epistle', box='in')}">${get_new_message_text()}</a> <br />
                     % else:
                         <a href="${request.route_url('epistle', box='read')}">Messages</a> <br />
                     % endif
