@@ -77,7 +77,8 @@ def epistle(request):
     [flat_eps.append(e) for e in _unwrap_list(epistle_children.values())]
 
     for e in flat_eps:
-        queries.mark_epistle_read(e)
+        if str(e.recipient) == s['users.id']:
+            queries.mark_epistle_read(e)
         e = _assign_epistle_parent(e)
 
     for c in comments:
