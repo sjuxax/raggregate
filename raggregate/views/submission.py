@@ -44,8 +44,10 @@ def post(request):
             p['url'] = None
 
 
-        slug = u"{title}-{uuid_first_octet}".format(title = slugify.slugify(unicode(p['title'][:15])), uuid_first_octet = str(s.id)[:8])
-        sub = Submission(p['title'], p['description'], p['url'], s['users.id'], slug=slug)
+        sub = Submission(p['title'], p['description'], p['url'], s['users.id'])
+        dbsession.add(sub)
+        dbsession.flush()
+        sub.slug = u"{title}-{uuid_first_octet}".format(title = slugify.slugify(unicode(p['title'][:15])), uuid_first_octet = str(sub.id)[:8])
         dbsession.add(sub)
         s['message'] = "Added."
 
