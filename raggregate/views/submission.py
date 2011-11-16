@@ -14,6 +14,8 @@ from pyramid.httpexceptions import HTTPFound
 
 import re
 
+import slugify
+
 @view_config(renderer='post.mak', route_name='post')
 @view_config(renderer='post.mak', route_name='home')
 def post(request):
@@ -42,7 +44,8 @@ def post(request):
             p['url'] = None
 
 
-        sub = Submission(p['title'], p['description'], p['url'], s['users.id'])
+        slug = u"{title}-{uuid_first_octet}".format(title = slugify.slugify(unicode(p['title'][:15])), uuid_first_octet = str(s.id)[:8])
+        sub = Submission(p['title'], p['description'], p['url'], s['users.id'], slug=slug)
         dbsession.add(sub)
         s['message'] = "Added."
 
@@ -183,6 +186,7 @@ def full(request):
     message = ''
     #@TODO: Change this to use slugs instead of literal guids
     sub_id = request.matchdict['sub_id']
+    sub_id = queries.get_story_id_from_slug(sub_id)
     dbsession = DBSession()
     p = request.session['safe_post']
     prm = request.session['safe_params']
