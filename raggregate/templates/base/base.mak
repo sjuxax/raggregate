@@ -341,7 +341,7 @@
             <div class="right_side_box" id="recent_comments">
                 <h2>Newest Comments</h2>
                 % for c in recent_comments:
-                <a href="${request.route_url('user_info', _query=[('user_id', c.submitter.id)])}">${c.submitter.display_name()}</a>: <a href="${request.route_url('full', sub_id=c.submission_id)}#${c.id}">${c.submission.title}</a><br />
+                <a href="${request.route_url('user_info', _query=[('user_id', c.submitter.id)])}">${c.submitter.display_name()}</a>: <a href="${request.route_url('full', sub_id=template_filters.get_submission_identifier_for_url(c.submission_id))}#${c.id}">${c.submission.title}</a><br />
                 <br />
                 % endfor
                 % if len(recent_comments) < 1:
