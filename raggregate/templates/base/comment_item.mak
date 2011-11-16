@@ -52,7 +52,7 @@ else:
                     <div class="comment-controls">
                     <a href="#comment" id="reply-${c.id}" class="comment-reply logged-in-only">Reply</a> &nbsp;  <a href="javascript:void(0)" class="follow-link logged-in-only" data-submitter-id="${c.submitter.id}" id="follow-${c.submitter.id}">${followed_term}</a>
                     % if str(c.submitter.id) == request.session['users.id'] or logged_in_admin:
-                        &nbsp; <a href="${request.route_url('full', sub_id = c.submission_id, _query=[('op', 'del'), ('comment_id', str(c.id))])}">delete</a>
+                        &nbsp; <a href="${request.route_url('full', sub_id=template_filters.get_submission_identifier_for_url(c.submission_id), _query=[('op', 'del'), ('comment_id', str(c.id))])}">delete</a>
                     % endif
                     % if str(c.submitter.id) == request.session['users.id'] or logged_in_admin:
                         &nbsp; <a href="javascript:void(0)" data-comment-id="${c.id}" class="comment-edit-link">edit</a>

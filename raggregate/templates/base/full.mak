@@ -129,11 +129,11 @@
         % endif
         % if next_page:
             <br />
-            <a href="${request.route_url('full', sub_id = story.id, _query = [('page_num', next_page)])}">next page &rarr;</a>
+            <a href="${request.route_url('full', sub_id=template_filters.get_submission_identifier_for_url(story), _query = [('page_num', next_page)])}">next page &rarr;</a>
         % endif
         % if prev_page:
             <br />
-            <a href="${request.route_url('full', sub_id = story.id, _query = [('page_num', prev_page)])}">prev page &larr;</a>
+            <a href="${request.route_url('full', sub_id=template_filters.get_submission_identifier_for_url(story), _query = [('page_num', prev_page)])}">prev page &larr;</a>
         % endif
         <div id="comment-reply-form" style="clear: both; display: none;">
         <b id="reply-text">Enter your Reply</b><br />
@@ -151,7 +151,7 @@
 
         <div id="story-edit-form" style="clear: both; display: none;">
             <b id="story-edit-text">Edit your description</b><br />
-            <form method="post" id="story-edit-form-real" action="${request.route_url('full', sub_id = story.id)}">
+            <form method="post" id="story-edit-form-real" action="${request.route_url('full', sub_id = template_filters.get_submission_identifier_for_url(story))}">
                 <textarea id="description-textarea" cols="50" rows="10" name="description-textarea">${story.description|h}</textarea>
                 <br />
                 <input type="submit" value="Edit Story"></input>

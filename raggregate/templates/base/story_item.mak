@@ -23,9 +23,9 @@ vote_dict = pageargs['vote_dict']
                 </div>
                 <div class="story-links">
                     % if s.self_post == True:
-                    <span class="title"><a href="${request.route_url('full', sub_id=s.id)}">${s.title}</a></span> <span class="domain">(self)</span> <br />
+                    <span class="title"><a href="${request.route_url('full', sub_id=template_filters.get_submission_identifier_for_url(s))}">${s.title}</a></span> <span class="domain">(self)</span> <br />
                     % elif request.route_url('post') in request.url or request.route_url('home') == request.url:
-                    <span class="title"><a href="${request.route_url('full', sub_id=s.id)}">${s.title}</a></span> <span class="domain">(${s.get_domain_name()})</span> <br />
+                    <span class="title"><a href="${request.route_url('full', sub_id=template_filters.get_submission_identifier_for_url(s))}">${s.title}</a></span> <span class="domain">(${s.get_domain_name()})</span> <br />
                     % else:
                         <span class="title"><a href="${s.url}">${s.title}</a></span> <span class="domain">(${s.get_domain_name()})</span>&nbsp;<img src="${static_base}images/small-globe.png" /><br />
                     % endif
@@ -35,7 +35,7 @@ vote_dict = pageargs['vote_dict']
                         if u and s in u.saved:
                             saved_term = 'unsave'
                     %>
-                    <a href="${request.route_url('full', sub_id=s.id)}">${s.comment_tally} comments</a> &nbsp;
+                    <a href="${request.route_url('full', sub_id=template_filters.get_submission_identifier_for_url(s))}">${s.comment_tally} comments</a> &nbsp;
                     % if logged_in:
                         | &nbsp; <a href="javascript:void(0)" class="save-link" id="save-${s.id}">${saved_term}</a>
                     % endif
@@ -43,8 +43,8 @@ vote_dict = pageargs['vote_dict']
                         &nbsp; | &nbsp; <a href="${request.route_url('post', _query=[('op', 'del'), ('sub_id', str(s.id))])}">delete</a>
                     % endif
                     <br />
-                    % if request.route_url('full', sub_id = s.id) in request.url:
-                        <a href="http://twitter.com/share" data-text="${s.title} on ${site_name}: " data-url="${request.route_url('full', sub_id=str(s.id))}" class="twitter-share-button" style="margin-top: 5px;">Tweet</a> <script src="http://connect.facebook.net/en_US/all.js#appId=114620985305159&amp;xfbml=1"></script><fb:like href="${request.route_url('full', sub_id=str(s.id))}" send="false" layout="button_count" width="450" show_faces="false" action="like" font="arial"></fb:like>
+                    % if request.route_url('full', sub_id = template_filters.get_submission_identifier_for_url(s)) in request.url:
+                        <a href="http://twitter.com/share" data-text="${s.title} on ${site_name}: " data-url="${request.route_url('full', sub_id=str(template_filters.get_submission_identifier_for_url(s)))}" class="twitter-share-button" style="margin-top: 5px;">Tweet</a>
                     % endif
                 </div>
             </div>
