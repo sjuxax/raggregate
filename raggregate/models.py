@@ -133,6 +133,7 @@ class Submission(Base):
     category = Column(GUID)
     url = Column(UnicodeText)
     self_post = Column(Boolean)
+    slug = Column(UnicodeText, unique=True)
     added_on = Column(DateTime(timezone=True), default=sqlalchemy.sql.func.now())
     added_by = Column(GUID, ForeignKey('users.id'), nullable=False)
     deleted = Column(Boolean, default=False)
@@ -149,11 +150,12 @@ class Submission(Base):
     submitter = relationship("User", backref="submissions")
     votes = relationship("Vote", cascade="all, delete, delete-orphan")
 
-    def __init__(self, title, description, url, user_id):
+    def __init__(self, title, description, url, user_id, slug = None):
         self.title = title
         self.description = description
         self.url = url
         self.added_by = user_id
+        self.slug = slug
 
         if url is None:
             self.self_post = True
