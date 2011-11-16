@@ -811,3 +811,23 @@ def list_bans(ip = None, username = None, active = True):
     # should work now but we use this to return every ban ever issued
     # presently, so would need to change behavior on front-end
     return dbsession.query(Ban).all()
+
+def get_story_id_from_slug(slug):
+    try_slug = True
+    # if our "slug" is the same length as a uuid
+    # try the uuid first, since it's more likely
+    # a uuid and NOT a slug.
+    if len(unicode(slug)) == 36:
+        try:
+            s = get_story_by_id(slug)
+            try_slug = False
+        except:
+            pass
+
+    if try_slug:
+        try:
+            s = dbsession.query(Submission).filter(Submission.slug == slug).one()
+        except:
+            s = get_story_by_id(slug)
+
+    return str(s.id)
