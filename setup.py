@@ -26,7 +26,8 @@ requires = [
     'pytz',
     'pyramid-tm',
     'Markdown',
-    'sjuxax-facebook'
+    'sjuxax-facebook',
+    'slugify',
     ]
 
 if sys.version_info[:3] < (2,5,0):
