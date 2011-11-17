@@ -52,6 +52,7 @@ $(document).ready(function() {
            % endif
                ${print_replies(c, c.submitter.id, c.recipient_u.id, c.submitter.display_name(), c.recipient_u.display_name(),)}
                <a href="#" class="reply-link" data-mid="${c.id}" data-uid="${c.submitter.id}" data-display="public -- will be posted as a comment">Reply</a><br />
+               <br />
            </div>
         % endfor
 		% for e_root in epistles['roots']:
