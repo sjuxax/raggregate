@@ -29,6 +29,7 @@ $(document).ready(function() {
         <a href="${request.route_url('epistle', box='in')}">unread</a> &nbsp;
         <a href="${request.route_url('epistle', box='read')}">in</a> &nbsp;
         <a href="${request.route_url('epistle', box='out')}">out</a> &nbsp;
+        <a href="${request.route_url('epistle', box='comments')}">last 20 replies to your comments</a> &nbsp;
         <br />
         <br />
                 <%def name="print_replies(obj, sender_id, recipient_id, sender_display_name, recipient_display_name)">

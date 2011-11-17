@@ -739,6 +739,9 @@ def get_epistle_children(id, recursive = True):
 def get_unread_comments_by_user_id(id):
     return dbsession.query(Comment).filter(sqlalchemy.and_(Comment.unread == True, Comment.in_reply_to == id)).all()
 
+def get_read_comments_by_user_id(id):
+    return dbsession.query(Comment).filter(Comment.in_reply_to == id).order_by(Comment.added_on.desc()).limit(20).all()
+
 def mark_comment_read(c):
     if c.unread == True:
         c.unread = False

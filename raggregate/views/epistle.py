@@ -64,25 +64,35 @@ def epistle(request):
 
     box = request.matchdict['box']
 
-    comments = queries.get_unread_comments_by_user_id(s['users.id'])
-    ep = queries.get_epistle_roots(id=s['users.id'], target=box)
-    epistle_children = {}
+    if box == 'in':
+        comments = queries.get_unread_comments_by_user_id(s['users.id'])
+    elif box == 'comments':
+        comments = queries.get_read_comments_by_user_id(s['users.id'])
+    else:
+        comments = []
 
-    for e in ep:
-        e_id = str(e.id)
-        epistle_children[e_id] = queries.get_epistle_children(e.id)
+    if box != 'comments':
+        ep = queries.get_epistle_roots(id=s['users.id'], target=box)
+        epistle_children = {}
 
-    flat_eps = []
-    [flat_eps.append(e) for e in _unwrap_list(ep)]
-    [flat_eps.append(e) for e in _unwrap_list(epistle_children.values())]
+        for e in ep:
+            e_id = str(e.id)
+            epistle_children[e_id] = queries.get_epistle_children(e.id)
 
-    for e in flat_eps:
-        if str(e.recipient) == s['users.id']:
-            queries.mark_epistle_read(e)
-        e = _assign_epistle_parent(e)
+        flat_eps = []
+        [flat_eps.append(e) for e in _unwrap_list(ep)]
+        [flat_eps.append(e) for e in _unwrap_list(epistle_children.values())]
 
-    for c in comments:
-        queries.mark_comment_read(c)
+        for e in flat_eps:
+            if str(e.recipient) == s['users.id']:
+                queries.mark_epistle_read(e)
+            e = _assign_epistle_parent(e)
+
+        for c in comments:
+            queries.mark_comment_read(c)
+    else:
+        ep = {}
+        epistle_children = {}
 
     return {'epistles': {'roots': ep, 'children': epistle_children}, 'comments': comments, 'success': True, 'code': 0,}
 
