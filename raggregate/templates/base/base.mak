@@ -204,7 +204,7 @@
 
         % if success == False:
             % if 'message' in request.session:
-                ${request.session['message']}<br />
+                ${request.session['message']| n}<br />
             % endif
             % if code:
                 Error Code: <b>${code}</b>
