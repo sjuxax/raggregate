@@ -295,6 +295,20 @@ def get_story_list(page_num = 1, per_page = 30, sort = 'new', request = None):
 def get_story_by_id(id):
     return dbsession.query(Submission).options(joinedload('submitter')).filter(Submission.id == id).one()
 
+def get_story_by_url_oldest(url):
+    """
+    Return the oldest instance of a post that matches the passed URL if there is such a post.
+    @param url: url to match
+    @return: matching raggregate.models.Submission object if found, otherwise False
+    """
+    q = dbsession.query(Submission).filter(Submission.url == url).order_by(Submission.added_on.asc()).limit(1)
+    res = q.all()
+    if len(res) > 0:
+        return res[0]
+    else:
+        return False
+
+
 #def get_all_stories_with_user_votes(user_id):
 #    stories = get_all_stories()
 #    vote_dict = {}
