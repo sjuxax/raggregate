@@ -2,11 +2,11 @@
        % if 'new_post' in context['request'].session['safe_get']:
             <form action="post" METHOD="POST">
                 <b>${message}</b><br />
-                Title: <input type="text" name="title" /><br />
+                Title: <input type="text" name="title" value="${new_title_text}" /><br />
                 <br />
                 <b>At least one of these is required</b><br />
                 Description: <textarea name="description" cols="50" rows="10"></textarea><br />
-                URL: <input type="text" name="url" /><br />
+                URL: <input type="text" name="url" value="${new_url_text}" /><br />
                 <br />
                 <input type="submit" value="Post Story" /><br />
             </form>

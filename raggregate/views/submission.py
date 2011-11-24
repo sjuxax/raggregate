@@ -26,6 +26,20 @@ def post(request):
     s['message'] = "Post a story."
     dbsession = DBSession()
     stories = None
+
+    new_url_text = ''
+    new_title_text = ''
+
+    #if uses came in with a share button, redirect to existing discussion if there is one
+    if 'from' in qs and qs['from'] == 'button':
+        existing_post = queries.get_story_by_url_oldest(qs['url'])
+        if existing_post:
+            return HTTPFound(r.route_url('full', sub_id=existing_post.id))
+        new_url_text = qs['url']
+        if 'title' in qs:
+            new_title_text = qs['title']
+
+
     if 'new_post' in qs and qs['new_post'] == 'y':
         if 'logged_in' not in s:
             s['message'] = 'Sorry, you must <a href="{0}">log in</a> before you can share a link.'.format(r.route_url('login'))
@@ -143,7 +157,8 @@ def post(request):
         s.tally_comments()
 
     return {'stories': stories, 'success': True, 'code': 0, 'vote_dict': vote_dict, 'max_stories': max_stories,
-            'prev_page': prev_page, 'next_page': next_page, }
+            'prev_page': prev_page, 'next_page': next_page, 'new_url_text': new_url_text,
+            'new_title_text': new_title_text, }
 
 @view_config(renderer='vote.mak', route_name='vote')
 def vote(request):
