@@ -28,7 +28,7 @@ def post(request):
     stories = None
     if 'new_post' in qs and qs['new_post'] == 'y':
         if 'logged_in' not in s:
-            s['message'] = 'Sorry, please log in first'
+            s['message'] = 'Sorry, you must <a href="{0}">log in</a> before you can share a link.'.format(r.route_url('login'))
             return {'stories': [], 'success': False, 'code': 'ENOLOGIN'}
 
     if p and 'title' in p:
