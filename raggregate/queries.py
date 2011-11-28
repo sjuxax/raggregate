@@ -800,7 +800,7 @@ def strip_all_html(s):
         return s
     from lxml.html import fromstring, tostring
     lx = fromstring(s)
-    return tostring(lx, method="text")
+    return tostring(lx, method="text", encoding="unicode")
 
 def list_bans(ip = None, username = None, active = True):
     # if ip or username are specified, search and see if we have any current bans for these.
