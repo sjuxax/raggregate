@@ -56,6 +56,7 @@
         % endif
         .story-score { text-align: center; }
         .story-thumb { float: left; margin-left: 10px; }
+        blockquote { border-left: 2px solid #0B1E73; padding-left: 4px; margin-left: 10px; }
     </style>
 
     <style type="text/css">
