@@ -2,7 +2,7 @@
        % if 'new_post' in context['request'].session['safe_get']:
             <form action="post" METHOD="POST">
                 <b>${message}</b><br />
-                Title: <input type="text" name="title" value="${new_title_text}" /><br />
+                Title: <input type="text" name="title" value="${new_title_text}" maxlength="100" /><br />
                 <br />
                 <b>At least one of these is required</b><br />
                 Description: <textarea name="description" cols="50" rows="10"></textarea><br />

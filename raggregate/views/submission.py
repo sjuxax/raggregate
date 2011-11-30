@@ -58,7 +58,7 @@ def post(request):
             p['url'] = None
 
 
-        sub = Submission(p['title'], p['description'], p['url'], s['users.id'])
+        sub = Submission(p['title'][:100], p['description'], p['url'], s['users.id'])
         dbsession.add(sub)
         dbsession.flush()
         sub.slug = u"{title}-{uuid_first_octet}".format(title = slugify.slugify(unicode(p['title'][:100])), uuid_first_octet = str(sub.id)[:8])
