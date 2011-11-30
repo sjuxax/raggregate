@@ -87,10 +87,6 @@ def post(request):
                 story_to_del = None
             if story_to_del:
                 if queries.is_user_allowed_admin_action(s['users.id'], str(story_to_del.id), ):
-                        # don't delete for real anymore
-                        # just zero out content
-                        # this is important so that comments, etc., don't die
-                        # dbsession.delete(story_to_del)
                         story_to_del.description = "[deleted]"
                         story_to_del.url = "#"
                         story_to_del.title = "[deleted]"
