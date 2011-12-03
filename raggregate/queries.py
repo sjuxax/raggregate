@@ -834,12 +834,17 @@ def get_story_id_from_slug(slug):
     # if our "slug" is the same length as a uuid
     # try the uuid first, since it's more likely
     # a uuid and NOT a slug.
+    #
+    # this breaks badly if it actually runs on a slug.
+    # because pgsql throws an error, we must explicitly
+    # roll back the current transaction, or everything
+    # else will also die.
     if len(unicode(slug)) == 36:
         try:
             s = get_story_by_id(slug)
             try_slug = False
         except:
-            pass
+            dbsession.rollback()
 
     if try_slug:
         try:
