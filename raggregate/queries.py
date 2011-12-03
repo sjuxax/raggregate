@@ -844,7 +844,9 @@ def get_story_id_from_slug(slug):
             s = get_story_by_id(slug)
             try_slug = False
         except:
-            dbsession.rollback()
+            from pyramid_tm import transaction
+            transaction.abort()
+            transaction.begin()
 
     if try_slug:
         try:
