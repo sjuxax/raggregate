@@ -8,7 +8,7 @@ README = open(os.path.join(here, 'README')).read()
 CHANGES = open(os.path.join(here, 'CHANGELOG')).read()
 
 requires = [
-    'pyramid',
+    'pyramid>=1.3a1',
     'SQLAlchemy',
     'transaction',
     'repoze.tm2>=1.0b1', # default_commit_veto
