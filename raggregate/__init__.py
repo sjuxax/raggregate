@@ -59,6 +59,7 @@ def main(global_config, **settings):
     config.add_route('twit_sign', '/twit_sign')
     config.add_route('user_info', '/user_info')
     config.add_route('buttons', '/buttons')
+    config.add_route('favicon', '/favicon.ico')
 
     config.add_subscriber(subscribers.ban, NewResponse)
     config.add_subscriber(subscribers.user_session_handler, BeforeRender)
