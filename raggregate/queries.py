@@ -347,7 +347,7 @@ def get_endpoints_from_page_num(page_num, per_page):
         end = per_page
     return {'start': start, 'end': end}
 
-def get_comments_by_story_id(id, organize_parentage = False, page_num = 1, per_page = 30, sort = 'new'):
+def get_comments(id, organize_parentage = False, page_num = 1, per_page = 30, sort = 'new', target = 'story', target_id = None):
     if not organize_parentage:
         return dbsession.query(Comment).filter(Comment.submission_id == id).all()
     else:
@@ -358,7 +358,11 @@ def get_comments_by_story_id(id, organize_parentage = False, page_num = 1, per_p
         tree[id] = []
         dex = {}
         all_comments = dbsession.query(Comment).filter(Comment.submission_id == id).all()
-        roots = dbsession.query(Comment).filter(Comment.submission_id == id).filter(Comment.submission_id == Comment.parent_id)
+        if target == 'story':
+            roots = dbsession.query(Comment).filter(Comment.submission_id == id).filter(Comment.submission_id == Comment.parent_id)
+        else:
+            roots = dbsession.query(Comment).filter(Comment.submission_id == id).filter(target_id == Comment.id)
+
         max_roots = count_sa_obj(roots)
 
         if sort == 'new':

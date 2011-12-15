@@ -268,7 +268,10 @@ def full(request):
             page_num = 1
 
     # comments returns a dict; see queries.py
-    comments = queries.get_comments_by_story_id(sub_id, organize_parentage=True, page_num = page_num, per_page = per_page, sort = sort)
+    if 'comment_perma' not in prm:
+        comments = queries.get_comments(sub_id, organize_parentage=True, page_num = page_num, per_page = per_page, sort = sort)
+    else:
+        comments = queries.get_comments(sub_id, organize_parentage=True, page_num = page_num, per_page = per_page, sort = sort, target = 'comment', target_id = prm['comment_perma'])
 
     for c in comments['comments']:
         #@TODO: Don't do this on every load on a real deployment
