@@ -90,7 +90,7 @@
                     <td>link to <a href="https://github.com">github</a></td>
                 </tr>
                 <tr>
-                    <td>>blockquote</td>
+                    <td>&gt;blockquote</td>
                     <td><blockquote>blockquote</blockquote></td>
                 </tr>
               </table>
