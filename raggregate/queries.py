@@ -363,11 +363,6 @@ def get_comments_by_story_id(id, organize_parentage = False, page_num = 1, per_p
 
         if sort == 'new':
             roots = roots.order_by(Comment.added_on.desc())
-        elif sort == 'sunshine':
-            roots = x
-        elif sort == 'ajaja':
-            roots = x
-            etc
 
         endpoints = get_endpoints_from_page_num(page_num, per_page)
         limited_roots = roots[endpoints['start']:endpoints['end']]
