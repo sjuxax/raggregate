@@ -365,12 +365,10 @@ def get_comments_by_story_id(id, organize_parentage = False, page_num = 1, per_p
             roots = roots.order_by(Comment.added_on.desc())
 
         endpoints = get_endpoints_from_page_num(page_num, per_page)
-        limited_roots = roots[endpoints['start']:endpoints['end']]
 
         allowed_roots = [ ]
 
-        for root in limited_roots:
-            allowed_roots.append(str(root.id))
+        [allowed_roots.append(str(root.id)) for root in roots[endpoints['start']:endpoints['end']]]
 
         structures = _build_comment_structures(all_comments, allowed_roots, tree, {})
         tree = structures['tree']
