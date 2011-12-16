@@ -393,16 +393,16 @@ def _build_comment_trees(all_comments, allowed_roots):
         c.parent_id = str(c.parent_id)
         # add comment to index for template lookup
         dex[str(c.id)] = c
-        # do not compile roots in this tree; use allowed_roots
-        if str(c.submission_id) == c.parent_id:
-            continue
-        # do not compile deleted comments with no children, and remove them from allowed_roots if they exist
+       # do not compile deleted comments with no children, and remove them from allowed_roots if they exist
         if c.deleted:
             if count_comment_children(c.id) < 1:
                 if str(c.id) in allowed_roots:
-                    del allowed_roots[str(c.id)]
+                    allowed_roots.remove(str(c.id))
                 continue
-        # add parent id to tree if it doesn't exist
+        # do not compile roots in this tree; use allowed_roots
+        if str(c.submission_id) == c.parent_id:
+            continue
+         # add parent id to tree if it doesn't exist
         if c.parent_id not in tree:
             tree[c.parent_id] = []
         # add this comment as a child of its parent
