@@ -365,7 +365,10 @@ def get_comments(id, organize_parentage = False, page_num = 1, per_page = 30, so
 
         max_roots = count_sa_obj(roots)
 
-        if sort == 'new':
+        if sort == 'top':
+            roots = roots.order_by(Comment.points.desc())
+        else:
+            # use "new" as default sort option
             roots = roots.order_by(Comment.added_on.desc())
 
 

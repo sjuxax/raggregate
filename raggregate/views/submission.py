@@ -261,6 +261,9 @@ def full(request):
     next_page = None
     prev_page = None
 
+    if 'comment_sort' in prm:
+        sort = prm['comment_sort']
+
     if 'page_num' in prm:
         try:
             page_num = int(prm['page_num'])
