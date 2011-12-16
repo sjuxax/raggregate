@@ -43,7 +43,7 @@ $(document).ready(function() {
         % for c in comments:
            <div class="message">
            % if isinstance(c.load_parent(), c.__class__):
-               <i>in reply to <a href="#" class="your-comment-flyout" data-cid="${c.parent_id}">your comment</a></i><br />
+               <i>in reply to <a href="#" class="your-comment-flyout" data-cid="${c.parent_id}">your comment</a> on <a href="${request.route_url('full', sub_id=c.submission_id)}">${c.load_submission().title}</a></i><br />
                <div id="flyout-${c.parent_id}" class="comment-flyout" style="display:none;">
                    ${c.load_parent().body}
                </div>
