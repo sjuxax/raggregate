@@ -379,7 +379,6 @@ def get_comments(id, organize_parentage = False, page_num = 1, per_page = 30, so
         trees = _build_comment_trees(all_comments, allowed_roots)
         tree = trees['tree']
         dex = trees['dex']
-        print "\n\n\n-------\n{0}\n---------\n\n\n".format(_build_comment_trees(all_comments, allowed_roots))
         return {'tree': tree, 'dex': dex, 'comments': all_comments, 'max_comments': max_roots, 'allowed_roots': allowed_roots}
 
 def _build_comment_trees(all_comments, allowed_roots):
