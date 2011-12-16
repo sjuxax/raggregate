@@ -368,48 +368,36 @@ def get_comments(id, organize_parentage = False, page_num = 1, per_page = 30, so
         if sort == 'new':
             roots = roots.order_by(Comment.added_on.desc())
 
+
         endpoints = get_endpoints_from_page_num(page_num, per_page)
-
         allowed_roots = [ ]
-
         [allowed_roots.append(str(root.id)) for root in roots[endpoints['start']:endpoints['end']]]
 
-        structures = _build_comment_structures(all_comments, allowed_roots, tree, {})
-        tree = structures['tree']
-        dex = structures['dex']
-        return {'tree': tree, 'dex': dex, 'comments': all_comments, 'max_comments': max_roots, }
+        trees = _build_comment_trees(all_comments, allowed_roots)
+        tree = trees['tree']
+        dex = trees['dex']
+        print "\n\n\n-------\n{0}\n---------\n\n\n".format(_build_comment_trees(all_comments, allowed_roots))
+        return {'tree': tree, 'dex': dex, 'comments': all_comments, 'max_comments': max_roots, 'allowed_roots': allowed_roots}
 
-def _build_comment_structures(all_comments, allowed_roots, tree, dex):
+def _build_comment_trees(all_comments, allowed_roots):
+    tree = {}
+    dex = {}
+
     for c in all_comments:
         # make c.parent_id a string; this function receives UUIDs as strings
         # @todo: we really need to unfungle the str/UUID conversion thing,
         # it is inconsistent throughout the application
-
         c.parent_id = str(c.parent_id)
-        if c.parent_id in allowed_roots or str(c.id) in allowed_roots:
-            # skip childless deleted comments
-            if c.deleted:
-                kid_count = count_comment_children(c.id)
-                if kid_count <= 0:
-                    continue
-            if c.parent_id not in tree:
-                tree[c.parent_id] = []
-            if str(c.id) not in tree[c.parent_id]:
-                tree[c.parent_id].append(str(c.id))
-                dex[str(c.id)] = c
-                # every comment written has potential children
-                # we must, therefore, allow it as a root
-                allowed_roots.append(str(c.id))
-                #@FIXME: there is a strong possibility that this is excessive recursion
-                # we should think about it and make this not re-loop over itself every time
-                # a new comment is added an official comment. mostly no-ops but I have a
-                # feeling that this is much more convoluted than necessary.
-                # however, i have worked on this a good long time and must stop now.
-                # it's working like this. one day, it should be reconsidered.
-                structure = _build_comment_structures(all_comments, allowed_roots, tree, dex)
-                tree = structure['tree']
-                dex = structure['dex']
-                allowed_roots = structure['allowed_roots']
+        # add comment to index for template lookup
+        dex[str(c.id)] = c
+        # do not compile roots in this tree; use allowed_roots
+        if str(c.submission_id) == c.parent_id:
+            continue
+        # add parent id to tree if it doesn't exist
+        if c.parent_id not in tree:
+            tree[c.parent_id] = []
+        # add this comment as a child of its parent
+        tree[c.parent_id].append(str(c.id))
 
     return {'tree': tree, 'dex': dex, 'allowed_roots': allowed_roots}
 

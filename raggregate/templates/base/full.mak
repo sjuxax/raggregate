@@ -121,10 +121,10 @@
             %>
         </%def>
         ## print comments starting at roots
-		% for c in comments['tree'][str(story.id)]:
+		% for c in comments['allowed_roots']:
             ${print_comment_tree(comments['dex'][c], 0)}
         % endfor
-        % if len(comments['tree'][str(story.id)]) < 1:
+        % if len(comments['allowed_roots']) < 1:
             <i>no comments yet</i>
         % endif
         % if next_page:
