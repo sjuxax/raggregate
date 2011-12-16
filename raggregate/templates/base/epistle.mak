@@ -51,7 +51,7 @@ $(document).ready(function() {
                 <i>in reply to <a href="${request.route_url('full', sub_id = c.load_parent().id)}">${c.load_parent().title}</a></i><br />
            % endif
                ${print_replies(c, c.submitter.id, c.recipient_u.id, c.submitter.display_name(), c.recipient_u.display_name(),)}
-               <a href="#" class="reply-link" data-mid="${c.id}" data-uid="${c.submitter.id}" data-display="public -- will be posted as a comment">Reply</a><br />
+               <a href="#" class="reply-link" data-mid="${c.id}" data-uid="${c.submitter.id}" data-display="public -- will be posted as a comment">reply</a><br />
                <br />
            </div>
         % endfor
@@ -70,7 +70,7 @@ $(document).ready(function() {
                         ${print_replies(e, e.sender_u.id, e.recipient_u.id, e.sender_u.display_name(), e.recipient_u.display_name(),)}
                     % endfor
                 % endif
-                <a href="#" class="reply-link" data-mid="${e_root.id}" data-uid="${e_root.sender_u.id}" data-display="${e_root.sender_u.display_name()}">Reply</a><br />
+                <a href="#" class="reply-link" data-mid="${e_root.id}" data-uid="${e_root.sender_u.id}" data-display="${e_root.sender_u.display_name()}">reply</a><br />
            <hr />
            </div>
         % endfor
