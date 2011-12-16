@@ -38,11 +38,11 @@ else:
                 <div class="comment-content">
                     <%
                     followed_class = ''
-                    followed_term = 'Follow'
+                    followed_term = 'follow'
                     followed_op = 'add'
                     if c.submitter.id in followed_users:
                         followed_class = 'follows'
-                        followed_term = 'Unfollow'
+                        followed_term = 'unfollow'
                         followed_op = 'del'
                     %>
                     <span class="comment-heading"><span class="comment-username ${followed_class}"><a href="${request.route_url('user_info', _query=[('user_id', c.submitter.id)])}">${c.submitter.display_name()}</a></span> ${fuzzify_date(c.added_on)} </span>
@@ -50,7 +50,7 @@ else:
                     ## <span class="c-body-text" id="body-${c.id}">${c.body.replace("\n", "<br />\n") | n}</span>
                     <div class="c-body-text" id="body-${c.id}">${c.body | template_filters.render_md,n}</div>
                     <div class="comment-controls">
-                    <a href="#comment" id="reply-${c.id}" class="comment-reply logged-in-only">Reply</a> &nbsp;  <a href="javascript:void(0)" class="follow-link logged-in-only" data-submitter-id="${c.submitter.id}" id="follow-${c.submitter.id}">${followed_term}</a>
+                    <a href="#comment" id="reply-${c.id}" class="comment-reply logged-in-only">reply</a> &nbsp;  <a href="javascript:void(0)" class="follow-link logged-in-only" data-submitter-id="${c.submitter.id}" id="follow-${c.submitter.id}">${followed_term}</a>
                     % if str(c.submitter.id) == request.session['users.id'] or logged_in_admin:
                         &nbsp; <a href="${request.route_url('full', sub_id=template_filters.get_submission_identifier_for_url(c.submission_id), _query=[('op', 'del'), ('comment_id', str(c.id))])}">delete</a>
                     % endif
