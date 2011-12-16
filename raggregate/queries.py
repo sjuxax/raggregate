@@ -360,7 +360,7 @@ def get_comments(id, organize_parentage = False, page_num = 1, per_page = 30, so
         all_comments = dbsession.query(Comment).filter(Comment.submission_id == id).all()
         if target == 'story':
             roots = dbsession.query(Comment).filter(Comment.submission_id == id).filter(Comment.submission_id == Comment.parent_id)
-        else:
+        elif target == 'comment':
             roots = dbsession.query(Comment).filter(Comment.submission_id == id).filter(target_id == Comment.id)
 
         max_roots = count_sa_obj(roots)
