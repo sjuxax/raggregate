@@ -272,6 +272,10 @@ class Comment(Base):
         p = queries.find_by_id(self.parent_id)
         return p
 
+    def load_submission(self):
+        from raggregate import queries
+        return queries.get_story_by_id(self.submission_id)
+
 class Epistle(Base):
     __tablename__ = 'epistles'
 
