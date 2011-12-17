@@ -257,7 +257,11 @@ def full(request):
 
     page_num = 1
     per_page = 30
-    sort = 'new'
+    if 'sort.comment_default_order' in request.registry.settings:
+        sort = request.registry.settings['sort.comment_default_order']
+    else:
+        # do NOT change the hardcoded default, change in the ini as above
+        sort = 'top'
     next_page = None
     prev_page = None
 
