@@ -44,7 +44,7 @@ vote_dict = pageargs['vote_dict']
                     % endif
                     <br />
                     % if request.route_url('full', sub_id = template_filters.get_submission_identifier_for_url(s)) in request.url:
-                        <a href="http://twitter.com/share" data-text="${s.title} on ${site_name}: " data-url="${request.route_url('full', sub_id=str(template_filters.get_submission_identifier_for_url(s)))}" class="twitter-share-button" style="margin-top: 5px;">Tweet</a>
+                        <a href="http://twitter.com/share" data-text="${s.title} - ${site_name}: " data-url="${request.route_url('full', sub_id=str(template_filters.get_submission_identifier_for_url(s)))}" class="twitter-share-button" style="margin-top: 5px;">Tweet</a>
                     % endif
                 </div>
             </div>
