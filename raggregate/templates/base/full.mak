@@ -94,7 +94,7 @@
                 </tr>
               </table>
         </div>
-        % if 'logged_in' in request.session:
+        % if 'logged_in' in request.session and 'comment_perma' not in request.session['safe_params']:
             <h3> Add a new comment </h3>
             <form method="post" id="story-reply-form" action="${request.route_url('full', sub_id = story.id)}">
                 <textarea name="body" cols="50" rows="10"></textarea>
@@ -106,10 +106,12 @@
                 <br />
                 <input type="submit" value="Add Comment"></input>
             </form>
+        % elif 'comment_perma' in request.session['safe_params']:
+            <br />
         % else:
             You can leave a comment after you log in (use the box on the right of your screen).<br />
             <br />
-        % endif
+         % endif
         <%def name="print_comment_tree(c, margin)">
             <%include file="comment_item.mak", args="comment = c, margin = margin, vote_dict = comment_vote_dict"/>
             <%
