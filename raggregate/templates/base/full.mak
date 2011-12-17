@@ -69,7 +69,6 @@
         % if (logged_in and request.session['users.id'] == str(story.added_by)) or logged_in_admin:
             <a href="javascript:void(0)" class=" story-edit-link logged-in-only ">edit this description</a><br/>
         % endif
-        <h2>Comments</h2>
         <div id="markdown-explanation-table" style="display: none;">
             click "markdown" again to close<br />
             <table style="border-width: 2px;">
