@@ -1,7 +1,7 @@
 <%inherit file="base.mak"/>
 
 <%block name="html_title">
-    ${story.title} on ${site_name}
+    ${story.title} - ${site_name}
 </%block>
 
 % if logged_in:
