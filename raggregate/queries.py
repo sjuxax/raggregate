@@ -695,7 +695,7 @@ def get_epistle_by_recipient_name(name):
 def get_new_message_num(id):
     user = get_user_by_id(id)
     epistle_num = dbsession.query(Epistle).filter(user.id == Epistle.recipient).filter(Epistle.unread == True).count()
-    comment_num = dbsession.query(Comment).filter(user.id == Comment.in_reply_to).filter(Comment.unread == True).count()
+    comment_num = dbsession.query(Comment).filter(sqlalchemy.and_(user.id == Comment.in_reply_to, user.id != Comment.user_id)).filter(Comment.unread == True).count()
     return epistle_num + comment_num
 
 def get_epistle_by_id(id):
@@ -745,7 +745,7 @@ def get_epistle_children(id, recursive = True):
     return all_ep
 
 def get_unread_comments_by_user_id(id):
-    return dbsession.query(Comment).filter(sqlalchemy.and_(Comment.unread == True, Comment.in_reply_to == id)).all()
+    return dbsession.query(Comment).filter(sqlalchemy.and_(Comment.unread == True, Comment.in_reply_to == id, Comment.user_id != id)).all()
 
 def get_read_comments_by_user_id(id):
     return dbsession.query(Comment).filter(Comment.in_reply_to == id).order_by(Comment.added_on.desc()).limit(20).all()
