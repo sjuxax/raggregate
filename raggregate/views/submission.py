@@ -61,6 +61,9 @@ def post(request):
         sub = Submission(p['title'][:100], p['description'], p['url'], s['users.id'])
         dbsession.add(sub)
         dbsession.flush()
+        v = Vote(sub.id, s['users.id'], 1, "submission", None)
+        v.direction = 1
+        dbsession.add(v)
         sub.slug = u"{title}-{uuid_first_octet}".format(title = slugify.slugify(unicode(p['title'][:100])), uuid_first_octet = str(sub.id)[:8])
         dbsession.add(sub)
         s['message'] = "Added."
@@ -243,6 +246,10 @@ def full(request):
 
             c = Comment(sub_id, s['users.id'], p['comment_parent'], prm['body'], in_reply_to = in_reply_to)
             dbsession.add(c)
+            dbsession.flush()
+            v = Vote(sub_id, s['users.id'], 1, "comment", c.id)
+            v.direction = 1
+            dbsession.add(v)
             s['message'] = 'Comment added.'
     #@TODO: Stop using SA queries in views, move them to individual models
     story = queries.get_story_by_id(sub_id)
