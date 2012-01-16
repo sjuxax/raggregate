@@ -24,6 +24,8 @@ vote_dict = pageargs['vote_dict']
                 <div class="story-links">
                     % if s.self_post == True:
                     <span class="title"><a href="${request.route_url('full', sub_id=template_filters.get_submission_identifier_for_url(s))}">${s.title}</a></span> <span class="domain">(self)</span> <br />
+                    ## on the story list page, take users to the comments section instead of the direct url.
+                    ## this template is used on other pages to take users directly to the URL, so we have to special case.
                     % elif request.route_url('post') in request.url or request.route_url('home') == request.url:
                     <span class="title"><a href="${request.route_url('full', sub_id=template_filters.get_submission_identifier_for_url(s))}">${s.title}</a></span> <span class="domain">(${s.get_domain_name()})</span> <br />
                     % else:
