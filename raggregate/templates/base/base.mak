@@ -2,6 +2,10 @@
     <head>
         <title><%block name="html_title">${site_name}</%block></title>
         <script type="text/javascript" src="${static_base}jquery-1.7.min.js"></script>
+        % if 'atom.enabled' in request.registry.settings and request.registry.settings['atom.enabled'] == 'true':
+            <link href="${request.route_url('atom_story')}" type="application/atom+xml" rel="alternate" title="${site_name} stories" />
+            <link href="${request.route_url('atom_comment')}" type="application/atom+xml" rel="alternate" title="${site_name} comments" />
+        % endif
     </head>
     <style type="text/css">
 
