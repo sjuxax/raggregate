@@ -4,7 +4,6 @@ from pyramid.view import view_config
 
 from raggregate.models import DBSession
 
-
 @view_config(renderer='atom_story.mak', route_name='atom_story')
 def story(request):
     s = request.session
@@ -34,7 +33,6 @@ def self_story(request):
             'feed_title': '{0} exclusives'.format(site_name), 'feed_subtitle': 'newest exclusives on {0}'.format(site_name),
             'site_name': site_name,
            }
-
 
 @view_config(renderer='atom_comment.mak', route_name='atom_comment')
 def comment(request):
