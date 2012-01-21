@@ -20,6 +20,21 @@ def story(request):
             'site_name': site_name,
            }
 
+@view_config(renderer='atom_story.mak', route_name='atom_self_story')
+def self_story(request):
+    s = request.session
+    r = request
+    dbsession = DBSession()
+
+    stories = queries.get_story_list(page_num = 1, per_page = 30, sort = 'new', request = r, self_only = True)
+    last_update = stories['stories'][0].added_on.isoformat()
+    request.response.content_type = "text/xml"
+    site_name = r.registry.settings['site.site_name']
+    return {'stories': stories['stories'], 'route': 'atom_self_story', 'last_update': last_update,
+            'feed_title': '{0} exclusives'.format(site_name), 'feed_subtitle': 'newest exclusives on {0}'.format(site_name),
+            'site_name': site_name,
+           }
+
 
 @view_config(renderer='atom_comment.mak', route_name='atom_comment')
 def comment(request):

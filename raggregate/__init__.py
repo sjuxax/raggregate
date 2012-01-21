@@ -61,6 +61,7 @@ def main(global_config, **settings):
     config.add_route('buttons', '/buttons')
     config.add_route('favicon', '/favicon.ico')
     config.add_route('atom_story', '/atom_story.xml')
+    config.add_route('atom_self_story', '/atom_self_story.xml')
     config.add_route('atom_comment', '/atom_comment.xml')
 
     config.add_subscriber(subscribers.ban, NewResponse)

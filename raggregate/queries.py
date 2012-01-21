@@ -268,8 +268,11 @@ def realize_timedelta_constructor(con_str):
     return eval("timedelta({0})".format(con_str))
 
 #stories
-def get_story_list(page_num = 1, per_page = 30, sort = 'new', request = None):
+def get_story_list(page_num = 1, per_page = 30, sort = 'new', request = None, self_only = False):
     stories = dbsession.query(Submission).options(joinedload('submitter')).filter(Submission.deleted == False)
+
+    if self_only:
+        stories = stories.filter(Submission.self_post == True)
 
     if sort == 'top':
         stories = stories.order_by(Submission.points.desc())
