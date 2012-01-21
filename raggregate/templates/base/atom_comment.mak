@@ -1,12 +1,6 @@
 <%inherit file="atom_base.mak" />
 
 <%block name="feed_metadata">
-<%
-    site_name = request.registry.settings['site.site_name']
-    feed_title = "{0} comments".format(site_name)
-    feed_subtitle = "newest comments on {0}".format(site_name)
-%>
-
         <title>${feed_title}</title>
         <subtitle>${feed_subtitle}</subtitle>
         <link href="${request.route_url(route)}" rel="self" />
