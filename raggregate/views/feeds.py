@@ -34,6 +34,28 @@ def self_story(request):
             'site_name': site_name,
            }
 
+@view_config(renderer='atom_combined.mak', route_name='atom_combined')
+def combined(request):
+    s = request.session
+    r = request
+    dbsession = DBSession()
+
+    stories = queries.get_story_list(page_num = 1, per_page = 10, sort = 'new', request = r)
+    comments = queries.get_recent_comments(10)
+
+    agg = []
+    [agg.append(i) for i in comments]
+    [agg.append(i) for i in stories['stories']]
+    agg.sort(key=lambda x: x.added_on, reverse=True)
+    last_update = agg[0].added_on.isoformat()
+
+    request.response.content_type = "text/xml"
+    site_name = r.registry.settings['site.site_name']
+    return {'interleaved': agg, 'route': 'atom_combined', 'last_update': last_update,
+            'feed_title': '{0} all content'.format(site_name), 'feed_subtitle': 'newest content on {0}'.format(site_name),
+            'site_name': site_name,
+           }
+
 @view_config(renderer='atom_comment.mak', route_name='atom_comment')
 def comment(request):
     s = request.session
