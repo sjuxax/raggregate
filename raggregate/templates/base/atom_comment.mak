@@ -1,12 +1,5 @@
 <%inherit file="atom_base.mak" />
 
-<%block name="feed_metadata">
-        <title>${feed_title}</title>
-        <subtitle>${feed_subtitle}</subtitle>
-        <link href="${request.route_url(route)}" rel="self" />
-        <id>${feed_title}+${feed_subtitle}+${site_name}</id>
-</%block>
-
 % for c in comments:
     <% s = c.load_submission() %>
     <entry>

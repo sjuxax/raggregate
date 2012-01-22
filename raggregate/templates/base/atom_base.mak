@@ -6,10 +6,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
     <%block name="feed_metadata">
-        <title>default</title>
-        <subtitle>default</subtitle>
-        <link href="${request.url}" rel="self" />
-        <id>default+default+${request.registry.settings['site.site_name']}</id>
+        <title>${feed_title}</title>
+        <subtitle>${feed_subtitle}</subtitle>
+        <link href="${request.route_url(route)}" rel="self" />
+        <id>${feed_title}+${feed_subtitle}+${site_name}</id>
     </%block>
     <link href="${request.route_url('home')}" />
     <updated>${last_update}</updated>

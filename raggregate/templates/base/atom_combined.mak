@@ -1,12 +1,5 @@
 <%inherit file="atom_base.mak" />
 
-<%block name="feed_metadata">
-        <title>${feed_title}</title>
-        <subtitle>${feed_subtitle}</subtitle>
-        <link href="${request.route_url(route)}" rel="self" />
-        <id>${feed_title}+${feed_subtitle}+${site_name}</id>
-</%block>
-
 ## @TODO: split story feed items and comment feed items into separate Mako
 ## templates for easy plugging, like extant templates story_item.mak and comment_item.mak
 
