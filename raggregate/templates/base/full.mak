@@ -60,9 +60,11 @@
         <%include file="story_item.mak", args="story_obj = story, vote_dict = story_vote_dict"/>
         <i><b>click the title above to proceed to posted article; scroll down for commentary</b></i><br />
         <br />
+    % if story.description != u'':
         <div id="description" class="story-description">
             ${story.description | template_filters.render_md,n}
         </div>
+    % endif
         ##@TODO: make functionality to determine whether a user is logged in on display a reusable function
         ## I have vague memories of this but think it's on the server side, need to create a def that can
         ## be used in the Mako templates to determine this, would be much better that way.
