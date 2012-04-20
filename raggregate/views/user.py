@@ -1,8 +1,8 @@
 import sqlalchemy
 
 from raggregate.models import DBSession
-from raggregate.models import User
-from raggregate.models import Ban
+from raggregate.models.user import User
+from raggregate.models.ban import Ban
 
 from raggregate import queries
 

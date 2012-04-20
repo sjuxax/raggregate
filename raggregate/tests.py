@@ -3,9 +3,9 @@ from pyramid.config import Configurator
 from pyramid import testing
 
 from raggregate import queries
-from raggregate.models import User
-from raggregate.models import Epistle
-from raggregate.models import Submission
+from raggregate.models.user import User
+from raggregate.models.epistle import Epistle
+from raggregate.models.submission import Submission
 
 import re
 

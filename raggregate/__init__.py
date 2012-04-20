@@ -16,6 +16,8 @@ from pyramid.request import Request
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
+    config = Configurator(settings=settings)
+    config.scan('raggregate.models')
     engine = engine_from_config(settings, 'sqlalchemy.')
     sqlahelper.add_engine(engine)
     initialize_sql(engine)

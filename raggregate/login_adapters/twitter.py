@@ -1,6 +1,6 @@
 import sqlalchemy
 
-from raggregate.models import User
+from raggregate.models.user import User
 from raggregate import queries
 
 from twython import Twython

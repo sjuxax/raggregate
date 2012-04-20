@@ -1,11 +1,11 @@
 from raggregate.models import DBSession
-from raggregate.models import User
-from raggregate.models import Vote
-from raggregate.models import Submission
-from raggregate.models import Comment
-from raggregate.models import Epistle
-from raggregate.models import Stat
-from raggregate.models import Ban
+from raggregate.models.user import User
+from raggregate.models.vote import Vote
+from raggregate.models.submission import Submission
+from raggregate.models.comment import Comment
+from raggregate.models.epistle import Epistle
+from raggregate.models.stat import Stat
+from raggregate.models.ban import Ban
 
 from sqlalchemy.orm import joinedload
 from sqlalchemy.sql import func
@@ -674,7 +674,7 @@ def add_user_picture(orig_filename, new_prefix, up_dir, image_file):
 
     im.save(full_path, 'JPEG')
 
-    from raggregate.models import UserPicture
+    from raggregate.models.user import UserPicture
     up = UserPicture(orig_filename, new_filename, sha, 0)
     dbsession.add(up)
     dbsession.flush()

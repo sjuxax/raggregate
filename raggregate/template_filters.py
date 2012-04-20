@@ -1,7 +1,7 @@
 import markdown
 import queries
 
-from raggregate.models import Submission
+from raggregate.models.submission import Submission
 
 md = markdown.Markdown( safe_mode='escape', )
 

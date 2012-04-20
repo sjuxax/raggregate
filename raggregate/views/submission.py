@@ -1,10 +1,10 @@
 import sqlalchemy
 
 from raggregate.models import DBSession
-from raggregate.models import Vote
-from raggregate.models import Submission
-from raggregate.models import Comment
-from raggregate.models import Epistle
+from raggregate.models.vote import Vote
+from raggregate.models.submission import Submission
+from raggregate.models.comment import Comment
+from raggregate.models.epistle import Epistle
 
 from raggregate import queries
 

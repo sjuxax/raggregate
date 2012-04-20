@@ -1,5 +1,5 @@
 from raggregate import queries
-from raggregate.models import User
+from raggregate.models.user import User
 
 import sqlahelper
 

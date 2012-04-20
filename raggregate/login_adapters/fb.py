@@ -2,7 +2,7 @@
 # which is also named "facebook"
 
 import facebook
-from raggregate.models import User
+from raggregate.models.user import User
 import sqlalchemy
 from raggregate import queries
 from raggregate.login_adapters import LoginAdapterExc
