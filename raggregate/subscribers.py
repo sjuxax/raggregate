@@ -16,6 +16,8 @@ from raggregate import template_filters
 
 import cgi
 
+from raggregate.new_queries import submission
+
 dbsession = sqlahelper.get_session()
 
 def ban(event):
@@ -106,10 +108,10 @@ def user_session_handler(event):
     e['followed_users'] = []
 
     if 'recent_comments.num' in r.registry.settings:
-        e['recent_comments'] = queries.get_recent_comments(r.registry.settings['recent_comments.num'])
+        e['recent_comments'] = submission.get_recent_comments(r.registry.settings['recent_comments.num'])
     else:
         # use ten as default if server parameter is missing
-        e['recent_comments'] = queries.get_recent_comments(10)
+        e['recent_comments'] = submission.get_recent_comments(10)
 
     if 'sort' in r.params:
         e['sort'] = r.params['sort']

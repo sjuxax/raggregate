@@ -1,6 +1,8 @@
 import markdown
 import queries
 
+from raggregate.new_queries import submission
+
 from raggregate.models.submission import Submission
 
 md = markdown.Markdown( safe_mode='escape', )
@@ -20,7 +22,7 @@ def none_as_blank(s):
 
 def get_submission_identifier_for_url(s):
     if s.__class__ != Submission:
-        s = queries.get_story_by_id(s)
+        s = submission.get_story_by_id(s)
     if s.slug is None or s.slug == '':
         return s.id
     else:
