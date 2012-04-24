@@ -23,8 +23,8 @@ def get_story_list(page_num = 1, per_page = 30, sort = 'new', request = None, se
     if sort == 'hot':
         if request and 'sort.hot_point_window' in request.registry.settings:
             sets = request.registry.settings
-            hotness.recentize_hots(hot_point_window = realize_timedelta_constructor(sets['sort.hot_point_window']), hot_eligible_age = realize_timedelta_constructor(sets['sort.hot_eligible_age']), hot_recalc_threshold = realize_timedelta_constructor(sets['sort.hot_recalc_threshold']))
-            stories = hotness.get_hot_stories(hot_eligible_age = realize_timedelta_constructor(sets['sort.hot_eligible_age'])) 
+            hotness.recentize_hots(hot_point_window = queries.realize_timedelta_constructor(sets['sort.hot_point_window']), hot_eligible_age = queries.realize_timedelta_constructor(sets['sort.hot_eligible_age']), hot_recalc_threshold = queries.realize_timedelta_constructor(sets['sort.hot_recalc_threshold']))
+            stories = hotness.get_hot_stories(hot_eligible_age = queries.realize_timedelta_constructor(sets['sort.hot_eligible_age'])) 
         else:
             hotness.recentize_hots()
             stories = hotness.get_hot_stories()

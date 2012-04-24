@@ -37,6 +37,11 @@ dbsession = sqlahelper.get_session()
 
 #one day, we should break this into files instead of sections
 
+def realize_timedelta_constructor(con_str):
+    """ Converts a timedelta constructor parameter list into a real timedelta.
+    @param con_str: the constructor parameters to convert"""
+    return eval("timedelta({0})".format(con_str))
+
 def now_in_utc():
     return datetime.utcnow().replace(tzinfo=pytz.utc)
 
