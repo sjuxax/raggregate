@@ -85,7 +85,7 @@ class TestSubmissions(BaseTest):
         sub = Submission(title, description, url, user.id)
         self.dbsession.add(sub)
         self.dbsession.flush()
-        s = queries.get_story_by_id(sub.id)
+        s = submission.get_story_by_id(sub.id)
         self.assertEqual(s.id, sub.id)
 
     def test_domain_parse(self):

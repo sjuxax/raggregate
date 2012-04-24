@@ -21,7 +21,7 @@ def search(request):
     vds = []
     vote_dict = {}
     for r in res:
-        stories.append(queries.get_story_by_id(r['id']))
+        stories.append(submission.get_story_by_id(r['id']))
         if 'users.id' in ses:
             vds.append(users.get_user_votes_on_submission(ses['users.id'], r['id']))
     for vd in vds:

@@ -114,8 +114,8 @@ def calc_hot_window_score(submission_id, hot_point_window = timedelta(hours = 6)
     except sqlalchemy.orm.exc.NoResultFound:
         # no votes on this story yet
         return 0
-
-    story = get_story_by_id(submission_id)
+    from raggregate.new_queries import submission
+    story = submission.get_story_by_id(submission_id)
     story.hot_window_score = story_votes.points
     story.hot_window_score_timestamp = now_in_utc()
     dbsession.add(story)
@@ -232,8 +232,9 @@ def get_controversial_stories(timediff = timedelta(hours = 48), contro_threshold
     return stories
 
 def count_story_votes(submission_id):
+    from raggregate.new_queries import submission
     dv_num = dbsession.query(Vote).filter(Vote.points < 0).filter(Vote.submission_id == submission_id).count()
-    story = get_story_by_id(submission_id)
+    story = submission.get_story_by_id(submission_id)
     story.downvote_tally = dv_num
     story.downvote_tally_timestamp = now_in_utc()
 

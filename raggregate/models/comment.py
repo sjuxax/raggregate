@@ -66,6 +66,6 @@ class Comment(Base):
         return p
 
     def load_submission(self):
-        from raggregate import queries
-        return queries.get_story_by_id(self.submission_id)
+        from raggregate.new_queries import submission
+        return submission.get_story_by_id(self.submission_id)
 

@@ -154,7 +154,7 @@ def save(request):
     if 'story_id' in p and 'logged_in' in s:
         dbsession = DBSession()
         u = users.get_user_by_id(s['users.id'])
-        to_save = queries.get_story_by_id(p['story_id'])
+        to_save = submission.get_story_by_id(p['story_id'])
         if 'op' in p:
             op = p['op']
         if op == 'add':

@@ -109,7 +109,7 @@ def _assign_epistle_parent(e):
     #@TODO: REALLY need to put parent_info somewhere smarter, and/or not make this happen so much
     if e.parent:
         if e.parent_type == 'story':
-            e.parent_info = queries.get_story_by_id(e.parent)
+            e.parent_info = submission.get_story_by_id(e.parent)
         elif e.parent_type == 'comment':
             e.parent_info = queries.get_comment_by_id(e.parent)
         elif e.parent_type == 'epistle' or e.parent_type == 'reply':
