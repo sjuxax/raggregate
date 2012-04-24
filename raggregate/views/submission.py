@@ -7,6 +7,7 @@ from raggregate.models.comment import Comment
 from raggregate.models.epistle import Epistle
 
 from raggregate import queries
+from raggregate.new_queries import users
 from raggregate.new_queries import submission
 
 from pyramid.view import view_config
@@ -90,7 +91,7 @@ def post(request):
             except sqlalchemy.orm.exc.NoResultFound:
                 story_to_del = None
             if story_to_del:
-                if queries.is_user_allowed_admin_action(s['users.id'], str(story_to_del.id), ):
+                if users.is_user_allowed_admin_action(s['users.id'], str(story_to_del.id), ):
                         story_to_del.description = "[deleted]"
                         story_to_del.url = "#"
                         story_to_del.title = "[deleted]"
@@ -150,7 +151,7 @@ def post(request):
 
     vote_dict = {}
     if 'logged_in' in s:
-        vote_dict = queries.get_user_votes_on_all_submissions(s['users.id'])
+        vote_dict = users.get_user_votes_on_all_submissions(s['users.id'])
     for s in stories:
         #@TODO: Remember to not tally on every load once a real site deploys
         s.tally_votes()
@@ -219,7 +220,7 @@ def full(request):
     if 'op' in prm and prm['op'] == 'del' and logged_in:
         if 'comment_id' in prm:
             c = submission.get_comment_by_id(prm['comment_id'])
-            if queries.is_user_allowed_admin_action(s['users.id'], str(c.id), ):
+            if users.is_user_allowed_admin_action(s['users.id'], str(c.id), ):
                 c.body = "[deleted]"
                 c.deleted = True
                 dbsession.add(c)
@@ -227,14 +228,14 @@ def full(request):
     if 'op' in prm and prm['op'] == 'edit' and logged_in:
         if 'comment_id' in prm:
             c = submission.get_comment_by_id(prm['comment_id'])
-            if queries.is_user_allowed_admin_action(s['users.id'], str(c.id), ):
+            if users.is_user_allowed_admin_action(s['users.id'], str(c.id), ):
                 c.body = prm['body']
                 dbsession.add(c)
         s['message'] = 'Comment updated.'
     else:
         if 'description-textarea' in request.session['safe_post'] and logged_in:
             sub = submission.get_story_by_id(sub_id)
-            if queries.is_user_allowed_admin_action(s['users.id'], str(sub.id)):
+            if users.is_user_allowed_admin_action(s['users.id'], str(sub.id)):
                 sub.description = prm['description-textarea']
                 dbsession.add(sub)
             s['message'] = 'Description updated.'
@@ -260,8 +261,8 @@ def full(request):
 
     if logged_in:
         # see queries.py; these two should not be separate. #@FIXME
-        story_vote_dict = queries.get_user_votes_on_submission(s['users.id'], sub_id)
-        comment_vote_dict = queries.get_user_votes_on_submissions_comments(s['users.id'], sub_id)
+        story_vote_dict = users.get_user_votes_on_submission(s['users.id'], sub_id)
+        comment_vote_dict = users.get_user_votes_on_submissions_comments(s['users.id'], sub_id)
 
     page_num = 1
     per_page = 30

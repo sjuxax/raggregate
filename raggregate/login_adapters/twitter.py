@@ -1,6 +1,7 @@
 import sqlalchemy
 
 from raggregate.models.user import User
+from raggregate.new_queries import users
 from raggregate import queries
 
 from twython import Twython
@@ -39,17 +40,17 @@ def complete_auth(request, auth_toks):
 
     # check if user already exists; if not, please create
     try:
-        u = queries.get_user_by_name(username)
+        u = users.get_user_by_name(username)
         #@TODO: add something to ensure we are in sync with the twitter profile picture
         # unless specifically overridden by the user
     except sqlalchemy.orm.exc.NoResultFound:
-        u = queries.create_user(origination='twitter', username=username, remote_object=final_toks)
+        u = users.create_user(origination='twitter', username=username, remote_object=final_toks)
         import urllib2
         image_data = urllib2.urlopen("http://api.twitter.com/1/users/profile_image/{0}.json".format(screen_name))
         orig_filename = "{0}-twitter-pic.png".format(screen_name)
         up_dir = request.registry.settings['user.picture_upload_directory']
 
-        u.picture = queries.add_user_picture(orig_filename, str(u.id)[:7], up_dir, image_data)
+        u.picture = users.add_user_picture(orig_filename, str(u.id)[:7], up_dir, image_data)
 
         dbsession.add(u)
 

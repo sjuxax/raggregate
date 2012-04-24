@@ -1,5 +1,7 @@
 from raggregate import queries
 from pyramid.view import view_config
+from raggregate.new_queries import users
+from raggregate.new_queries import submission
 
 @view_config(renderer='search.mak', route_name='search')
 def search(request):
@@ -21,7 +23,7 @@ def search(request):
     for r in res:
         stories.append(queries.get_story_by_id(r['id']))
         if 'users.id' in ses:
-            vds.append(queries.get_user_votes_on_submission(ses['users.id'], r['id']))
+            vds.append(users.get_user_votes_on_submission(ses['users.id'], r['id']))
     for vd in vds:
         if type(vd) == dict:
             vote_dict.update(vd)

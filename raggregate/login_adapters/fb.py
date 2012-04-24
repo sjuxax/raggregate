@@ -5,6 +5,7 @@ import facebook
 from raggregate.models.user import User
 import sqlalchemy
 from raggregate import queries
+from raggregate.new_queries import users
 from raggregate.login_adapters import LoginAdapterExc
 
 import sqlahelper
@@ -32,10 +33,10 @@ def extract_from_cookie(request):
     return {'info': u_fbinfo, 'local_username': "fb-{id}".format(id=u_fbinfo['id']), 'request': r}
 
 def create_local_user(fb_info, local_username, request = None): 
-    u = queries.create_user(origination='facebook', remote_object=fb_info, username=local_username)
+    u = users.create_user(origination='facebook', remote_object=fb_info, username=local_username)
     if request:
         profile_picture = request.session['u_fbgraph'].get_connections(fb_info['id'], "picture")
-        up = queries.add_user_picture("{0}-fbprofile.jpg".format(fb_info['id']), fb_info['id'], request.registry.settings['user.picture_upload_directory'], profile_picture)
+        up = users.add_user_picture("{0}-fbprofile.jpg".format(fb_info['id']), fb_info['id'], request.registry.settings['user.picture_upload_directory'], profile_picture)
         u.picture = up
         dbsession.add(u)
     return u

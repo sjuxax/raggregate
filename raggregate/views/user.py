@@ -3,7 +3,8 @@ import sqlalchemy
 from raggregate.models import DBSession
 from raggregate.models.user import User
 from raggregate.models.ban import Ban
-
+from raggregate.new_queries import users
+from raggregate.new_queries import submission
 from raggregate import queries
 
 from pyramid.view import view_config
@@ -32,11 +33,11 @@ def login(request):
     try:
         fb_cookie = fb.extract_from_cookie(request)
         try:
-            u = queries.get_user_by_name(fb_cookie['local_username'])
+            u = users.get_user_by_name(fb_cookie['local_username'])
         except sqlalchemy.orm.exc.NoResultFound:
             u = fb.create_local_user(fb_cookie['info'], fb_cookie['local_username'], request = request)
         try:
-            queries.login_user(request, u, None, bypass_password = True)
+            users.login_user(request, u, None, bypass_password = True)
         except LoginAdapterExc:
             pass
     except LoginAdapterExc:
@@ -78,9 +79,9 @@ def login(request):
             if request.session['safe_get']['act'] == 'register':
                 if logged_in:
                     try:
-                        u = queries.get_user_by_id(s['users.id'])
+                        u = users.get_user_by_id(s['users.id'])
                         if u.temporary:
-                            queries.create_user(temp_to_perm = True, extant_id = s['users.id'], username = username, password = p['password'], origination = 'site')
+                            users.create_user(temp_to_perm = True, extant_id = s['users.id'], username = username, password = p['password'], origination = 'site')
                             s['message'] = "Your anonymous profile has been converted, thanks."
                         else:
                             s['message'] = "You can't register while you're logged in."
@@ -89,7 +90,7 @@ def login(request):
                         dbsession.rollback()
                 else:
                     try:
-                        queries.create_user(username = username, password = p['password'], origination = 'site')
+                        users.create_user(username = username, password = p['password'], origination = 'site')
                         s['message'] = "Successfully registered."
                         success = True
                     except sqlalchemy.exc.IntegrityError:
@@ -100,7 +101,7 @@ def login(request):
                 if p['new_password'] != p['new_password_confirm']:
                     s['message'] = 'New password doesn\'t match confirmation, please try again.'
                 else:
-                    u = queries.get_user_by_id(s['users.id'])
+                    u = users.get_user_by_id(s['users.id'])
                     if u.verify_pw(p['old_password']):
                         u.password = u.hash_pw(p['new_password'])
                         dbsession.add(u)
@@ -110,9 +111,9 @@ def login(request):
                         s['message'] = 'Old password invalid.'
             else:
                 try:
-                    u = queries.get_user_by_name(username)
+                    u = users.get_user_by_name(username)
                     try:
-                        queries.login_user(request, u, p['password'])
+                        users.login_user(request, u, p['password'])
                         s['message'] = "Good, logged in"
                         success = True
                         return HTTPFound(request.route_url('post'))
@@ -136,7 +137,7 @@ def twit_sign(request):
         twit_auth = twitter.complete_auth(request, request.session['tmp_tok_store'])
         del request.session['tmp_tok_store']
         try:
-            queries.login_user(request, twit_auth['u'], None, bypass_password = True)
+            users.login_user(request, twit_auth['u'], None, bypass_password = True)
         except:
             request.session['last_login_status'] = 'Sorry, your password was wrong.'
             #raise
@@ -152,7 +153,7 @@ def save(request):
 
     if 'story_id' in p and 'logged_in' in s:
         dbsession = DBSession()
-        u = queries.get_user_by_id(s['users.id'])
+        u = users.get_user_by_id(s['users.id'])
         to_save = queries.get_story_by_id(p['story_id'])
         if 'op' in p:
             op = p['op']
@@ -167,12 +168,12 @@ def save(request):
                 dbsession.add(u)
             s['message'] = 'Successfully unsaved {0}'.format(to_save.title)
     elif 'logged_in' in s:
-        u = queries.get_user_by_id(s['users.id'])
+        u = users.get_user_by_id(s['users.id'])
 
     if u:
         vds = []
         for i in u.saved:
-            vds.append(queries.get_user_votes_on_submission(s['users.id'], i.id))
+            vds.append(users.get_user_votes_on_submission(s['users.id'], i.id))
         for vd in vds:
             if type(vd) == dict:
                 vote_dict.update(vd)
@@ -192,8 +193,8 @@ def follow(request):
     if 'follow_id' in p and 'logged_in' in s:
         dbsession = DBSession()
         #@TODO: replace with model-wide method to get logged-in user object
-        u = queries.get_user_by_id(s['users.id'])
-        to_follow = queries.get_user_by_id(p['follow_id'])
+        u = users.get_user_by_id(s['users.id'])
+        to_follow = users.get_user_by_id(p['follow_id'])
         op = 'add'
         if 'op' in p:
             op = p['op']
@@ -208,7 +209,7 @@ def follow(request):
             dbsession.add(u)
             message = 'Successfully unfollowed {0}'.format(to_follow.display_name())
     elif 'logged_in' in s:
-        u = queries.get_user_by_id(s['users.id'])
+        u = users.get_user_by_id(s['users.id'])
 
     vds = []
     vote_dict = {}
@@ -217,7 +218,7 @@ def follow(request):
        for i in u.follows:
            for story in i.submissions:
                #@FIXME: this is probably quite slow
-               vds.append(queries.get_user_votes_on_submission(u.id, story.id))
+               vds.append(users.get_user_votes_on_submission(u.id, story.id))
        for vd in vds:
            if type(vd) == dict:
                vote_dict.update(vd)
@@ -244,10 +245,10 @@ def user_info(request):
     if 'logged_in' in ses and 'user_id' not in r.params:
         user_id = ses['users.id']
 
-    if 'logged_in' in ses and (user_id == str(ses['users.id']) or queries.get_user_by_id(ses['users.id']).is_user_admin()):
+    if 'logged_in' in ses and (user_id == str(ses['users.id']) or users.get_user_by_id(ses['users.id']).is_user_admin()):
         edit_mode = True
 
-    u = queries.get_user_by_id(user_id)
+    u = users.get_user_by_id(user_id)
 
     if p and edit_mode:
         dbsession = DBSession()
@@ -256,7 +257,7 @@ def user_info(request):
             orig_filename = r.POST['picture'].filename
             up_dir = r.registry.settings['user.picture_upload_directory']
 
-            u.picture = queries.add_user_picture(orig_filename, str(u.id)[:7], up_dir, r.POST['picture'].file)
+            u.picture = users.add_user_picture(orig_filename, str(u.id)[:7], up_dir, r.POST['picture'].file)
 
         dbsession.add(u)
 
@@ -290,7 +291,7 @@ def ban(request):
             duration = eval(duration)
 
         if username:
-            user_id = queries.get_user_by_name(username).id
+            user_id = users.get_user_by_name(username).id
 
         b = Ban(ip = ip, username = username, duration = duration, user_id = user_id, added_by = s['users.id'])
         dbsession = DBSession()

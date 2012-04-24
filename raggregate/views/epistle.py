@@ -1,7 +1,8 @@
 import sqlalchemy
 
 from raggregate import queries
-
+from raggregate.new_queries import users
+from raggregate.new_queries import submission
 from pyramid.response import Response
 from pyramid.view import view_config
 
@@ -27,14 +28,14 @@ def epistle(request):
         if p['recipient'] == '':
             # look up recipient-name
             try:
-                recp = queries.get_user_by_name(p['recipient-name'])
+                recp = users.get_user_by_name(p['recipient-name'])
             except sqlalchemy.orm.exc.NoResultFound:
                 #@TODO: discuss facebook name sending implications
                 s['message'] = "Could not find that user."
                 return {'code': 'ENORECP', 'success': False}
         else:
             try:
-                recp = queries.get_user_by_id(p['recipient'])
+                recp = users.get_user_by_id(p['recipient'])
             except:
                 s['message'] = "Could not find that user."
                 return {'code': 'ENORECP', 'success': False}

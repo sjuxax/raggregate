@@ -1,7 +1,8 @@
 import unittest
 from pyramid.config import Configurator
 from pyramid import testing
-
+from raggregate.new_queries import users
+from raggregate.new_queries import submission
 from raggregate import queries
 from raggregate.models.user import User
 from raggregate.models.epistle import Epistle
@@ -27,19 +28,19 @@ class TestUsers(BaseTest):
     def test_create_user(self, username = None):
         if not username:
             username = 'test'
-        u = queries.create_user(username = username, password = username,)
+        u = users.create_user(username = username, password = username,)
         res = self.dbsession.query(User).filter(User.name == username).first()
         self.assertEqual(res.id, u.id)
         self.assertEqual(res.name, u.name)
 
     def test_get_user_by_name(self):
-        u = queries.create_user(username = 'test', password='test')
-        res = queries.get_user_by_name(u.name)
+        u = users.create_user(username = 'test', password='test')
+        res = users.get_user_by_name(u.name)
         self.assertEqual(u.id, res.id)
 
     def test_find_by_id_user(self):
         # depends on functional test_create_user
-        u = queries.create_user(username = 'test', password='test')
+        u = users.create_user(username = 'test', password='test')
         res = queries.find_by_id(u.id)
         self.assertEqual(res.id, u.id)
         self.assertEqual(res.name, u.name)
@@ -47,8 +48,8 @@ class TestUsers(BaseTest):
 class TestEpistles(BaseTest):
     def test_send_epistle_by_id(self):
         #@TODO: as this test illustrates, we should make a "send_epistle" function in queries
-        u1 = queries.create_user(username = 't1', password='test')
-        u2 = queries.create_user(username = 't2', password='test')
+        u1 = users.create_user(username = 't1', password='test')
+        u2 = users.create_user(username = 't2', password='test')
         ep = Epistle(u1.id, u2.id, u'test epistle', subject = u'a simple test')
         self.dbsession.add(ep)
         self.dbsession.flush()
@@ -68,7 +69,7 @@ class TestSubmissions(BaseTest):
     def test_create_submission(self):
         #@TODO: another function that should be split out of the view for easy repitition.
         # if the view code changes substantially, this test will not keep up
-        user = queries.create_user(username = 'test', password = 'test')
+        user = users.create_user(username = 'test', password = 'test')
         url = 'http://google.com'
         title = 'test'
         description = 'test'
@@ -92,7 +93,7 @@ class TestSubmissions(BaseTest):
         description = 'test'
         #@TODO: we should make this accept a fake user id in test mode at least
         # so that we don't have huge cascading failures if create_user is broken
-        user = queries.create_user(username='test', password='test')
+        user = users.create_user(username='test', password='test')
 
         sub = Submission(title, description, 'http://google.com', user.id)
         self.assertEqual('google.com', sub.get_domain_name())
