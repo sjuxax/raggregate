@@ -29,7 +29,11 @@ vote_dict = pageargs['vote_dict']
                     % elif request.route_url('post') in request.url or request.route_url('home') == request.url:
                     <span class="title"><a href="${request.route_url('full', sub_id=template_filters.get_submission_identifier_for_url(s))}">${s.title}</a></span> <span class="domain">(${s.get_domain_name()})</span> <br />
                     % else:
-                        <span class="title"><a href="${s.url}">${s.title}</a></span> <span class="domain">(${s.get_domain_name()})</span>&nbsp;<img src="${static_base}images/small-globe.png" /><br />
+                        <span class="title"><a href="${s.url}">${s.title}</a></span> <span class="domain">(${s.get_domain_name()})</span>&nbsp;<img src="${static_base}images/small-globe.png" />
+                        % if s.url[-4:].lower() == ".pdf":
+                            <b>[PDF]</b>
+                        % endif
+                        <br />
                     % endif
                     submitted ${fuzzify_date(s.added_on)} by <a href="${request.route_url('user_info', _query=[('user_id', s.submitter.id)])}">${s.submitter.display_name()}</a><br />
                     <%
