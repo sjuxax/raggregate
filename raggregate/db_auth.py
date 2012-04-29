@@ -1,5 +1,5 @@
 from raggregate import queries
-
+from raggregate.new_queries import users
 from pyramid.security import Everyone
 from pyramid.security import Authenticated
 
@@ -7,7 +7,7 @@ class AuthPolicy(object):
     def authenticated_userid(self, request):
         if not request.session['users.id']:
             return None
-        return queries.get_user_by_id(request.session['users.id'])
+        return users.get_user_by_id(request.session['users.id'])
 
     def unauthenticated_userid(self, request):
         if not request.session['users.id']:

@@ -7,6 +7,8 @@ from raggregate.models.comment import Comment
 from raggregate.models.epistle import Epistle
 
 from raggregate import queries
+from raggregate.new_queries import users
+from raggregate.new_queries import submission
 
 from pyramid.view import view_config
 
@@ -32,7 +34,7 @@ def post(request):
 
     #if uses came in with a share button, redirect to existing discussion if there is one
     if 'from' in qs and qs['from'] == 'button':
-        existing_post = queries.get_story_by_url_oldest(qs['url'])
+        existing_post = submission.get_story_by_url_oldest(qs['url'])
         if existing_post:
             return HTTPFound(r.route_url('full', sub_id=existing_post.id))
         new_url_text = qs['url']
@@ -85,11 +87,11 @@ def post(request):
         sub_id = r.params['sub_id']
         if r.params['op'] == 'del':
             try:
-                story_to_del = queries.get_story_by_id(sub_id)
+                story_to_del = submission.get_story_by_id(sub_id)
             except sqlalchemy.orm.exc.NoResultFound:
                 story_to_del = None
             if story_to_del:
-                if queries.is_user_allowed_admin_action(s['users.id'], str(story_to_del.id), ):
+                if users.is_user_allowed_admin_action(s['users.id'], str(story_to_del.id), ):
                         story_to_del.description = "[deleted]"
                         story_to_del.url = "#"
                         story_to_del.title = "[deleted]"
@@ -135,7 +137,7 @@ def post(request):
 #   if 'per_page' in qs:
 #       per_page = qs['per_page']
 
-    stories = queries.get_story_list(page_num = page_num, per_page = per_page, sort = sort, request = request)
+    stories = submission.get_story_list(page_num = page_num, per_page = per_page, sort = sort, request = request)
     max_stories = stories['max_stories']
     stories = stories['stories']
 
@@ -149,7 +151,7 @@ def post(request):
 
     vote_dict = {}
     if 'logged_in' in s:
-        vote_dict = queries.get_user_votes_on_all_submissions(s['users.id'])
+        vote_dict = users.get_user_votes_on_all_submissions(s['users.id'])
     for s in stories:
         #@TODO: Remember to not tally on every load once a real site deploys
         s.tally_votes()
@@ -175,7 +177,7 @@ def vote(request):
         if 'target_type' in p and p['target_type'] == 'comment':
             # the post comes in with comment id in sub_id spot
             # here, we make sub_id the real sub_id
-            sub_id = queries.get_comment_parent_story(p['sub_id'])[0]
+            sub_id = submission.get_comment_parent_story(p['sub_id'])[0]
             comment_id = p['sub_id']
             vote_list = dbsession.query(Vote).filter(Vote.comment_id == comment_id).filter(Vote.user_id == s['users.id']).all()
         else:
@@ -202,7 +204,7 @@ def full(request):
     message = ''
     #@TODO: Change this to use slugs instead of literal guids
     sub_id = request.matchdict['sub_id']
-    sub_id = queries.get_story_id_from_slug(sub_id)
+    sub_id = submission.get_story_id_from_slug(sub_id)
     dbsession = DBSession()
     p = request.session['safe_post']
     prm = request.session['safe_params']
@@ -217,31 +219,31 @@ def full(request):
 
     if 'op' in prm and prm['op'] == 'del' and logged_in:
         if 'comment_id' in prm:
-            c = queries.get_comment_by_id(prm['comment_id'])
-            if queries.is_user_allowed_admin_action(s['users.id'], str(c.id), ):
+            c = submission.get_comment_by_id(prm['comment_id'])
+            if users.is_user_allowed_admin_action(s['users.id'], str(c.id), ):
                 c.body = "[deleted]"
                 c.deleted = True
                 dbsession.add(c)
         s['message'] = 'Comment deleted.'
     if 'op' in prm and prm['op'] == 'edit' and logged_in:
         if 'comment_id' in prm:
-            c = queries.get_comment_by_id(prm['comment_id'])
-            if queries.is_user_allowed_admin_action(s['users.id'], str(c.id), ):
+            c = submission.get_comment_by_id(prm['comment_id'])
+            if users.is_user_allowed_admin_action(s['users.id'], str(c.id), ):
                 c.body = prm['body']
                 dbsession.add(c)
         s['message'] = 'Comment updated.'
     else:
         if 'description-textarea' in request.session['safe_post'] and logged_in:
-            sub = queries.get_story_by_id(sub_id)
-            if queries.is_user_allowed_admin_action(s['users.id'], str(sub.id)):
+            sub = submission.get_story_by_id(sub_id)
+            if users.is_user_allowed_admin_action(s['users.id'], str(sub.id)):
                 sub.description = prm['description-textarea']
                 dbsession.add(sub)
             s['message'] = 'Description updated.'
         if 'body' in request.session['safe_post'] and logged_in:
             if p['parent_type'] == 'story':
-                in_reply_to = queries.get_story_by_id(p['comment_parent']).submitter.id
+                in_reply_to = submission.get_story_by_id(p['comment_parent']).submitter.id
             elif p['parent_type'] == 'comment':
-                c = queries.get_comment_by_id(p['comment_parent'])
+                c = submission.get_comment_by_id(p['comment_parent'])
                 in_reply_to = c.user_id
 
             c = Comment(sub_id, s['users.id'], p['comment_parent'], prm['body'], in_reply_to = in_reply_to)
@@ -252,15 +254,15 @@ def full(request):
             dbsession.add(v)
             s['message'] = 'Comment added.'
     #@TODO: Stop using SA queries in views, move them to individual models
-    story = queries.get_story_by_id(sub_id)
+    story = submission.get_story_by_id(sub_id)
     story.tally_votes()
     story_vote_dict = {}
     comment_vote_dict = {}
 
     if logged_in:
         # see queries.py; these two should not be separate. #@FIXME
-        story_vote_dict = queries.get_user_votes_on_submission(s['users.id'], sub_id)
-        comment_vote_dict = queries.get_user_votes_on_submissions_comments(s['users.id'], sub_id)
+        story_vote_dict = users.get_user_votes_on_submission(s['users.id'], sub_id)
+        comment_vote_dict = users.get_user_votes_on_submissions_comments(s['users.id'], sub_id)
 
     page_num = 1
     per_page = 30
@@ -283,9 +285,9 @@ def full(request):
 
     # comments returns a dict; see queries.py
     if 'comment_perma' not in prm:
-        comments = queries.get_comments(sub_id, organize_parentage=True, page_num = page_num, per_page = per_page, sort = sort)
+        comments = submission.get_comments(sub_id, organize_parentage=True, page_num = page_num, per_page = per_page, sort = sort)
     else:
-        comments = queries.get_comments(sub_id, organize_parentage=True, page_num = page_num, per_page = per_page, sort = sort, target = 'comment', target_id = prm['comment_perma'])
+        comments = submission.get_comments(sub_id, organize_parentage=True, page_num = page_num, per_page = per_page, sort = sort, target = 'comment', target_id = prm['comment_perma'])
 
     for c in comments['comments']:
         #@TODO: Don't do this on every load on a real deployment

@@ -1,5 +1,6 @@
 from raggregate import queries
 from raggregate.models.user import User
+from raggregate.new_queries import users
 
 import sqlahelper
 
@@ -16,6 +17,8 @@ from raggregate import template_filters
 
 import cgi
 
+from raggregate.new_queries import submission
+
 dbsession = sqlahelper.get_session()
 
 def ban(event):
@@ -23,7 +26,7 @@ def ban(event):
     ip_ban = queries.list_bans(ip = r.remote_addr)
 
     if 'logged_in' in r.session:
-        username_ban = queries.list_bans(username = queries.get_user_by_id(r.session['users.id']).name)
+        username_ban = queries.list_bans(username = users.get_user_by_id(r.session['users.id']).name)
     else:
         username_ban = False
 
@@ -95,7 +98,7 @@ def user_session_handler(event):
     e['site_name'] = r.registry.settings['site.site_name']
 
     # export date fuzzing function to templates
-    e['fuzzify_date'] = queries.fuzzify_date
+    e['fuzzify_date'] = users.fuzzify_date
 
     e['new_message_num'] = None
     e['karma'] = None
@@ -106,10 +109,10 @@ def user_session_handler(event):
     e['followed_users'] = []
 
     if 'recent_comments.num' in r.registry.settings:
-        e['recent_comments'] = queries.get_recent_comments(r.registry.settings['recent_comments.num'])
+        e['recent_comments'] = submission.get_recent_comments(r.registry.settings['recent_comments.num'])
     else:
         # use ten as default if server parameter is missing
-        e['recent_comments'] = queries.get_recent_comments(10)
+        e['recent_comments'] = submission.get_recent_comments(10)
 
     if 'sort' in r.params:
         e['sort'] = r.params['sort']
@@ -131,17 +134,17 @@ def user_session_handler(event):
         #    print 'AAAAAAAAAA' + str(s['karma'])
         #else:
         #not caching right now, commenting conditional
-        karma = queries.get_user_by_id(s['users.id']).update_karma()
+        karma = users.get_user_by_id(s['users.id']).update_karma()
         s['karma'] = karma
         e['karma'] = karma
 
         if 'followed_users' in s and len(s['followed_users']) > 0:
             e['followed_users'] = s['followed_users']
         else:
-            s['followed_users'] = queries.get_followed_users(s['users.id'])
+            s['followed_users'] = users.get_followed_users(s['users.id'])
             e['followed_users'] = s['followed_users']
 
-        u = queries.get_user_by_id(s['users.id'])
+        u = users.get_user_by_id(s['users.id'])
         e['logged_in_admin'] = u.is_user_admin()
         s['logged_in_admin'] = e['logged_in_admin']
         e['u'] = u

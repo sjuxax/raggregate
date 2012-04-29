@@ -1,4 +1,5 @@
 from raggregate import queries
+from raggregate.new_queries import submission
 
 from pyramid.view import view_config
 
@@ -10,7 +11,7 @@ def story(request):
     r = request
     dbsession = DBSession()
 
-    stories = queries.get_story_list(page_num = 1, per_page = 30, sort = 'new', request = r)
+    stories = submission.get_story_list(page_num = 1, per_page = 30, sort = 'new', request = r)
     last_update = stories['stories'][0].added_on.isoformat()
     request.response.content_type = "text/xml"
     site_name = r.registry.settings['site.site_name']
@@ -25,7 +26,7 @@ def self_story(request):
     r = request
     dbsession = DBSession()
 
-    stories = queries.get_story_list(page_num = 1, per_page = 30, sort = 'new', request = r, self_only = True)
+    stories = submission.get_story_list(page_num = 1, per_page = 30, sort = 'new', request = r, self_only = True)
     last_update = stories['stories'][0].added_on.isoformat()
     request.response.content_type = "text/xml"
     site_name = r.registry.settings['site.site_name']
@@ -40,7 +41,7 @@ def combined(request):
     r = request
     dbsession = DBSession()
 
-    stories = queries.get_story_list(page_num = 1, per_page = 10, sort = 'new', request = r)
+    stories = submission.get_story_list(page_num = 1, per_page = 10, sort = 'new', request = r)
     comments = queries.get_recent_comments(10)
 
     agg = []
