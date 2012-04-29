@@ -6,7 +6,9 @@ from raggregate.models.comment import Comment
 from raggregate.models.epistle import Epistle
 from raggregate.models.stat import Stat
 from raggregate.models.ban import Ban
+
 from raggregate.new_queries import users
+from raggregate.new_queries import submission
 
 from sqlalchemy.orm import joinedload
 from sqlalchemy.sql import func
@@ -161,8 +163,12 @@ def mark_comment_read(c):
 #scary/inefficient general queries, using for readibility/clarity, optimize anything important
 
 def find_by_id(id):
+    # @FIXME: make these exceptions specific to the case
+    # where they can run successfully but do not find
+    # the thing we are looking for. This should be really
+    # easy as I think we just need NoResultFound.
     try:
-        return get_story_by_id(id)
+        return submission.get_story_by_id(id)
     except:
         pass
 
@@ -170,7 +176,7 @@ def find_by_id(id):
         return users.get_user_by_id(id)
 
     try:
-        return get_comment_by_id(id)
+        return submission.get_comment_by_id(id)
     except:
         pass
 

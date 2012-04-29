@@ -4,7 +4,6 @@ from raggregate.models.vote import Vote
 
 from raggregate.new_queries import hotness
 
-from raggregate import queries
 
 import sqlahelper
 from sqlalchemy.orm import joinedload
@@ -13,6 +12,7 @@ dbsession = sqlahelper.get_session()
 
 #stories
 def get_story_list(page_num = 1, per_page = 30, sort = 'new', request = None, self_only = False):
+    from raggregate import queries
     stories = dbsession.query(Submission).options(joinedload('submitter')).filter(Submission.deleted == False)
 
     if self_only:
@@ -95,6 +95,7 @@ def get_endpoints_from_page_num(page_num, per_page):
     return {'start': start, 'end': end}
 
 def get_comments(id, organize_parentage = False, page_num = 1, per_page = 30, sort = 'new', target = 'story', target_id = None):
+    from raggregate import queries
     if not organize_parentage:
         return dbsession.query(Comment).filter(Comment.submission_id == id).all()
     else:
