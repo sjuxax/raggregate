@@ -170,6 +170,9 @@ def create_user(**kwargs):
         u.facebook_user_id = kwargs['remote_object']['id']
         u.real_name = kwargs['remote_object']['name']
 
+    if 'email' in kwargs and kwargs['email'] != "":
+        u.email = kwargs['email']
+
     dbsession.add(u)
     dbsession.flush()
 

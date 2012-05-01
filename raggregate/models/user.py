@@ -90,9 +90,10 @@ class User(Base):
         # this is simplistic for now, but one day should use a real roles / permissions system
         return self.is_admin
 
-    def __init__(self, name, password, real_name = None, temporary = False):
+    def __init__(self, name, password, email = None, real_name = None, temporary = False):
         self.name = name
         self.password = self.hash_pw(password)
+        self.email = email
         if real_name:
             self.real_name = real_name
         if temporary:

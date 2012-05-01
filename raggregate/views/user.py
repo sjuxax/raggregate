@@ -81,7 +81,7 @@ def login(request):
                     try:
                         u = users.get_user_by_id(s['users.id'])
                         if u.temporary:
-                            users.create_user(temp_to_perm = True, extant_id = s['users.id'], username = username, password = p['password'], origination = 'site')
+                            users.create_user(temp_to_perm = True, extant_id = s['users.id'], username = username, password = p['password'], email = p['email'], origination = 'site')
                             s['message'] = "Your anonymous profile has been converted, thanks."
                         else:
                             s['message'] = "You can't register while you're logged in."
@@ -90,7 +90,7 @@ def login(request):
                         dbsession.rollback()
                 else:
                     try:
-                        users.create_user(username = username, password = p['password'], origination = 'site')
+                        users.create_user(username = username, password = p['password'], email = p['email'], origination = 'site')
                         s['message'] = "Successfully registered."
                         success = True
                     except sqlalchemy.exc.IntegrityError:
@@ -253,6 +253,10 @@ def user_info(request):
     if p and edit_mode:
         dbsession = DBSession()
         u.about_me = p['about_me']
+        if p['email'] == "":
+            u.email = None
+        else:
+            u.email = p['email']
         if r.POST['picture'] != '':
             orig_filename = r.POST['picture'].filename
             up_dir = r.registry.settings['user.picture_upload_directory']

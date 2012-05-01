@@ -4,6 +4,7 @@
     <form method="POST" action="/user_info?user_id=${u.id}" enctype="multipart/form-data">
         About Me: <textarea name="about_me" cols="50" rows="10">${u.about_me | template_filters.none_as_blank}</textarea><br />
         My Picture: <input type="file" name="picture" /><br />
+        Email: <input type="text" name="email" value="${u.email | template_filters.none_as_blank}" /><br />
         <input type="submit" value="Update" />
     </form>
     <br />
