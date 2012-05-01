@@ -1,10 +1,10 @@
 from raggregate.models import DBSession
 from raggregate.models.user import User
 from raggregate.models.submission import Submission
+from raggregate.models.comment import Comment
 from raggregate.models.vote import Vote
 from sqlalchemy.orm import joinedload
 from sqlalchemy.sql import func
-#from raggregate import queries
 import sqlalchemy
 import uuid
 import sqlahelper
@@ -28,19 +28,20 @@ def is_user_allowed_admin_action(user_id, target_id, request = None, target_clas
     @param target_class: optional class of item being targeted
     """
     allow = False
+    from raggregate import queries
 
     if user_id is None:
         return None
 
     u = get_user_by_id(user_id)
 
-    # instantly grant whatever action this is to the admin
     try:
+        # instantly grant whatever action this is to the admin
         if u.is_user_admin():
             return True
 
         if target_class == 'user_post':
-            target = find_by_id(target_id)
+            target = queries.find_by_id(target_id)
             if type(target) == Comment or type(target) == Submission:
                 allow = (str(target.submitter.id) == user_id)
         elif target_class == 'user_info':
