@@ -173,7 +173,7 @@ def save(request):
     if u:
         vds = []
         for i in u.saved:
-            vds.append(users.get_user_votes_on_submission(s['users.id'], i.id))
+            vds.append(users.get_user_votes(s['users.id'], "on_submission", i.id))
         for vd in vds:
             if type(vd) == dict:
                 vote_dict.update(vd)
@@ -218,7 +218,7 @@ def follow(request):
        for i in u.follows:
            for story in i.submissions:
                #@FIXME: this is probably quite slow
-               vds.append(users.get_user_votes_on_submission(u.id, story.id))
+               vds.append(users.get_user_votes(u.id, "on_submission", story.id))
        for vd in vds:
            if type(vd) == dict:
                vote_dict.update(vd)
