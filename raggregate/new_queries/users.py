@@ -9,6 +9,8 @@ import sqlalchemy
 import uuid
 import sqlahelper
 
+import os
+
 dbsession = sqlahelper.get_session()
 
 def get_user_by_id(id):
