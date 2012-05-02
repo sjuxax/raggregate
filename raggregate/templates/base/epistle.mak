@@ -62,8 +62,8 @@ $(document).ready(function() {
 		% for e_root in epistles['roots']:
             <div class="message">
                 % if e_root.parent_type == 'story':
-                    <i>left on <a href="/full/${e_root.parent_info.id}">${e_root.parent_info.title}</a></i><br />
-                % elif e_root.parent_type == 'comment':
+                    <i>left on <a href=${request.route_url('full', sub_id=e_root.parent_info.id)}>${e_root.parent_info.title}</a></i><br />
+% elif e_root.parent_type == 'comment':
                     <i>in reply to ${e_root.parent_info.submitter.display_name()}'s comment</i><br />
                 % elif e_root.parent_type == 'epistle' or e_root.parent_type == 'reply':
                     <h2 class="message_subject">${e_root.display_subject()}</h2>
