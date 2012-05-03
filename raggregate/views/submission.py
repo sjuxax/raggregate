@@ -60,7 +60,10 @@ def post(request):
             p['url'] = None
 
 
-        sub = Submission(p['title'][:100], p['description'], p['url'], s['users.id'])
+        if 'section_id' in p:
+            sub = Submission(p['title'][:100], p['description'], p['url'], s['users.id'], section = p['section_id'])
+        else:
+            sub = Submission(p['title'][:100], p['description'], p['url'], s['users.id'])
         dbsession.add(sub)
         dbsession.flush()
         v = Vote(sub.id, s['users.id'], 1, "submission", None)

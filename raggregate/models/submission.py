@@ -39,16 +39,18 @@ class Submission(Base):
     upvote_tally_timestamp = Column(DateTime(timezone=True), default=None)
     total_vote_tally = Column(Integer)
     total_vote_timestamp = Column(DateTime(timezone=True), default=None)
+    section = Column(GUID, ForeignKey('sections.id'), nullable=True)
 
     submitter = relationship("User", backref="submissions")
     votes = relationship("Vote", cascade="all, delete, delete-orphan")
 
-    def __init__(self, title, description, url, user_id, slug = None):
+    def __init__(self, title, description, url, user_id, slug = None, section = None):
         self.title = title
         self.description = description
         self.url = url
         self.added_by = user_id
         self.slug = slug
+        self.section = section
 
         if url is None:
             self.self_post = True
