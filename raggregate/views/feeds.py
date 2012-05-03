@@ -42,7 +42,7 @@ def combined(request):
     dbsession = DBSession()
 
     stories = submission.get_story_list(page_num = 1, per_page = 10, sort = 'new', request = r)
-    comments = queries.get_recent_comments(10)
+    comments = submission.get_recent_comments(10)
 
     agg = []
     [agg.append(i) for i in comments]
@@ -63,7 +63,7 @@ def comment(request):
     r = request
     dbsession = DBSession()
 
-    comments = queries.get_recent_comments(20)
+    comments = submission.get_recent_comments(20)
     last_update = comments[0].added_on.isoformat()
     request.response.content_type = "text/xml"
     site_name = r.registry.settings['site.site_name']
