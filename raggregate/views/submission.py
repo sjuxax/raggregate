@@ -9,6 +9,7 @@ from raggregate.models.epistle import Epistle
 from raggregate import queries
 from raggregate.new_queries import users
 from raggregate.new_queries import submission
+from raggregate.new_queries import section
 
 from pyramid.view import view_config
 
@@ -28,6 +29,7 @@ def post(request):
     s['message'] = "Post a story."
     dbsession = DBSession()
     stories = None
+    sections = None
 
     new_url_text = ''
     new_title_text = ''
@@ -46,6 +48,7 @@ def post(request):
         if 'logged_in' not in s:
             s['message'] = 'Sorry, you must <a href="{0}">log in</a> before you can share a link.'.format(r.route_url('login'))
             return {'stories': [], 'success': False, 'code': 'ENOLOGIN'}
+        sections = section.get_sections()
 
     if p and 'title' in p:
         if 'logged_in' not in s:
@@ -162,7 +165,7 @@ def post(request):
 
     return {'stories': stories, 'success': True, 'code': 0, 'vote_dict': vote_dict, 'max_stories': max_stories,
             'prev_page': prev_page, 'next_page': next_page, 'new_url_text': new_url_text,
-            'new_title_text': new_title_text, }
+            'new_title_text': new_title_text,  'sections': sections,}
 
 @view_config(renderer='vote.mak', route_name='vote')
 def vote(request):

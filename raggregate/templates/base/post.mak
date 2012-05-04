@@ -7,9 +7,14 @@
                 <b>At least one of these is required</b><br />
                 Description: <textarea name="description" cols="50" rows="10"></textarea><br />
                 URL: <input type="text" name="url" value="${new_url_text}" /><br />
-                % if 'section_id' in request.session['safe_get']:
-                    <input type="hidden" value="${request.session['safe_get']['section_id']}" name="section_id" />
-                % endif
+                Section: <select name="section_id">
+                    % for section in sections:
+                        <option value="${section.id}">${section.name}</option>
+                    % endfor
+                </select><br />
+                ##% if 'section_id' in request.session['safe_get']:
+                ##    <input type="hidden" value="${request.session['safe_get']['section_id']}" name="section_id" />
+                ##% endif
                 <br />
                 <input type="submit" value="Post Story" /><br />
             </form>
