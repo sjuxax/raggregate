@@ -36,11 +36,13 @@ vote_dict = pageargs['vote_dict']
                         <br />
                     % endif
                     submitted ${fuzzify_date(s.added_on)} by <a href="${request.route_url('user_info', _query=[('user_id', s.submitter.id)])}">${s.submitter.display_name()}</a><br />
-                    ## @TODO: this probably runs inefficiently.
-                    ## We could supply a dictionary of sections to
-                    ## this template from the controller and reference
-                    ## that. Or do something else to make it fast.
-                    in section ${s.sections.name}<br />
+                    % if s.sections:
+                        ## @TODO: this probably runs inefficiently.
+                        ## We could supply a dictionary of sections to
+                        ## this template from the controller and reference
+                        ## that. Or do something else to make it fast.
+                        in section ${s.sections.name}<br />
+                    % endif
                     <%
                         saved_term = 'save'
                         if u and s in u.saved:
