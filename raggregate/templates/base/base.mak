@@ -364,7 +364,7 @@
         <div id="footer">
             <br />
             <div id="footer_links"> <a href="#">About</a> &nbsp; <a href="#">FAQ</a> &nbsp; <a href="#">Contact Us</a> &nbsp; <a href="#">Privacy Policy</a> &nbsp; </div>
-            <div id="footer_copy">&copy; 2011</div>
+            <div id="footer_copy">&copy; 2011-2012</div>
         </div>
     </div>
 </body>
