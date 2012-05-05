@@ -24,8 +24,8 @@
             % endif
             filter by section: <form action="${request.route_url('post')}" method="GET">
                                    <select name="section">
-                                       % for section in sections:
                                        <option value="">all</option>
+                                       % for section in sections:
                                        <option>${section.name}</option>
                                        % endfor
                                    </select> <input type="submit" value="Go" />
