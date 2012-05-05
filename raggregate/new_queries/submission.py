@@ -11,9 +11,12 @@ from sqlalchemy.orm import joinedload
 dbsession = sqlahelper.get_session()
 
 #stories
-def get_story_list(page_num = 1, per_page = 30, sort = 'new', request = None, self_only = False):
+def get_story_list(page_num = 1, per_page = 30, sort = 'new', request = None, self_only = False, section = None):
     from raggregate import queries
     stories = dbsession.query(Submission).options(joinedload('submitter')).filter(Submission.deleted == False)
+
+    if section:
+        stories = stories.filter(Submission.section == section.id)
 
     if self_only:
         stories = stories.filter(Submission.self_post == True)

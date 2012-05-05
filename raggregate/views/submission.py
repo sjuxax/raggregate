@@ -5,11 +5,12 @@ from raggregate.models.vote import Vote
 from raggregate.models.submission import Submission
 from raggregate.models.comment import Comment
 from raggregate.models.epistle import Epistle
+from raggregate.models.section import Section
 
 from raggregate import queries
 from raggregate.new_queries import users
 from raggregate.new_queries import submission
-from raggregate.new_queries import section
+from raggregate.new_queries import section as section_queries
 
 from pyramid.view import view_config
 
@@ -29,10 +30,14 @@ def post(request):
     s['message'] = "Post a story."
     dbsession = DBSession()
     stories = None
-    sections = None
+
+    filtered_section = None
+    section_found = False
 
     new_url_text = ''
     new_title_text = ''
+
+    sections = section_queries.get_sections()
 
     #if uses came in with a share button, redirect to existing discussion if there is one
     if 'from' in qs and qs['from'] == 'button':
@@ -48,7 +53,6 @@ def post(request):
         if 'logged_in' not in s:
             s['message'] = 'Sorry, you must <a href="{0}">log in</a> before you can share a link.'.format(r.route_url('login'))
             return {'stories': [], 'success': False, 'code': 'ENOLOGIN'}
-        sections = section.get_sections()
 
     if p and 'title' in p:
         if 'logged_in' not in s:
@@ -136,6 +140,29 @@ def post(request):
         except:
             page_num = 1
 
+    section = None
+    if 'section' in qs:
+        section = qs['section']
+        try:
+            section = section_queries.get_section_by_name(section)
+            section_found = True
+        except sqlalchemy.orm.exc.NoResultFound:
+            try:
+                section = section_queries.get_section_by_id(section)
+                section_found = True
+            except:
+                from pyramid_tm import transaction
+                transaction.abort()
+                pass
+
+        # reset section variable to None if we couldn't the named section
+        if section_found == False:
+            section = None
+        else:
+            #if we did find something, set filtered_section so that we can
+            #reference the filtered section in the template.
+            filtered_section = section
+
 #   @FIXME: make per_page configurable in a safe location
 #   it is probably unwise to allow this to be set in the query string
 #   because then a malicious user could say per_page = 10000000000
@@ -143,7 +170,7 @@ def post(request):
 #   if 'per_page' in qs:
 #       per_page = qs['per_page']
 
-    stories = submission.get_story_list(page_num = page_num, per_page = per_page, sort = sort, request = request)
+    stories = submission.get_story_list(page_num = page_num, per_page = per_page, sort = sort, request = request, section = section)
     max_stories = stories['max_stories']
     stories = stories['stories']
 
@@ -165,7 +192,7 @@ def post(request):
 
     return {'stories': stories, 'success': True, 'code': 0, 'vote_dict': vote_dict, 'max_stories': max_stories,
             'prev_page': prev_page, 'next_page': next_page, 'new_url_text': new_url_text,
-            'new_title_text': new_title_text,  'sections': sections,}
+            'new_title_text': new_title_text,  'sections': sections, 'filtered_section': section}
 
 @view_config(renderer='vote.mak', route_name='vote')
 def vote(request):

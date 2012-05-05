@@ -19,6 +19,17 @@
                 <input type="submit" value="Post Story" /><br />
             </form>
         % else:
+            % if filtered_section:
+                <i> showing section <b>${filtered_section.name}</b> </i><br />
+            % endif
+            filter by section: <form action="${request.route_url('post')}" method="GET">
+                                   <select name="section">
+                                       % for section in sections:
+                                       <option value="">all</option>
+                                       <option>${section.name}</option>
+                                       % endfor
+                                   </select> <input type="submit" value="Go" />
+                               </form>
             % if len(stories) <= 0:
                 <i>nothing to see here</i>
             % endif
