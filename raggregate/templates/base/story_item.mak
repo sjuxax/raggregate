@@ -41,7 +41,7 @@ vote_dict = pageargs['vote_dict']
                         ## We could supply a dictionary of sections to
                         ## this template from the controller and reference
                         ## that. Or do something else to make it fast.
-                        in section ${s.sections.name}<br />
+                        in section <a href="${request.route_url('post', _query=[('section', s.sections.name)])}">${s.sections.name}</a><br />
                     % endif
                     <%
                         saved_term = 'save'
