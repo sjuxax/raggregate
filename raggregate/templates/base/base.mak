@@ -33,8 +33,7 @@
 
         #sidebar { width: 20%; float: right; }
 
-        #main_content { padding-top:12px;
-                        width: 70%;
+        #main_content { width: 70%;
                         clear: both;
                         float: left; }
 

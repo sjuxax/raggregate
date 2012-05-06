@@ -7,10 +7,29 @@
                 <b>At least one of these is required</b><br />
                 Description: <textarea name="description" cols="50" rows="10"></textarea><br />
                 URL: <input type="text" name="url" value="${new_url_text}" /><br />
+                Section: <select name="section_id">
+                    % for section in sections:
+                        <option value="${section.id}">${section.name}</option>
+                    % endfor
+                </select><br />
+                ##% if 'section_id' in request.session['safe_get']:
+                ##    <input type="hidden" value="${request.session['safe_get']['section_id']}" name="section_id" />
+                ##% endif
                 <br />
                 <input type="submit" value="Post Story" /><br />
             </form>
         % else:
+            % if filtered_section:
+                <i> showing section <b>${filtered_section.name}</b> </i><br />
+            % endif
+            filter by section: <form action="${request.route_url('post')}" method="GET">
+                                   <select name="section">
+                                       <option value="">all</option>
+                                       % for section in sections:
+                                       <option>${section.name}</option>
+                                       % endfor
+                                   </select> <input type="submit" value="Go" />
+                               </form>
             % if len(stories) <= 0:
                 <i>nothing to see here</i>
             % endif
