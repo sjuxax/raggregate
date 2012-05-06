@@ -273,7 +273,7 @@ def ban(request):
     s = request.session
     p = s['safe_post']
 
-    if 'logged_in_admin' not in s:
+    if 'logged_in_admin' not in s or s['logged_in_admin'] == False:
         return HTTPNotFound()
 
     if 'ip' in p:
