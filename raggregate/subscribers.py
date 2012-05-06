@@ -106,6 +106,8 @@ def user_session_handler(event):
     e['logged_in_admin'] = None
     e['logged_in'] = False
 
+    s['logged_in_admin'] = False
+
     e['followed_users'] = []
 
     if 'recent_comments.num' in r.registry.settings:
