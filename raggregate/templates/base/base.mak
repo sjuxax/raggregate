@@ -341,7 +341,11 @@
                  % endif
            </div>
             <div class="right_side_box" id="submit_link">
-                <h2><a href="${request.route_url('post', _query=[('new_post', 'y')])}">Submit a Link!</a></h2>
+                % if filtered_section:
+                    <h2><a href="${request.route_url('post', _query=[('new_post', 'y'), ('section', filtered_section.name)])}">Submit a Link!</a></h2>
+                % else:
+                    <h2><a href="${request.route_url('post', _query=[('new_post', 'y')])}">Submit a Link!</a></h2>
+                % endif
             </div>
             % if 'recent_comments.enabled' in request.registry.settings and request.registry.settings['recent_comments.enabled'] == 'true':
             <div class="right_side_box" id="recent_comments">

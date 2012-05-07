@@ -9,7 +9,11 @@
                 URL: <input type="text" name="url" value="${new_url_text}" /><br />
                 Section: <select name="section_id">
                     % for section in sections:
-                        <option value="${section.id}">${section.name}</option>
+                        % if 'section' in request.session['safe_get'] and section.name == request.session['safe_get']['section']:
+                            <option value="${section.id}" selected="selected">${section.name}</option>
+                        % else:
+                            <option value="${section.id}">${section.name}</option>
+                        % endif
                     % endfor
                 </select><br />
                 ##% if 'section_id' in request.session['safe_get']:
