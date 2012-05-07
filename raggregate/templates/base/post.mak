@@ -23,6 +23,9 @@
                 <i> showing section <b>${filtered_section.name}</b> </i><br />
             % endif
             filter by section: <form action="${request.route_url('post')}" method="GET">
+                                   % if sort:
+                                       <input type="hidden" name="sort" value="${sort}" />
+                                   % endif
                                    <select name="section">
                                        <option value="">all</option>
                                        % for section in sections:
