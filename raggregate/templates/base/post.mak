@@ -39,12 +39,20 @@
             % for s in stories:
                 <%include file="story_item.mak" args="story_obj = s, vote_dict = vote_dict" />
             % endfor
-             % if next_page:
+            % if next_page:
                 <br />
-                <a href="${request.route_url('post', _query = [('page_num', next_page), ('sort', sort)])}">next page &rarr;</a>
+                % if filtered_section:
+                    <a href="${request.route_url('post', _query = [('page_num', next_page), ('sort', sort), ('section', filtered_section.name)])}">next page &rarr;</a>
+                % else:
+                    <a href="${request.route_url('post', _query = [('page_num', next_page), ('sort', sort)])}">next page &rarr;</a>
+                % endif
             % endif
             % if prev_page:
                 <br />
-                <a href="${request.route_url('post', _query = [('page_num', prev_page), ('sort', sort)])}">prev page &larr;</a>
+                % if filtered_section:
+                    <a href="${request.route_url('post', _query = [('page_num', prev_page), ('sort', sort), ('section', filtered_section.name)])}">prev page &larr;</a>
+                % else:
+                    <a href="${request.route_url('post', _query = [('page_num', prev_page), ('sort', sort)])}">prev page &larr;</a>
+                % endif
             % endif
         % endif
