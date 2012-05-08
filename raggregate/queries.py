@@ -231,3 +231,14 @@ def list_bans(ip = None, username = None, active = True):
     # presently, so would need to change behavior on front-end
     return dbsession.query(Ban).all()
 
+def unroll_sqlalchemy_id_tuple(tup):
+    """ If we get a list of IDs from SqlAlchemy, it looks like:
+    [(1L,), (2L,), (3L,)]
+    which we almost never want. As such, we have created this utility
+    function to change that into:
+    [1, 2, 3]
+    """
+    ret = []
+    for t in tup:
+        ret.append(t[0])
+    return ret
