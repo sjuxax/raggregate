@@ -11,6 +11,7 @@ from raggregate import queries
 from raggregate.new_queries import users
 from raggregate.new_queries import submission
 from raggregate.new_queries import section as section_queries
+from raggregate.new_queries import motd
 
 from pyramid.view import view_config
 
@@ -190,9 +191,12 @@ def post(request):
         s.tally_votes()
         s.tally_comments()
 
+    # Get message of the day
+    message_of_the_day = motd.get_random_message()
+
     return {'stories': stories, 'success': True, 'code': 0, 'vote_dict': vote_dict, 'max_stories': max_stories,
             'prev_page': prev_page, 'next_page': next_page, 'new_url_text': new_url_text,
-            'new_title_text': new_title_text,  'sections': sections, 'filtered_section': section}
+            'new_title_text': new_title_text,  'sections': sections, 'filtered_section': section, 'message_of_the_day': message_of_the_day}
 
 @view_config(renderer='vote.mak', route_name='vote')
 def vote(request):
