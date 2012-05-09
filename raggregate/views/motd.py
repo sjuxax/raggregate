@@ -34,6 +34,8 @@ def motd(request):
             session['message'] = "Message of the Day Added!"
         except Exception, ex:
             print str(ex)
+            session['message'] = 'There was a problem posting your message.'
+            return {'motds': [], 'success': False, 'code': 'EBADPOST'}
 
     messages_of_the_day = motd_queries.get_all_messages()
     return {'messages_of_the_day': messages_of_the_day}
