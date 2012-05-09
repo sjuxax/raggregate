@@ -25,7 +25,7 @@ def motd(request):
 
         #@TODO: Need to add more form validation here
         if author == "":
-            author = "Unknown"
+            author = None
 
         try:
             new_MOTD = MOTD(message = new_motd, author = author, added_by = session['users.id'])
