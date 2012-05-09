@@ -33,7 +33,7 @@ def motd(request):
             author = "Unknown"
 
         try:
-            new_MOTD = MOTD(message_to_add, author, session['users.id'])
+            new_MOTD = MOTD(message = new_motd, author = author, added_by = session['users.id'])
             dbsession.add(new_MOTD)
             dbsession.commit()
             session['message'] = "Message of the Day Added!"

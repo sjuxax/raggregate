@@ -14,7 +14,7 @@ class MOTD(Base):
     author = Column(UnicodeText)
     added_by = Column(UnicodeText)
 
-    def __init__(self, message, author, added_by):
+    def __init__(self, message = None, author = None, added_by = None):
         self.message = message
         self.author = author
         self.added_by = added_by
