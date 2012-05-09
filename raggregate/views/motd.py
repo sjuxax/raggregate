@@ -19,8 +19,8 @@ def motd(request):
         return HTTPNotFound()
 
     # Handle the form input
-    if post and post['message_to_add'] != '':
-        message_to_add = post['message_to_add']
+    if post and post['new_motd'] != '':
+        new_motd = post['new_motd']
         author = post['author']
 
         #@TODO: Need to add more form validation here
@@ -37,5 +37,5 @@ def motd(request):
             session['message'] = 'There was a problem posting your message.'
             return {'motds': [], 'success': False, 'code': 'EBADPOST'}
 
-    messages_of_the_day = motd_queries.get_all_messages()
-    return {'messages_of_the_day': messages_of_the_day}
+    motds = motd_queries.get_all_messages()
+    return {'motds': motds}

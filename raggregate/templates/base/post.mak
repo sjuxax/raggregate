@@ -62,8 +62,6 @@
         % endif
 		<br />
         Message of the day: <br />
-		${message_of_the_day.message}
+		${motd.message}
         <br />
-        - ${message_of_the_day.author}
-        <br />
-        <a href="${request.route_url('motd')}">Add a message</a>
+        - ${motd.author}
