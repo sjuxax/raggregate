@@ -15,13 +15,8 @@ def motd(request):
     # Only allow admins to add a message at this time
     #@TODO: unify admin-only page handling so that we can easily change this
     # some day if we want.
-    #if 'logged_in_admin' not in session or session['logged_in_admin'] == False:
-    #    return HTTPNotFound()
-
-    # Ensure user is logged in
-    if 'logged_in' not in session:
-        session['message'] = 'Sorry, you must <a href="{0}">log in</a> before you can add a message of the day.'.format(request.route_url('login'))
-        return {'messages_of_the_day': [], 'success': False, 'code': 'ENOLOGIN'}
+    if 'logged_in_admin' not in session or session['logged_in_admin'] == False:
+        return HTTPNotFound()
 
     # Handle the form input
     if post and post['message_to_add'] != '':
