@@ -60,8 +60,10 @@
                 % endif
             % endif
         % endif
-		<br />
-        Message of the day: <br />
-		${motd.message}
         <br />
-        - ${motd.author}
+        % if motd:
+            Message of the day: <br />
+            ${motd.message}
+            <br />
+            - ${motd.author}
+        % endif
