@@ -233,12 +233,17 @@ def list_bans(ip = None, username = None, active = True):
 
 def unroll_sqlalchemy_id_tuple(tup):
     """ If we get a list of IDs from SqlAlchemy, it looks like:
-    [(1L,), (2L,), (3L,)]
+    [(UUID('fake-uuid')), (UUID('fake-uuid-2'))]
     which we almost never want. As such, we have created this utility
     function to change that into:
-    [1, 2, 3]
+    [UUID('fake-uuid'), UUID('fake-uuid-2')]
     """
     ret = []
+
+    if len(tup) == 0:
+        return []
+
     for t in tup:
         ret.append(t[0])
+
     return ret
