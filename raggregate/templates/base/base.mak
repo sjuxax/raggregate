@@ -341,7 +341,7 @@
                  % endif
            </div>
             <div class="right_side_box" id="submit_link">
-                % if filtered_section:
+                % if filtered_section and filtered_section != 'all':
                     <h2><a href="${request.route_url('post', _query=[('new_post', 'y'), ('section', filtered_section.name)])}">Submit a Link!</a></h2>
                 % else:
                     <h2><a href="${request.route_url('post', _query=[('new_post', 'y')])}">Submit a Link!</a></h2>

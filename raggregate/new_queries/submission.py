@@ -1,9 +1,12 @@
 from raggregate.models.submission import Submission
 from raggregate.models.comment import Comment
 from raggregate.models.vote import Vote
+from raggregate.models.subscribe import Subscribe
+from raggregate.models.section import Section
 
 from raggregate.new_queries import hotness
-
+from raggregate.new_queries import subscribe as sub_queries
+from raggregate.new_queries import section as section_queries
 
 import sqlahelper
 from sqlalchemy.orm import joinedload
@@ -12,11 +15,26 @@ dbsession = sqlahelper.get_session()
 
 #stories
 def get_story_list(page_num = 1, per_page = 30, sort = 'new', request = None, self_only = False, section = None):
+    if 'users.id' in request.session and request.session['users.id'] is not None:
+        user_id = request.session['users.id']
+    else:
+        user_id = None
+
     from raggregate import queries
     stories = dbsession.query(Submission).options(joinedload('submitter')).filter(Submission.deleted == False)
 
-    if section:
+    if section and section.__class__ == Section:
         stories = stories.filter(Submission.section == section.id)
+    elif section and section == 'all':
+        pass
+    else:
+        # show default user sections
+        if user_id is not None:
+            # Get a list of sections that this user is subscribed to
+            subscribed_to_list = sub_queries.get_subscribe_to_by_user_id(user_id)
+            # Filter sections by the list we just retreived
+            if len(subscribed_to_list) > 0:
+                stories = stories.filter(Submission.section.in_(subscribed_to_list))
 
     if self_only:
         stories = stories.filter(Submission.self_post == True)

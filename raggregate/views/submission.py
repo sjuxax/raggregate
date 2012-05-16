@@ -11,6 +11,7 @@ from raggregate import queries
 from raggregate.new_queries import users
 from raggregate.new_queries import submission
 from raggregate.new_queries import section as section_queries
+from raggregate.new_queries import subscribe as sub_queries
 
 from pyramid.view import view_config
 
@@ -140,8 +141,12 @@ def post(request):
         except:
             page_num = 1
 
-    section = None
-    if 'section' in qs:
+    if 'section' in qs and qs['section'] == 'all':
+        section = 'all'
+    else:
+        section = None
+
+    if 'section' in qs and qs['section'] != 'all' and qs['section'] != '':
         section = qs['section']
         try:
             section = section_queries.get_section_by_name(section)
@@ -183,16 +188,19 @@ def post(request):
         prev_page = page_num - 1
 
     vote_dict = {}
+    subscribed_to_list = []
     if 'logged_in' in s:
         vote_dict = users.get_user_votes_on_all_submissions(s['users.id'])
-    for s in stories:
+        subscribed_to_list = sub_queries.get_subscribe_to_by_user_id(s['users.id'])
+    for story in stories:
         #@TODO: Remember to not tally on every load once a real site deploys
-        s.tally_votes()
-        s.tally_comments()
+        story.tally_votes()
+        story.tally_comments()
 
     return {'stories': stories, 'success': True, 'code': 0, 'vote_dict': vote_dict, 'max_stories': max_stories,
             'prev_page': prev_page, 'next_page': next_page, 'new_url_text': new_url_text,
-            'new_title_text': new_title_text,  'sections': sections, 'filtered_section': section}
+            'new_title_text': new_title_text,  'sections': sections, 'filtered_section': section,
+            'subscribed_to_list': subscribed_to_list}
 
 @view_config(renderer='vote.mak', route_name='vote')
 def vote(request):

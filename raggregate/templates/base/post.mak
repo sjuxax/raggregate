@@ -23,15 +23,24 @@
                 <input type="submit" value="Post Story" /><br />
             </form>
         % else:
-            % if filtered_section:
+            % if filtered_section and filtered_section != 'all':
                 <i> showing section <b>${filtered_section.name}</b> </i><br />
+                % if 'logged_in' in request.session:
+                    ##TODO: This doesn't work properly, still shows "Subscribed" when already subscribed
+                    % if filtered_section in subscribed_to_list:
+                        <a href="" >Unsubscribe</a><br />
+                    % else:
+                        <a href="" >Subscribe</a><br />
+                    % endif
+                % endif
             % endif
             filter by section: <form action="${request.route_url('post')}" method="GET">
                                    % if sort:
                                        <input type="hidden" name="sort" value="${sort}" />
                                    % endif
                                    <select name="section">
-                                       <option value="">all</option>
+                                       <option value="">Subscribed</option>
+                                       <option value="all">All</option>
                                        % for section in sections:
                                        <option>${section.name}</option>
                                        % endfor
@@ -45,7 +54,7 @@
             % endfor
             % if next_page:
                 <br />
-                % if filtered_section:
+                % if filtered_section and filtered_section != 'all':
                     <a href="${request.route_url('post', _query = [('page_num', next_page), ('sort', sort), ('section', filtered_section.name)])}">next page &rarr;</a>
                 % else:
                     <a href="${request.route_url('post', _query = [('page_num', next_page), ('sort', sort)])}">next page &rarr;</a>

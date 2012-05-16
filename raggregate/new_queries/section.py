@@ -3,8 +3,6 @@ from raggregate.models.comment import Comment
 from raggregate.models.vote import Vote
 from raggregate.models.section import Section
 
-from raggregate import queries
-
 import sqlahelper
 
 dbsession = sqlahelper.get_session()
