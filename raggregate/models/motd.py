@@ -1,10 +1,7 @@
 from raggregate.models import *
 import sqlalchemy
 from sqlalchemy import Column
-from sqlalchemy import Unicode
 from sqlalchemy import UnicodeText
-from sqlalchemy import Boolean
-from sqlalchemy import ForeignKey
 from raggregate.guid_recipe import GUID
 
 class MOTD(Base):
@@ -15,6 +12,7 @@ class MOTD(Base):
     source = Column(UnicodeText)
     link = Column(UnicodeText)
     added_by = Column(UnicodeText)
+    datestring = Column(UnicodeText)
 
     def __init__(self, message = None, author = None, source = None, link = None,
                  added_by = None):
@@ -23,3 +21,4 @@ class MOTD(Base):
         self.source = source
         self.link = link
         self.added_by = added_by
+        self.datestring = datestring
