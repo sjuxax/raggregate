@@ -27,7 +27,7 @@
                 <i> showing section <b>${filtered_section.name}</b> </i><br />
                 % if 'logged_in' in request.session:
                     ##TODO: This doesn't work properly, still shows "Subscribed" when already subscribed
-                    % if filtered_section in subscribed_to_list:
+                    % if filtered_section.id in subscribed_to_list:
                         <a href="" >Unsubscribe</a><br />
                     % else:
                         <a href="" >Subscribe</a><br />
