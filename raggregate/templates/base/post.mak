@@ -24,13 +24,13 @@
             </form>
         % else:
             % if filtered_section and filtered_section != 'all':
-                <i> showing section <b>${filtered_section.name}</b> </i><br />
+                <i> showing section <b>${filtered_section.name}</b> </i>&nbsp;
                 % if 'logged_in' in request.session:
                     ##TODO: This doesn't work properly, still shows "Subscribed" when already subscribed
                     % if filtered_section.id in subscribed_to_list:
-                        <a href="${request.route_url('post', _query = [('section', filtered_section.name), ('subscribe', 'n')])}">Unsubscribe</a><br />
+                        <a href="${request.route_url('post', _query = [('section', filtered_section.name), ('subscribe', 'n')])}">[unsubscribe]</a><br />
                     % else:
-                        <a href="${request.route_url('post', _query = [('section', filtered_section.name), ('subscribe', 'y')])}">Subscribe</a><br />
+                        <a href="${request.route_url('post', _query = [('section', filtered_section.name), ('subscribe', 'y')])}">[subscribe]</a><br />
                     % endif
                 % endif
             % endif
