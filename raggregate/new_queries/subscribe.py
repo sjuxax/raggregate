@@ -36,7 +36,7 @@ def get_subscribed_by_user_id(id):
     for sub in user_subs:
         if sub.subscription_status and sub.section_id not in subscribed_to_list:
             subscribed_to_list.append(sub.section_id)
-        else:
+        elif not sub.subscription_status:
             if sub.section_id in subscribed_to_list:
                 subscribed_to_list.remove(sub.section_id)
     return subscribed_to_list
