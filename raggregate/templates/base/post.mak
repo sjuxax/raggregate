@@ -39,10 +39,14 @@
                                        <input type="hidden" name="sort" value="${sort}" />
                                    % endif
                                    <select name="section">
-                                       <option value="">subscribed</option>
-                                       <option value="all">all</option>
+                                       <option value="" ${"selected=\"selected\"" if not filtered_section else ""}>subscribed</option>
+                                       <option value="all" ${"selected=\"selected\"" if filtered_section == 'all' else ""}>all</option>
                                        % for section in sections:
-                                           <option>${section.name}</option>
+                                           % if filtered_section and filtered_section != 'all' and filtered_section.name == section.name:
+                                               <option selected="selected">${section.name}</option>
+                                           % else:
+                                               <option>${section.name}</option>
+                                           % endif
                                        % endfor
                                    </select> <input type="submit" value="Go" />
                                </form>
