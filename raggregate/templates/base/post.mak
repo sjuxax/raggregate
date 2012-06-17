@@ -28,9 +28,9 @@
                 % if 'logged_in' in request.session:
                     ##TODO: This doesn't work properly, still shows "Subscribed" when already subscribed
                     % if filtered_section.id in subscribed_to_list:
-                        <a href="" >Unsubscribe</a><br />
+                        <a href="${request.route_url('post', _query = [('section', filtered_section.name), ('subscribe', 'n')])}">Unsubscribe</a><br />
                     % else:
-                        <a href="" >Subscribe</a><br />
+                        <a href="${request.route_url('post', _query = [('section', filtered_section.name), ('subscribe', 'y')])}">Subscribe</a><br />
                     % endif
                 % endif
             % endif

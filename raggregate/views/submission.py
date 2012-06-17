@@ -168,6 +168,15 @@ def post(request):
             #reference the filtered section in the template.
             filtered_section = section
 
+    if 'subscribe' in qs and isinstance(section, Section) and 'logged_in' in s:
+        if qs['subscribe'] == 'y':
+            sub_way = True
+        elif qs['subscribe'] == 'n':
+            sub_way = False
+
+        sub = sub_queries.create_subscription(s['users.id'], section.id, sub_way)
+        s['message'] = 'Subscription to section {0} updated'.format(section.name)
+
 #   @FIXME: make per_page configurable in a safe location
 #   it is probably unwise to allow this to be set in the query string
 #   because then a malicious user could say per_page = 10000000000
@@ -196,6 +205,8 @@ def post(request):
         #@TODO: Remember to not tally on every load once a real site deploys
         story.tally_votes()
         story.tally_comments()
+
+    print "\n\nsubscribed list: {0}\n\n".format(subscribed_to_list)
 
     return {'stories': stories, 'success': True, 'code': 0, 'vote_dict': vote_dict, 'max_stories': max_stories,
             'prev_page': prev_page, 'next_page': next_page, 'new_url_text': new_url_text,
