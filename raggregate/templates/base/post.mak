@@ -39,8 +39,8 @@
                                        <input type="hidden" name="sort" value="${sort}" />
                                    % endif
                                    <select name="section">
-                                       <option value="">Subscribed</option>
-                                       <option value="all">All</option>
+                                       <option value="">subscribed</option>
+                                       <option value="all">all</option>
                                        % for section in sections:
                                        <option>${section.name}</option>
                                        % endfor
