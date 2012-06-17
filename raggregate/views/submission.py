@@ -191,7 +191,7 @@ def post(request):
     subscribed_to_list = []
     if 'logged_in' in s:
         vote_dict = users.get_user_votes_on_all_submissions(s['users.id'])
-        subscribed_to_list = sub_queries.get_subscribe_to_by_user_id(s['users.id'])
+        subscribed_to_list = sub_queries.get_subscribed_by_user_id(s['users.id'])
     for story in stories:
         #@TODO: Remember to not tally on every load once a real site deploys
         story.tally_votes()

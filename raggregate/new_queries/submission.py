@@ -31,7 +31,7 @@ def get_story_list(page_num = 1, per_page = 30, sort = 'new', request = None, se
         # show default user sections
         if user_id is not None:
             # Get a list of sections that this user is subscribed to
-            subscribed_to_list = sub_queries.get_subscribe_to_by_user_id(user_id)
+            subscribed_to_list = sub_queries.get_subscribed_by_user_id(user_id)
             # Filter sections by the list we just retreived
             if len(subscribed_to_list) > 0:
                 stories = stories.filter(Submission.section.in_(subscribed_to_list))

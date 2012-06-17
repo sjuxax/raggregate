@@ -19,7 +19,7 @@ def get_subs_by_section_id(id):
     # Returns a list of subscription objects filtered by section id
     return dbsession.query(Subscribe).filter(Subscribe.section_id == id).all()
 
-def get_subscribe_to_by_user_id(id):
+def get_subscribed_by_user_id(id):
     # Returns a list of section id's that this user is subscribed to
     # It has to generate one list from two data sources
     subscribed_to_list = []
