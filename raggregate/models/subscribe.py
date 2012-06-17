@@ -8,7 +8,7 @@ from sqlalchemy import ForeignKey
 from raggregate.guid_recipe import GUID
 
 class Subscribe(Base):
-    __tablename__ = 'subscribe'
+    __tablename__ = 'users_subscriptions'
     id = Column(GUID, primary_key=True)
     user_id = Column(GUID, ForeignKey('users.id'))
     section_id = Column(GUID, ForeignKey('sections.id'))
