@@ -30,7 +30,8 @@ def get_base_subscriptions():
 def get_subscribed_by_user_id(id):
     # Returns a list of section id's that this user is subscribed to
     # It has to generate one list from two data sources
-    subscribed_to_list = get_base_subscriptions()
+    subscribed_to_list = []
+    [subscribed_to_list.append(i[0]) for i in get_base_subscriptions()]
     user_subs = get_subs_by_user_id(id)
     for sub in user_subs:
         if sub.subscription_status and sub.section_id not in subscribed_to_list:
