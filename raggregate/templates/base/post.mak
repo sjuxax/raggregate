@@ -42,7 +42,7 @@
                                        <option value="">subscribed</option>
                                        <option value="all">all</option>
                                        % for section in sections:
-                                       <option>${section.name}</option>
+                                           <option>${section.name}</option>
                                        % endfor
                                    </select> <input type="submit" value="Go" />
                                </form>
