@@ -94,6 +94,8 @@ def post(request):
             #solr is not configured for this connection
             pass
 
+        return HTTPFound(r.route_url('home'))
+
     if r.params and 'op' in r.params:
         sub_id = r.params['sub_id']
         if r.params['op'] == 'del':
