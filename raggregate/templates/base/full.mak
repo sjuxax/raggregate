@@ -62,9 +62,11 @@
         <br />
     % if story.description != u'':
         <div id="description" class="story-description">
+    % else:
+        <div id="description">
+    % endif
             ${story.description | template_filters.render_md,n}
         </div>
-    % endif
         ##@TODO: make functionality to determine whether a user is logged in on display a reusable function
         ## I have vague memories of this but think it's on the server side, need to create a def that can
         ## be used in the Mako templates to determine this, would be much better that way.
