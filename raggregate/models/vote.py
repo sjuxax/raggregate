@@ -20,6 +20,7 @@ class Vote(Base):
     # the tradeoff here is size on various db structures.
     submission_id = Column(GUID, ForeignKey('submissions.id'))
     comment_id = Column(GUID, ForeignKey('comments.id'))
+    motd_id = Column(GUID, ForeignKey('motd.id'))
     user_id = Column(GUID, ForeignKey('users.id'), nullable=False)
     # points: -1 for down, 0 for neutral, 1 for up
     # this also allows easier manipulation of vote tallying if needed
@@ -40,6 +41,8 @@ class Vote(Base):
             self.submission_id = item_id
         elif target_type == 'submission':
             self.submission_id = item_id
+        elif target_type == 'motd':
+            self.motd_id = item_id
         else:
             raise Exception("Need to know target type for this vote.")
         self.user_id = user_id
