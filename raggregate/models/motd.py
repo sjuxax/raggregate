@@ -12,9 +12,14 @@ class MOTD(Base):
     id = Column(GUID, primary_key=True)
     message = Column(UnicodeText, nullable=False)
     author = Column(UnicodeText)
+    source = Column(UnicodeText)
+    link = Column(UnicodeText)
     added_by = Column(UnicodeText)
 
-    def __init__(self, message = None, author = None, added_by = None):
+    def __init__(self, message = None, author = None, source = None, link = None,
+                 added_by = None):
         self.message = message
         self.author = author
+        self.source = source
+        self.link = link
         self.added_by = added_by

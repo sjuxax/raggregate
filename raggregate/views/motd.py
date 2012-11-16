@@ -22,19 +22,22 @@ def motd(request):
     if post and post['new_motd'] != '':
         new_motd = post['new_motd']
         author = post['author']
+        source = post['source']
+        link = post['link']
 
         #@TODO: Need to add more form validation here
         if author == "":
             author = None
 
         try:
-            new_MOTD = MOTD(message = new_motd, author = author, added_by = session['users.id'])
-            dbsession.add(new_MOTD)
-            dbsession.commit()
+            new_motd = MOTD(message = new_motd, author = author,
+                            source = source, link = link,
+                            added_by = session['users.id'])
+            dbsession.add(new_motd)
             session['message'] = "Message of the Day Added!"
         except Exception, ex:
             print str(ex)
-            session['message'] = 'There was a problem posting your message.'
+            session['message'] = 'There was a problem adding your message.'
             return {'motds': [], 'success': False, 'code': 'EBADPOST'}
 
     motds = motd_queries.get_all_messages()
