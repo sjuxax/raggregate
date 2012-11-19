@@ -13,10 +13,8 @@ class MOTD(Base):
     link = Column(UnicodeText)
     added_by = Column(UnicodeText)
     datestring = Column(UnicodeText)
-    source_title = Column(UnicodeText)
-    source_url = Column(UnicodeText)
 
-    def __init__(self, message, author, added_by, datestring, source_title, source_url):
+    def __init__(self, message = None, author = None, source = None, link = None,
                  added_by = None):
         self.message = message
         self.author = author
@@ -24,5 +22,3 @@ class MOTD(Base):
         self.link = link
         self.added_by = added_by
         self.datestring = datestring
-        self.source_title = source_title
-        self.source_url = source_url
