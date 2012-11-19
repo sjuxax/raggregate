@@ -14,10 +14,10 @@ def get_message_by_id(id):
         return None
 
 def get_random_message():
-    motds = dbsession.query(MOTD.id).all()
-
-    # circumventing empty list errors with random.choice
-    if len(motds) == 0:
+    messages = dbsession.query(MOTD.id).all()
+    if len(messages) > 0:
+        return get_message_by_id(random.choice(queries.unroll_sqlalchemy_id_tuple(messages)))
+    else:
         return None
 
     return get_message_by_id(random.choice(queries.unroll_sqlalchemy_id_tuple(motds)))
