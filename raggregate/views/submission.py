@@ -193,7 +193,7 @@ def post(request):
         s.tally_comments()
 
     # Get message of the day
-    motd = motd_queries.get_random_message()
+    message_of_the_day = motd_queries.get_random_message()
 
     return {'stories': stories, 'success': True, 'code': 0, 'vote_dict': vote_dict,
             'max_stories': max_stories, 'prev_page': prev_page, 'next_page': next_page,

@@ -7,6 +7,16 @@ from raggregate import queries
 
 dbsession = sqlahelper.get_session()
 
+def create_motd(message = None, author = None, source = None,
+        link = None, added_by = None, datestring = None):
+
+    new_motd = MOTD(message = message, author = author, source = source,
+            link = link, added_by = added_by, datestring = datestring)
+
+    dbsession.add(new_motd)
+    dbsession.flush()
+    return new_motd
+
 def get_message_by_id(id):
     try:
         return dbsession.query(MOTD).filter(MOTD.id == id).one()
@@ -19,8 +29,6 @@ def get_random_message():
         return get_message_by_id(random.choice(queries.unroll_sqlalchemy_id_tuple(messages)))
     else:
         return None
-
-    return get_message_by_id(random.choice(queries.unroll_sqlalchemy_id_tuple(motds)))
 
 def get_all_messages():
     return dbsession.query(MOTD).all()

@@ -15,7 +15,7 @@ class MOTD(Base):
     datestring = Column(UnicodeText)
 
     def __init__(self, message = None, author = None, source = None, link = None,
-                 added_by = None):
+                 added_by = None, datestring = None):
         self.message = message
         self.author = author
         self.source = source
