@@ -3,7 +3,7 @@ from raggregate.models.submission import Submission
 from raggregate.models.user import User
 from raggregate.models.section import Section
 import sqlahelper
-from raggregate.new_queries import section as section_queries
+from raggregate.queries import section as section_queries
 
 import sqlalchemy
 

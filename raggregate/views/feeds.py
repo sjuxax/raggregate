@@ -1,5 +1,4 @@
-from raggregate import queries
-from raggregate.new_queries import submission
+from raggregate.queries import submission
 
 from pyramid.view import view_config
 

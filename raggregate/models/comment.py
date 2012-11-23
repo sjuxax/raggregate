@@ -58,14 +58,14 @@ class Comment(Base):
         # so it shouldn't be imported until it's ready to be used in a function
         # as it's being imported here. Otherwise, we die with dependency problems.
         # it is probably not advisable to do things this way, but it is much nicer
-        from raggregate import queries
+        from raggregate.queries import general
         if self.parent_id == None:
             print("No parent id on comment {0}, this is a problem...".format(self.id))
             return None
-        p = queries.find_by_id(self.parent_id)
+        p = general.find_by_id(self.parent_id)
         return p
 
     def load_submission(self):
-        from raggregate.new_queries import submission
+        from raggregate.queries import submission
         return submission.get_story_by_id(self.submission_id)
 

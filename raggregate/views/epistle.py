@@ -1,8 +1,9 @@
 import sqlalchemy
 
-from raggregate import queries
-from raggregate.new_queries import users
-from raggregate.new_queries import submission
+from raggregate.queries import users
+from raggregate.queries import submission
+from raggregate.queries import epistle as epistle_queries
+from raggregate.queries import general
 from pyramid.response import Response
 from pyramid.view import view_config
 
@@ -50,7 +51,7 @@ def epistle(request):
             parent_type = 'epistle'
         else:
             parent_id = p['parent_id']
-            parent_obj = queries.find_by_id(parent_id)
+            parent_obj = general.find_by_id(parent_id)
             if isinstance(parent_obj, Comment):
                 parent_type = 'comment'
                 c = Comment(parent_obj.submission_id, s['users.id'], parent_obj.id, p['body'], in_reply_to = parent_obj.user_id)
@@ -66,19 +67,19 @@ def epistle(request):
     box = request.matchdict['box']
 
     if box == 'in':
-        comments = queries.get_unread_comments_by_user_id(s['users.id'])
+        comments = epistle_queries.get_unread_comments_by_user_id(s['users.id'])
     elif box == 'comments':
-        comments = queries.get_read_comments_by_user_id(s['users.id'])
+        comments = epistle_queries.get_read_comments_by_user_id(s['users.id'])
     else:
         comments = []
 
     if box != 'comments':
-        ep = queries.get_epistle_roots(id=s['users.id'], target=box)
+        ep = epistle_queries.get_epistle_roots(id=s['users.id'], target=box)
         epistle_children = {}
 
         for e in ep:
             e_id = str(e.id)
-            epistle_children[e_id] = queries.get_epistle_children(e.id)
+            epistle_children[e_id] = epistle_queries.get_epistle_children(e.id)
 
         flat_eps = []
         [flat_eps.append(e) for e in _unwrap_list(ep)]
@@ -86,11 +87,11 @@ def epistle(request):
 
         for e in flat_eps:
             if str(e.recipient) == s['users.id']:
-                queries.mark_epistle_read(e)
+                epistle_queries.mark_epistle_read(e)
             e = _assign_epistle_parent(e)
 
         for c in comments:
-            queries.mark_comment_read(c)
+            epistle_queries.mark_comment_read(c)
     else:
         ep = {}
         epistle_children = {}
@@ -113,5 +114,5 @@ def _assign_epistle_parent(e):
         elif e.parent_type == 'comment':
             e.parent_info = queries.get_comment_by_id(e.parent)
         elif e.parent_type == 'epistle' or e.parent_type == 'reply':
-            e.parent_info = queries.get_epistle_by_id(e.parent)
+            e.parent_info = epistle_queries.get_epistle_by_id(e.parent)
     return e

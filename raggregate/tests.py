@@ -1,9 +1,10 @@
 import unittest
 from pyramid.config import Configurator
 from pyramid import testing
-from raggregate.new_queries import users
-from raggregate.new_queries import submission
-from raggregate import queries
+from raggregate.queries import users
+from raggregate.queries import submission
+from raggregate.queries import epistle as epistle_queries
+from raggregate.queries import general
 from raggregate.models.user import User
 from raggregate.models.epistle import Epistle
 from raggregate.models.submission import Submission
@@ -41,7 +42,7 @@ class TestUsers(BaseTest):
     def test_find_by_id_user(self):
         # depends on functional test_create_user
         u = users.create_user(username = 'test', password='test')
-        res = queries.find_by_id(u.id)
+        res = general.find_by_id(u.id)
         self.assertEqual(res.id, u.id)
         self.assertEqual(res.name, u.name)
 
@@ -53,7 +54,7 @@ class TestEpistles(BaseTest):
         ep = Epistle(u1.id, u2.id, u'test epistle', subject = u'a simple test')
         self.dbsession.add(ep)
         self.dbsession.flush()
-        epd = queries.get_epistle_by_recipient_id(u1.id)[0]
+        epd = epistle_queries.get_epistle_by_recipient_id(u1.id)[0]
         self.assertEqual(ep.id, epd.id)
 
     def test_unwrap_list_generator(self):
@@ -75,7 +76,7 @@ class TestSubmissions(BaseTest):
         description = 'test'
 
         if url != '' and url is not None:
-            url = queries.strip_all_html(url)
+            url = general.strip_all_html(url)
             if not re.match(r'http[s]*:\/\/', url):
                 url = 'http://' + url
         else:

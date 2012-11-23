@@ -4,9 +4,10 @@ from raggregate.models.vote import Vote
 from raggregate.models.subscribe import Subscribe
 from raggregate.models.section import Section
 
-from raggregate.new_queries import hotness
-from raggregate.new_queries import subscribe as sub_queries
-from raggregate.new_queries import section as section_queries
+from raggregate.queries import hotness
+from raggregate.queries import subscribe as sub_queries
+from raggregate.queries import section as section_queries
+from raggregate.queries import general
 
 import sqlahelper
 from sqlalchemy.orm import joinedload
@@ -20,7 +21,6 @@ def get_story_list(page_num = 1, per_page = 30, sort = 'new', request = None, se
     else:
         user_id = None
 
-    from raggregate import queries
     stories = dbsession.query(Submission).options(joinedload('submitter')).filter(Submission.deleted == False)
 
     if section and section.__class__ == Section:
@@ -44,8 +44,10 @@ def get_story_list(page_num = 1, per_page = 30, sort = 'new', request = None, se
     if sort == 'hot':
         if request and 'sort.hot_point_window' in request.registry.settings:
             sets = request.registry.settings
-            hotness.recentize_hots(hot_point_window = queries.realize_timedelta_constructor(sets['sort.hot_point_window']), hot_eligible_age = queries.realize_timedelta_constructor(sets['sort.hot_eligible_age']), hot_recalc_threshold = queries.realize_timedelta_constructor(sets['sort.hot_recalc_threshold']))
-            stories = hotness.get_hot_stories(hot_eligible_age = queries.realize_timedelta_constructor(sets['sort.hot_eligible_age'])) 
+            hotness.recentize_hots(hot_point_window = general.realize_timedelta_constructor(sets['sort.hot_point_window']),
+                                   hot_eligible_age = general.realize_timedelta_constructor(sets['sort.hot_eligible_age']),
+                                   hot_recalc_threshold = general.realize_timedelta_constructor(sets['sort.hot_recalc_threshold']))
+            stories = hotness.get_hot_stories(hot_eligible_age = general.realize_timedelta_constructor(sets['sort.hot_eligible_age'])) 
         else:
             hotness.recentize_hots()
             stories = hotness.get_hot_stories()
@@ -55,7 +57,7 @@ def get_story_list(page_num = 1, per_page = 30, sort = 'new', request = None, se
         hotness.recentize_contro()
         stories = hotness.get_controversial_stories()
 
-    max_stories = queries.count_sa_obj(stories)
+    max_stories = general.count_sa_obj(stories)
 
     endpoints = get_endpoints_from_page_num(page_num, per_page)
     return {'stories': stories[endpoints['start']:endpoints['end']], 'max_stories': max_stories}
@@ -116,7 +118,6 @@ def get_endpoints_from_page_num(page_num, per_page):
     return {'start': start, 'end': end}
 
 def get_comments(id, organize_parentage = False, page_num = 1, per_page = 30, sort = 'new', target = 'story', target_id = None):
-    from raggregate import queries
     if not organize_parentage:
         return dbsession.query(Comment).filter(Comment.submission_id == id).all()
     else:
@@ -132,7 +133,7 @@ def get_comments(id, organize_parentage = False, page_num = 1, per_page = 30, so
         elif target == 'comment':
             roots = dbsession.query(Comment).filter(Comment.submission_id == id).filter(target_id == Comment.id)
 
-        max_roots = queries.count_sa_obj(roots)
+        max_roots = general.count_sa_obj(roots)
 
         if sort == 'top':
             roots = roots.order_by(Comment.points.desc())
