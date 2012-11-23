@@ -3,9 +3,9 @@ import sqlalchemy
 from raggregate.models import DBSession
 from raggregate.models.user import User
 from raggregate.models.ban import Ban
-from raggregate.new_queries import users
-from raggregate.new_queries import submission
-from raggregate import queries
+from raggregate.queries import users
+from raggregate.queries import submission
+from raggregate.queries import general
 
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
@@ -73,7 +73,7 @@ def login(request):
         prm = request.session['safe_params']
         username = None
         if 'username' in prm:
-            username = queries.strip_all_html(prm['username'])
+            username = general.strip_all_html(prm['username'])
         if p:
             dbsession = DBSession()
             if request.session['safe_get']['act'] == 'register':
@@ -301,5 +301,5 @@ def ban(request):
         dbsession = DBSession()
         dbsession.add(b)
 
-    bans = queries.list_bans()
+    bans = general.list_bans()
     return {'bans': bans}

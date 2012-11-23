@@ -1,6 +1,6 @@
-from raggregate import queries
 from raggregate.models.user import User
-from raggregate.new_queries import users
+from raggregate.queries import users
+from raggregate.queries import epistle as epistle_queries
 
 import sqlahelper
 
@@ -17,16 +17,17 @@ from raggregate import template_filters
 
 import cgi
 
-from raggregate.new_queries import submission
+from raggregate.queries import submission
+from raggregate.queries import general
 
 dbsession = sqlahelper.get_session()
 
 def ban(event):
     r = event.request
-    ip_ban = queries.list_bans(ip = r.remote_addr)
+    ip_ban = general.list_bans(ip = r.remote_addr)
 
     if 'logged_in' in r.session:
-        username_ban = queries.list_bans(username = users.get_user_by_id(r.session['users.id']).name)
+        username_ban = general.list_bans(username = users.get_user_by_id(r.session['users.id']).name)
     else:
         username_ban = False
 
@@ -52,14 +53,14 @@ def clean_inputs(event):
                 continue
 
             if i[0] != 'body' and i[0] != 'description' and i[0] != 'description-textarea':
-                safe_i = queries.strip_all_html(i[1])
+                safe_i = general.strip_all_html(i[1])
                 safe_post[i[0]] = safe_i
             else:
                 safe_post[i[0]] = i[1]
     if request.GET:
         get = request.GET
         for i in get.items():
-            safe_i = queries.strip_all_html(i[1])
+            safe_i = general.strip_all_html(i[1])
             safe_get[i[0]] = safe_i
 
     request.session['safe_get'] = safe_get
@@ -123,7 +124,7 @@ def user_session_handler(event):
 
     if 'logged_in' in s:
         #@TODO: implement caching/rate limiting so we don't perform this on every single request anymore
-        num = queries.get_new_message_num(s['users.id'])
+        num = epistle_queries.get_new_message_num(s['users.id'])
         if num == 0:
             s['new_message_num'] = None
             e['new_message_num'] = None

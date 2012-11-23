@@ -1,7 +1,7 @@
 import markdown
 import queries
 
-from raggregate.new_queries import submission
+from raggregate.queries import submission
 
 from raggregate.models.submission import Submission
 

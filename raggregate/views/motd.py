@@ -1,7 +1,7 @@
 from raggregate.models import DBSession
 from raggregate.models.motd import MOTD
-from raggregate.new_queries import motd as motd_queries
-from raggregate.new_queries import general
+from raggregate.queries import motd as motd_queries
+from raggregate.queries import general
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPNotFound

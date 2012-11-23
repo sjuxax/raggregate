@@ -11,6 +11,8 @@ import sqlahelper
 
 import os
 
+from raggregate.queries import general
+
 dbsession = sqlahelper.get_session()
 
 def get_user_by_id(id):
@@ -30,7 +32,6 @@ def is_user_allowed_admin_action(user_id, target_id, request = None, target_clas
     @param target_class: optional class of item being targeted
     """
     allow = False
-    from raggregate import queries
 
     if user_id is None:
         return None
@@ -43,7 +44,7 @@ def is_user_allowed_admin_action(user_id, target_id, request = None, target_clas
             return True
 
         if target_class == 'user_post':
-            target = queries.find_by_id(target_id)
+            target = general.find_by_id(target_id)
             if type(target) == Comment or type(target) == Submission:
                 allow = (str(target.submitter.id) == user_id)
         elif target_class == 'user_info':

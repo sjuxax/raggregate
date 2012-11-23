@@ -1,7 +1,6 @@
-from raggregate import queries
 from pyramid.view import view_config
-from raggregate.new_queries import users
-from raggregate.new_queries import submission
+from raggregate.queries import users
+from raggregate.queries import submission
 
 @view_config(renderer='search.mak', route_name='search')
 def search(request):

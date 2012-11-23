@@ -1,5 +1,4 @@
-from raggregate import queries
-from raggregate.new_queries import users
+from raggregate.queries import users
 from pyramid.security import Everyone
 from pyramid.security import Authenticated
 

@@ -7,12 +7,12 @@ from raggregate.models.comment import Comment
 from raggregate.models.epistle import Epistle
 from raggregate.models.section import Section
 
-from raggregate import queries
-from raggregate.new_queries import users
-from raggregate.new_queries import submission
-from raggregate.new_queries import section as section_queries
-from raggregate.new_queries import motd as motd_queries
-from raggregate.new_queries import subscribe as sub_queries
+from raggregate.queries import users
+from raggregate.queries import submission
+from raggregate.queries import section as section_queries
+from raggregate.queries import subscribe as sub_queries
+from raggregate.queries import motd as motd_queries
+from raggregate.queries import general
 
 from pyramid.view import view_config
 
@@ -61,7 +61,7 @@ def post(request):
             s['message'] = 'Sorry, please log in first'
             return {'stories': [], 'success': False, 'code': 'ENOLOGIN'}
         if p['url'] != '' and p['url'] is not None:
-            p['url'] = queries.strip_all_html(p['url'])
+            p['url'] = general.strip_all_html(p['url'])
             if not re.match(r'http[s]*:\/\/', p['url']):
                 p['url'] = 'http://' + p['url']
         else:

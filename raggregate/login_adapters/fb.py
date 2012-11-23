@@ -4,8 +4,7 @@
 import facebook
 from raggregate.models.user import User
 import sqlalchemy
-from raggregate import queries
-from raggregate.new_queries import users
+from raggregate.queries import users
 from raggregate.login_adapters import LoginAdapterExc
 
 import sqlahelper
