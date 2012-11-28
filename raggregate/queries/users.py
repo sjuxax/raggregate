@@ -68,34 +68,25 @@ def get_followed_users(id):
         ret[f.id] = f
     return ret
 
-def get_user_votes_on_submission(user_id, submission_id):
-    #@TODO: make this agnostic, work on comments too
+def get_user_votes(user_id, vote_type, submission_id=None):
     vote_dict = {}
-    vs = dbsession.query(Vote).filter(Vote.user_id == user_id).filter(Vote.submission_id == submission_id).filter(Vote.comment_id == None).all()
-    for v in vs:
-        if v.submission_id not in vote_dict:
-            vote_dict[v.submission_id] = []
-        vote_dict[v.submission_id].append(v.direction)
-    return vote_dict
-
-def get_user_votes_on_all_submissions(user_id):
-    #@TODO: make this agnostic, work on comments too
-    vote_dict = {}
-    vs = dbsession.query(Vote).filter(Vote.user_id == user_id).filter(Vote.comment_id == None).all()
-    for v in vs:
-        if v.submission_id not in vote_dict:
-            vote_dict[v.submission_id] = []
-        vote_dict[v.submission_id].append(v.direction)
-    return vote_dict
-
-def get_user_votes_on_submissions_comments(user_id, submission_id):
-    #@TODO: merge this into function above since logic is almost identical
-    vote_dict = {}
-    vs = dbsession.query(Vote).filter(Vote.user_id == user_id).filter(Vote.submission_id == submission_id).filter(Vote.comment_id != None).all()
-    for v in vs:
-        if v.comment_id not in vote_dict:
-            vote_dict[v.comment_id] = []
-        vote_dict[v.comment_id].append(v.direction)
+    if vote_type == "on_submission" and submission_id != None:
+        votes = dbsession.query(Vote).filter(Vote.user_id == user_id).filter(Vote.submission_id == submission_id).filter(Vote.comment_id == None).all()
+    elif vote_type == "on_all_submissions":
+        votes = dbsession.query(Vote).filter(Vote.user_id == user_id).filter(Vote.comment_id == None).all()
+    elif vote_type == "on_submissions_comments" and submission_id != None:
+        votes = dbsession.query(Vote).filter(Vote.user_id == user_id).filter(Vote.submission_id == submission_id).filter(Vote.comment_id != None).all()
+        for vote in votes:
+            if vote.comment_id not in vote_dict:
+                vote_dict[vote.comment_id] = []
+            vote_dict[vote.comment_id].append(vote.direction)
+        return vote_dict
+    else:
+        return vote_dict
+    for vote in votes:
+        if vote.submission_id not in vote_dict:
+            vote_dict[vote.submission_id] = []
+        vote_dict[vote.submission_id].append(vote.direction)
     return vote_dict
 
 def create_temp_user(initial_pw = None):

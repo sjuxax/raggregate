@@ -201,7 +201,7 @@ def post(request):
     vote_dict = {}
     subscribed_to_list = []
     if 'logged_in' in s:
-        vote_dict = users.get_user_votes_on_all_submissions(s['users.id'])
+        vote_dict = users.get_user_votes(s['users.id'], "on_all_submissions")
         subscribed_to_list = sub_queries.get_subscribed_by_user_id(s['users.id'])
     for story in stories:
         #@TODO: Remember to not tally on every load once a real site deploys
@@ -315,8 +315,8 @@ def full(request):
 
     if logged_in:
         # see queries.py; these two should not be separate. #@FIXME
-        story_vote_dict = users.get_user_votes_on_submission(s['users.id'], sub_id)
-        comment_vote_dict = users.get_user_votes_on_submissions_comments(s['users.id'], sub_id)
+        story_vote_dict = users.get_user_votes(s['users.id'], "on_submission", sub_id)
+        comment_vote_dict = users.get_user_votes(s['users.id'], "on_submissions_comments", sub_id)
 
     page_num = 1
     per_page = 30

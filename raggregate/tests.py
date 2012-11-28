@@ -104,3 +104,6 @@ class TestSubmissions(BaseTest):
 
         sub = Submission(title, description, 'https://google.com', user.id)
         self.assertEqual('google.com', sub.get_domain_name())
+
+if __name__ == '__main__':
+    unittest.main()

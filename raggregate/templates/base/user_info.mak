@@ -41,13 +41,13 @@ About Me: ${u.about_me | template_filters.render_md,n}
 <h2>Activity</h2>
             ##<h3>Comments</h3>
             ##% for c in u.comments:
-            ##    Comment on <a href="/full/${c.parent_id}">${c.load_parent().title}</a>: <br />
+            ##    Comment on <a href=${request.route_url('full', sub_id=c.parent_id)}>${c.load_parent().title}</a>: <br />
             ##    ${c.body} <br />
             ##    <br />
             ##% endfor
             <h3>Submissions</h3>
             % for s in u.submissions:
-                Submitted <a href="/full/${s.id}">${s.title}</a><br />
+                Submitted <a href=${request.route_url('full', sub_id=s.id)}>${s.title}</a><br />
                 <br />
             % endfor
             </div>

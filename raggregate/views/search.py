@@ -22,7 +22,7 @@ def search(request):
     for r in res:
         stories.append(submission.get_story_by_id(r['id']))
         if 'users.id' in ses:
-            vds.append(users.get_user_votes_on_submission(ses['users.id'], r['id']))
+            vds.append(users.get_user_votes(ses['users.id'], "on_submission", r['id']))
     for vd in vds:
         if type(vd) == dict:
             vote_dict.update(vd)
