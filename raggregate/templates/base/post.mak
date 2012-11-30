@@ -76,8 +76,10 @@
         <br />
         % if motd:
             Message of the day: <br />
-            ${motd.message}
-            <br />
-            - ${motd.author}
+            % if motd.link:
+                <li>${motd.message} - ${motd.author} (<a href="${motd.link}">${motd.source}</a>, ${motd.datestring})</li>
+            % else:
+                <li>${motd.message} - ${motd.author} (${motd.source}, ${motd.datestring})</li>
+            % endif
             <br />
         % endif
