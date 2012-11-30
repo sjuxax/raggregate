@@ -20,7 +20,7 @@ class Vote(Base):
     # the tradeoff here is size on various db structures.
     submission_id = Column(GUID, ForeignKey('submissions.id'))
     comment_id = Column(GUID, ForeignKey('comments.id'))
-    motd_id = Column(GUID, ForeignKey('motd.id'))
+    motd_id = Column(GUID, ForeignKey('motds.id'))
     user_id = Column(GUID, ForeignKey('users.id'), nullable=False)
     # points: -1 for down, 0 for neutral, 1 for up
     # this also allows easier manipulation of vote tallying if needed

@@ -5,7 +5,7 @@ from sqlalchemy import UnicodeText
 from raggregate.guid_recipe import GUID
 
 class MOTD(Base):
-    __tablename__ = 'motd'
+    __tablename__ = 'motds'
     id = Column(GUID, primary_key=True)
     message = Column(UnicodeText, nullable=False)
     author = Column(UnicodeText)
