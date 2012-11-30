@@ -68,4 +68,3 @@
             - ${message_of_the_day.author}
             <br />
         % endif
-        <a href="${request.route_url('motd')}">Add a message</a>
