@@ -1,5 +1,8 @@
 <%inherit file="atom_base.mak" />
 
+## @TODO: split story feed items and comment feed items into separate Mako
+## templates for easy plugging, like extant templates story_item.mak and comment_item.mak
+
 % for i in interleaved:
     <%
         type_flag = None
@@ -14,11 +17,29 @@
             type_flag = "s"
     %>
     % if type_flag == "s":
-        <%include file="atom_story_item.mak" args="i=i" />
+        <entry>
+            <title>${i.title}</title>
+            <author>
+                <name>${i.submitter.display_name()}</name>
+            </author>
+            <link href="${request.route_url('full', sub_id=template_filters.get_submission_identifier_for_url(i))}" />
+            <id>urn:uuid:${i.id}</id>
+            <updated>${i.added_on.isoformat()}</updated>
+            <summary>${i.description}</summary>
+        </entry>
     % endif
     % if type_flag == "c":
         <% s = i.load_submission() %>
-        <%include file="atom_comment_item.mak" args="i=i" />
+        <entry>
+            <title>${i.submitter.display_name()} on ${s.title} (${fuzzify_date(i.added_on)})</title>
+            <author>
+                <name>${i.submitter.display_name()}</name>
+            </author>
+            <link href="${request.route_url('full', sub_id=template_filters.get_submission_identifier_for_url(i.submission_id), _query=[('comment_perma', i.id)])}" />
+            <id>urn:uuid:${i.id}</id>
+            <updated>${i.added_on.isoformat()}</updated>
+            <summary>${i.body}</summary>
+        </entry>
     % endif
 % endfor
 
