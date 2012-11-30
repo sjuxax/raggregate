@@ -52,7 +52,7 @@ def initialize_sql_test(engine):
     Base.metadata.bind = engine
     Base.metadata.create_all(engine)
     listen(sqlalchemy.orm.mapper, 'before_insert', make_uuid)
-    return DBSession
+    return [DBSession, Base]
 #    try:
 #        populate()
 #    except IntegrityError:
