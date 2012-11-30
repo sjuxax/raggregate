@@ -133,3 +133,20 @@ def list_bans(ip = None, username = None, active = True):
     # should work now but we use this to return every ban ever issued
     # presently, so would need to change behavior on front-end
     return dbsession.query(Ban).all()
+
+def unroll_sqlalchemy_id_tuple(tup):
+    """ If we get a list of IDs from SqlAlchemy, it looks like:
+    [(UUID('fake-uuid')), (UUID('fake-uuid-2'))]
+    which we almost never want. As such, we have created this utility
+    function to change that into:
+    [UUID('fake-uuid'), UUID('fake-uuid-2')]
+    """
+    ret = []
+
+    if len(tup) == 0:
+        return []
+
+    for t in tup:
+        ret.append(t[0])
+
+    return ret

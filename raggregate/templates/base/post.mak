@@ -73,3 +73,11 @@
                 % endif
             % endif
         % endif
+        <br />
+        % if message_of_the_day:
+            Message of the day: <br />
+            ${message_of_the_day.message}
+            <br />
+            - ${message_of_the_day.author}
+            <br />
+        % endif
