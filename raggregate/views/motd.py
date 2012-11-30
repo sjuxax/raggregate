@@ -34,7 +34,9 @@ def motd(request):
                 if not author:
                     author = 'Unknown'
                 if not source:
-                    source = 'No source'
+                    source = 'Source unknown'
+                if not datestring:
+                    date = 'Date unknown'
 
                 try:
                     new_motd = motd_queries.create_motd(message = message_to_add,
