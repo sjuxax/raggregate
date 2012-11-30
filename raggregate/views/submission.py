@@ -212,12 +212,12 @@ def post(request):
     print "\n\nsubscribed list: {0}\n\n".format(subscribed_to_list)
 
     # Get message of the day
-    message_of_the_day = motd_queries.get_random_message()
+    motd = motd_queries.get_random_message()
 
     return {'stories': stories, 'success': True, 'code': 0, 'vote_dict': vote_dict,
             'max_stories': max_stories, 'prev_page': prev_page, 'next_page': next_page,
             'new_url_text': new_url_text, 'new_title_text': new_title_text,  'sections': sections,
-            'filtered_section': section, 'message_of_the_day': message_of_the_day,
+            'filtered_section': section, 'motd': motd,
             'subscribed_to_list': subscribed_to_list}
 
 @view_config(renderer='vote.mak', route_name='vote')

@@ -74,10 +74,10 @@
             % endif
         % endif
         <br />
-        % if message_of_the_day:
+        % if motd:
             Message of the day: <br />
-            ${message_of_the_day.message}
+            ${motd.message}
             <br />
-            - ${message_of_the_day.author}
+            - ${motd.author}
             <br />
         % endif
