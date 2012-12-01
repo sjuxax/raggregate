@@ -6,11 +6,15 @@ from raggregate.models.user import User
 
 class TestUsers(BaseTest):
 
-    def test_create_user(self, username = None):
+    def create_user(self, username = None):
         if not username:
             username = 'test'
-        u = users.create_user(username = username, password = username,)
-        res = self.dbsession.query(User).filter(User.name == username).first()
+        user = users.create_user(username = username, password = username,)
+        return user
+
+    def test_create_user(self, username = None):
+        u = self.create_user()
+        res = self.dbsession.query(User).filter(User.name == u.name).first()
         assert res.id == u.id
         assert res.name == u.name
 
@@ -25,3 +29,13 @@ class TestUsers(BaseTest):
         res = general.find_by_id(u.id)
         assert res.id == u.id
         assert res.name == u.name
+
+    def test_login_user(self):
+        user = self.create_user()
+        result = users.login_user(self.request, user, 'test')
+        assert result
+
+    def test_create_temp_user(self):
+        temp_user = users.create_temp_user()
+        assert temp_user.real_name == 'Unregistered User'
+        assert temp_user.temporary
