@@ -205,7 +205,7 @@
 % endif
     <body>
         <div id="logo_bar">
-            <a href="${request.route_url('post')}"><img src="${static_base}images/logo.png" style="border: 0" /></a>
+            <a href="${request.route_url('list')}"><img src="${static_base}images/logo.png" style="border: 0" /></a>
         </div>
 
         % if success == False:
@@ -222,7 +222,7 @@
 
         ## @TODO: mako offers things that make it so we don't have to special case like this
         ## we should use them some time
-        % if request.route_url('post') in request.url or request.route_url('home') == request.url:
+        % if request.matched_route.name in ['home', 'list', 'post']:
 
             <style type="text/css">
                 #home_nav_links { margin-top: 9.5px; padding: 0px; float: left; }
@@ -239,18 +239,18 @@
                     <%
                         if sort in request.params and term == request.params['sort']:
                             return 'active'
-                        elif sort not in request.params and (request.url == request.route_url('post') or request.url == request.route_url('home') ) and term == 'new':
+                        elif sort not in request.params and (request.url in [request.route_url('list'), request.route_url('home'), request.route_url('post')]) and term == 'new':
                             return 'active'
-                        elif 'full' not in request.url and term in request.url:
+                        elif request.matched_route.name != 'full' and term in request.url:
                             return 'active'
                         else:
                             return ''
                     %>
                     </%def>
-                    <li class="${is_term_active('new')}"><a href="${request.route_url('post', _query = [('sort', 'new'),])}">New</a></li>
-                    <li class="${is_term_active('top')}"><a href="${request.route_url('post', _query = [('sort', 'top'),])}">Top</a></li>
-                    <li class="${is_term_active('hot')}"><a href="${request.route_url('post', _query = [('sort', 'hot'),])}">Hot</a></li>
-                    <li class="${is_term_active('contro')}"><a href="${request.route_url('post', _query = [('sort', 'contro'),])}">Controversial</a></li>
+                    <li class="${is_term_active('new')}"><a href="${request.route_url('list', _query = [('sort', 'new'),])}">New</a></li>
+                    <li class="${is_term_active('top')}"><a href="${request.route_url('list', _query = [('sort', 'top'),])}">Top</a></li>
+                    <li class="${is_term_active('hot')}"><a href="${request.route_url('list', _query = [('sort', 'hot'),])}">Hot</a></li>
+                    <li class="${is_term_active('contro')}"><a href="${request.route_url('list', _query = [('sort', 'contro'),])}">Controversial</a></li>
                     % if logged_in:
                         <li class="${is_term_active('save')}"><a href="${request.route_url('save',)}">Saved</a></li>
                         <li class="${is_term_active('follow')}"><a href="${request.route_url('follow')}">Followed</a></li>
@@ -342,9 +342,9 @@
            </div>
             <div class="right_side_box" id="submit_link">
                 % if filtered_section and filtered_section != 'all':
-                    <h2><a href="${request.route_url('post', _query=[('new_post', 'y'), ('section', filtered_section.name)])}">Submit a Link!</a></h2>
+                    <h2><a href="${request.route_url('new_post', _query=[('section', filtered_section.name)])}">Submit a Link!</a></h2>
                 % else:
-                    <h2><a href="${request.route_url('post', _query=[('new_post', 'y')])}">Submit a Link!</a></h2>
+                    <h2><a href="${request.route_url('new_post')}">Submit a Link!</a></h2>
                 % endif
             </div>
             % if 'recent_comments.enabled' in request.registry.settings and request.registry.settings['recent_comments.enabled'] == 'true':

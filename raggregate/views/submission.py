@@ -22,9 +22,8 @@ import re
 
 import slugify
 
-@view_config(renderer='post.mak', route_name='post')
-@view_config(renderer='post.mak', route_name='home')
-def post(request):
+@view_config(renderer='new_post.mak', route_name='new_post')
+def new_post(request):
     s = request.session
     p = request.session['safe_post']
     r = request
@@ -32,14 +31,10 @@ def post(request):
     s['message'] = "Post a story."
     dbsession = DBSession()
     stories = None
-
-    filtered_section = None
-    section_found = False
+    sections = section_queries.get_sections()
 
     new_url_text = ''
     new_title_text = ''
-
-    sections = section_queries.get_sections()
 
     #if uses came in with a share button, redirect to existing discussion if there is one
     if 'from' in qs and qs['from'] == 'button':
@@ -96,6 +91,25 @@ def post(request):
             pass
 
         return HTTPFound(r.route_url('home'))
+    return {'stories': stories, 'success': True, 'code': 0,
+            'new_url_text': new_url_text, 'new_title_text': new_title_text,
+            'sections': sections}
+
+@view_config(renderer='list.mak', route_name='post')
+@view_config(renderer='list.mak', route_name='list')
+@view_config(renderer='list.mak', route_name='home')
+def list(request):
+    s = request.session
+    p = request.session['safe_post']
+    r = request
+    qs = s['safe_get']
+    s['message'] = "Post a story."
+    dbsession = DBSession()
+    stories = None
+
+    filtered_section = None
+    section_found = False
+    sections = section_queries.get_sections()
 
     if r.params and 'op' in r.params:
         sub_id = r.params['sub_id']
@@ -216,7 +230,7 @@ def post(request):
 
     return {'stories': stories, 'success': True, 'code': 0, 'vote_dict': vote_dict,
             'max_stories': max_stories, 'prev_page': prev_page, 'next_page': next_page,
-            'new_url_text': new_url_text, 'new_title_text': new_title_text,  'sections': sections,
+            'sections': sections,
             'filtered_section': section, 'motd': motd,
             'subscribed_to_list': subscribed_to_list}
 

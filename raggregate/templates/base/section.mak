@@ -9,6 +9,6 @@
         Extant sections: <br />
         <ul>
         % for s in sections:
-            <li><a href="${request.route_url('post', _query=[('section', s.name)])}">${s.name}</a></li>
+            <li><a href="${request.route_url('list', _query=[('section', s.name)])}">${s.name}</a></li>
         % endfor
         </ul>

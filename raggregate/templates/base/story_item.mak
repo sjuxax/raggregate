@@ -26,7 +26,7 @@ vote_dict = pageargs['vote_dict']
                     <span class="title"><a href="${request.route_url('full', sub_id=template_filters.get_submission_identifier_for_url(s))}">${s.title}</a></span> <span class="domain">(self)</span> <br />
                     ## on the story list page, take users to the comments section instead of the direct url.
                     ## this template is used on other pages to take users directly to the URL, so we have to special case.
-                    % elif request.route_url('post') in request.url or request.route_url('home') == request.url:
+                    % elif request.route_url('list') in request.url or request.route_url('home') == request.url:
                     <span class="title"><a href="${request.route_url('full', sub_id=template_filters.get_submission_identifier_for_url(s))}">${s.title}</a></span> <span class="domain">(${s.get_domain_name()})</span> <br />
                     % else:
                         <span class="title"><a href="${s.url}">${s.title}</a></span> <span class="domain">(${s.get_domain_name()})</span>&nbsp;<img src="${static_base}images/small-globe.png" />
@@ -41,7 +41,7 @@ vote_dict = pageargs['vote_dict']
                         ## We could supply a dictionary of sections to
                         ## this template from the controller and reference
                         ## that. Or do something else to make it fast.
-                        in section <a href="${request.route_url('post', _query=[('section', s.sections.name)])}">${s.sections.name}</a><br />
+                        in section <a href="${request.route_url('list', _query=[('section', s.sections.name)])}">${s.sections.name}</a><br />
                     % endif
                     <%
                         saved_term = 'save'
@@ -53,7 +53,7 @@ vote_dict = pageargs['vote_dict']
                         | &nbsp; <a href="javascript:void(0)" class="save-link" id="save-${s.id}">${saved_term}</a>
                     % endif
                     % if str(s.submitter.id) == request.session['users.id'] or logged_in_admin:
-                        &nbsp; | &nbsp; <a href="${request.route_url('post', _query=[('op', 'del'), ('sub_id', str(s.id))])}">delete</a>
+                        &nbsp; | &nbsp; <a href="${request.route_url('list', _query=[('op', 'del'), ('sub_id', str(s.id))])}">delete</a>
                     % endif
                     <br />
                     % if request.route_url('full', sub_id = template_filters.get_submission_identifier_for_url(s)) in request.url:
