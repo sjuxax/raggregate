@@ -21,7 +21,7 @@ def get_story_list(page_num = 1, per_page = 30, sort = 'new', request = None, se
     else:
         user_id = None
 
-    stories = dbsession.query(Submission).options(joinedload('submitter')).filter(Submission.deleted == False)
+    stories = dbsession.query(Submission).options(joinedload('submitter')).filter(Submission.deleted == False).filter(Submission.render_type == 'story_md')
 
     if section and section.__class__ == Section:
         stories = stories.filter(Submission.section == section.id)

@@ -150,3 +150,8 @@ def unroll_sqlalchemy_id_tuple(tup):
         ret.append(t[0])
 
     return ret
+
+def gen_uuid():
+    import uuid
+    import os
+    return uuid.UUID(bytes=os.urandom(16))

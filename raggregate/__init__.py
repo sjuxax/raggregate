@@ -52,6 +52,7 @@ def main(global_config, **settings):
     config.add_route('login', '/login')
     config.add_route('list', '/list')
     config.add_route('post', '/post')
+    config.add_route('new_page', '/new_page')
     config.add_route('new_post', '/new_post')
     config.add_route('ban', '/ban')
     config.add_route('vote', '/vote/{way}')

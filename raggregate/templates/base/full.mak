@@ -54,50 +54,73 @@
     table {border: 2px black solid; }
 </style>
 
-    % if success == False:
-        <h1>${message}</h1>
-    % else:
-        <%include file="story_item.mak", args="story_obj = story, vote_dict = story_vote_dict"/>
-        <i><b>click the title above to proceed to posted article; scroll down for commentary</b></i><br />
-        <br />
-    % if story.description != u'':
-        <div id="description" class="story-description">
-    % else:
-        <div id="description">
-    % endif
+% if success == False:
+    <h1>${message}</h1>
+    <% return %>
+% elif render_type == 'story_md':
+    <%include file="story_item.mak", args="story_obj = story, vote_dict = story_vote_dict"/>
+    <i><b>click the title above to proceed to posted article; scroll down for commentary</b></i><br />
+    <br />
+% endif
+
+% if story.description != u'':
+    % if render_type == 'story_md' or render_type == 'static_md':
+    <div id="description" class="story-description">
             ${story.description | template_filters.render_md,n}
-        </div>
-        ##@TODO: make functionality to determine whether a user is logged in on display a reusable function
-        ## I have vague memories of this but think it's on the server side, need to create a def that can
-        ## be used in the Mako templates to determine this, would be much better that way.
-        % if (logged_in and request.session['users.id'] == str(story.added_by)) or logged_in_admin:
-            <a href="javascript:void(0)" class=" story-edit-link logged-in-only ">edit this description</a><br/>
-        % endif
-        <div id="markdown-explanation-table" style="display: none;">
-            click "markdown" again to close<br />
-            <table style="border-width: 2px;">
-                <tr>
-                    <th>Markdown</th>
-                    <th>Output</th>
-                </tr>
-                <tr>
-                    <td>*italic*</td>
-                    <td><i>italic</i></td>
-                </tr>
-                <tr>
-                    <td>**bold**</td>
-                    <td><b>bold</b></td>
-                </tr>
-                <tr>
-                    <td>link to [github](https://github.com)</td>
-                    <td>link to <a href="https://github.com">github</a></td>
-                </tr>
-                <tr>
-                    <td>&gt;blockquote</td>
-                    <td><blockquote>blockquote</blockquote></td>
-                </tr>
-              </table>
-        </div>
+    % elif render_type == 'static_html':
+    <div id="description" class="static_description">
+            ${story.description | n}
+   % endif
+    </div>
+% endif
+
+    ##@TODO: make functionality to determine whether a user is logged in on display a reusable function
+    ## I have vague memories of this but think it's on the server side, need to create a def that can
+    ## be used in the Mako templates to determine this, would be much better that way.
+    % if (logged_in and request.session['users.id'] == str(story.added_by)) or logged_in_admin:
+        <a href="javascript:void(0)" class=" story-edit-link logged-in-only ">edit this description</a><br/>
+    % endif
+
+    <div id="markdown-explanation-table" style="display: none;">
+        click "markdown" again to close<br />
+        <table style="border-width: 2px;">
+            <tr>
+                <th>Markdown</th>
+                <th>Output</th>
+            </tr>
+            <tr>
+                <td>*italic*</td>
+                <td><i>italic</i></td>
+            </tr>
+            <tr>
+                <td>**bold**</td>
+                <td><b>bold</b></td>
+            </tr>
+            <tr>
+                <td>link to [github](https://github.com)</td>
+                <td>link to <a href="https://github.com">github</a></td>
+            </tr>
+            <tr>
+                <td>&gt;blockquote</td>
+                <td><blockquote>blockquote</blockquote></td>
+            </tr>
+          </table>
+    </div>
+
+    <div id="story-edit-form" style="clear: both; display: none;">
+        <b id="story-edit-text">Edit your description</b><br />
+        <form method="post" id="story-edit-form-real" action="${request.route_url('full', sub_id = template_filters.get_submission_identifier_for_url(story))}">
+            % if '_html' in render_type:
+                <textarea id="description-textarea" cols="50" rows="10" name="description-textarea">${story.description|n}</textarea>
+            % else:
+                <textarea id="description-textarea" cols="50" rows="10" name="description-textarea">${story.description|h}</textarea>
+            % endif
+            <br />
+            <input type="submit" value="Edit Story"></input>
+        </form>
+    </div>
+
+    % if 'static' not in render_type:
         % if 'logged_in' in request.session and 'comment_perma' not in request.session['safe_params']:
             <h3> Add a new comment </h3>
             <form method="post" id="story-reply-form" action="${request.route_url('full', sub_id = story.id)}">
@@ -126,7 +149,7 @@
             %>
         </%def>
         ## print comments starting at roots
-		% for c in comments['allowed_roots']:
+        % for c in comments['allowed_roots']:
             ${print_comment_tree(comments['dex'][c], 0)}
         % endfor
         % if len(comments['allowed_roots']) < 1:
@@ -153,14 +176,4 @@
             <input type="submit" value="Add Comment"></input>
         </form>
         </div>
-
-        <div id="story-edit-form" style="clear: both; display: none;">
-            <b id="story-edit-text">Edit your description</b><br />
-            <form method="post" id="story-edit-form-real" action="${request.route_url('full', sub_id = template_filters.get_submission_identifier_for_url(story))}">
-                <textarea id="description-textarea" cols="50" rows="10" name="description-textarea">${story.description|h}</textarea>
-                <br />
-                <input type="submit" value="Edit Story"></input>
-            </form>
-        </div>
-
     % endif

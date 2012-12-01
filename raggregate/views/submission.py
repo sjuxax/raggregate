@@ -22,8 +22,9 @@ import re
 
 import slugify
 
+@view_config(renderer='new_page.mak', route_name='new_page')
 @view_config(renderer='new_post.mak', route_name='new_post')
-def new_post(request):
+def submit(request):
     s = request.session
     p = request.session['safe_post']
     r = request
@@ -36,6 +37,13 @@ def new_post(request):
     new_url_text = ''
     new_title_text = ''
 
+    route_name = r.matched_route.name
+
+    if route_name == 'new_page':
+        # require admin to load a new page form
+        if 'logged_in_admin' not in s or s['logged_in_admin'] == False:
+            return HTTPNotFound()
+
     #if uses came in with a share button, redirect to existing discussion if there is one
     if 'from' in qs and qs['from'] == 'button':
         existing_post = submission.get_story_by_url_oldest(qs['url'])
@@ -45,17 +53,15 @@ def new_post(request):
         if 'title' in qs:
             new_title_text = qs['title']
 
-
-    if 'new_post' in qs and qs['new_post'] == 'y':
-        if 'logged_in' not in s:
-            s['message'] = 'Sorry, you must <a href="{0}">log in</a> before you can share a link.'.format(r.route_url('login'))
-            return {'stories': [], 'success': False, 'code': 'ENOLOGIN'}
+    if 'logged_in' not in s:
+        s['message'] = 'Sorry, you must <a href="{0}">log in</a> before you can share a link.'.format(r.route_url('login'))
+        return {'stories': [], 'success': False, 'code': 'ENOLOGIN'}
 
     if p and 'title' in p:
         if 'logged_in' not in s:
             s['message'] = 'Sorry, please log in first'
             return {'stories': [], 'success': False, 'code': 'ENOLOGIN'}
-        if p['url'] != '' and p['url'] is not None:
+        if 'url' in p and p['url'] != '' and p['url'] is not None:
             p['url'] = general.strip_all_html(p['url'])
             if not re.match(r'http[s]*:\/\/', p['url']):
                 p['url'] = 'http://' + p['url']
@@ -63,18 +69,40 @@ def new_post(request):
             # set to None so that NULL goes into the database
             p['url'] = None
 
+        if route_name == 'new_page':
+            render_type = p['render_type']
+            slug = p['slug']
+
+            # if we can find this slug already, kill submission here.
+            try:
+                s = dbsession.query(Submission).filter(Submission.slug == slug).one()
+                s['message'] = 'This slug is already taken.'
+                success = False
+            except sqlalchemy.orm.exc.NoResultFound:
+                pass
+        else:
+            slug = ''
+            render_type = 'story_md'
 
         if 'section_id' in p:
             sub = Submission(p['title'][:100], p['description'], p['url'], s['users.id'], section = p['section_id'])
         else:
             sub = Submission(p['title'][:100], p['description'], p['url'], s['users.id'])
+
+        sub.render_type = render_type
+
+        # slug octet no longer derived from story's actual id
+        if slug == '':
+            slug = u"{title}-{uuid_first_octet}".format(
+                    title = slugify.slugify(unicode(p['title'][:100])),
+                    uuid_first_octet = str(general.gen_uuid())[:8])
+        sub.slug = slug
+
         dbsession.add(sub)
         dbsession.flush()
         v = Vote(sub.id, s['users.id'], 1, "submission", None)
         v.direction = 1
         dbsession.add(v)
-        sub.slug = u"{title}-{uuid_first_octet}".format(title = slugify.slugify(unicode(p['title'][:100])), uuid_first_octet = str(sub.id)[:8])
-        dbsession.add(sub)
         s['message'] = "Added."
 
         try:
@@ -373,4 +401,5 @@ def full(request):
         next_page = page_num + 1
 
     return {'story': story, 'comments': comments, 'success': True, 'code': 0, 'story_vote_dict': story_vote_dict,
-            'comment_vote_dict': comment_vote_dict, 'next_page': next_page, 'prev_page': prev_page, }
+            'comment_vote_dict': comment_vote_dict, 'next_page': next_page, 'prev_page': prev_page,
+            'render_type': story.render_type, }
