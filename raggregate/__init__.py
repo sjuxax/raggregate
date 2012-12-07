@@ -47,6 +47,7 @@ def main(global_config, **settings):
     # right now we don't care. Someone should fix this.
     config.add_static_view('static', template_static_asset)
     config.add_static_view('user_imgs', settings['user.picture_upload_package'])
+    config.add_static_view('section_imgs', settings['section.picture_upload_package'])
 
     config.add_route('home', '/')
     config.add_route('login', '/login')
