@@ -205,7 +205,15 @@
 % endif
     <body>
         <div id="logo_bar">
-            <a href="${request.route_url('list')}"><img src="${static_base}images/logo.png" style="border: 0" /></a>
+            % if filtered_section and filtered_section != 'all':
+                % if filtered_section.picture_ref:
+                    <a href="${request.route_url('list')}"><img src="/section_imgs/${filtered_section.picture_ref.filename}" style="border: 0" /></a>
+                % else:
+                    <a href="${request.route_url('list')}"><img src="${static_base}images/logo.png" style="border: 0" /></a>
+                % endif
+            % else:
+                <a href="${request.route_url('list')}"><img src="${static_base}images/logo.png" style="border: 0" /></a>
+            % endif
         </div>
 
         % if success == False:

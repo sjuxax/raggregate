@@ -22,7 +22,7 @@ requires = [
     'httplib2',
     'lxml',
     'twython',
-    'PIL',
+    'pillow',
     'pytz',
     'pyramid-tm',
     'Markdown',

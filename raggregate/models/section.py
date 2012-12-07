@@ -24,8 +24,10 @@ class Section(Base):
     enabled = Column(Boolean, default=True)
     added_on = Column(DateTime(timezone=True), default=sqlalchemy.sql.func.now())
     modified_on = Column(DateTime(timezone=True), default=sqlalchemy.sql.func.now())
+    picture = Column(GUID, ForeignKey('section_pictures.id'))
 
     stories = relationship("Submission", backref="sections")
+    picture_ref = relationship("SectionPicture")
 
     def __init__(self, name = None, description = None, parent = None, added_by = None, modified_on = None, subscribe_by_default = False, enabled = True):
         self.name = name

@@ -25,5 +25,18 @@ def story(request):
         dbsession.add(new_sect)
         s['message'] = "Section {0} successfully added.".format(p['name'])
 
+    if 'add_pic_button' in p:
+        section = None
+        if 'section_id' in p and p['section_id'] != '':
+            section = section_queries.get_section_by_id(p['section_id'])
+        if section:
+            if r.POST['picture'] != '':
+                orig_filename = r.POST['picture'].filename
+                sp_dir = r.registry.settings['section.picture_upload_directory']
+
+                section.picture = section_queries.add_section_picture(orig_filename,
+                        str(section.id)[:7], sp_dir, r.POST['picture'].file)
+                dbsession.add(section)
+
     sections = section_queries.get_sections()
     return {'sections': sections}
