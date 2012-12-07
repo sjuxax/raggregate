@@ -234,7 +234,7 @@ def add_user_picture(orig_filename, new_prefix, up_dir, image_file):
 
     im.save(full_path, 'JPEG')
 
-    from raggregate.models.user import UserPicture
+    from raggregate.models.userpicture import UserPicture
     up = UserPicture(orig_filename, new_filename, sha, 0)
     dbsession.add(up)
     dbsession.flush()
