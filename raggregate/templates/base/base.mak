@@ -183,6 +183,16 @@
                     $.get(save_url, function() { save_element.text('save') });
                 }
             });
+            $('.notify-link').click( function(e) {
+                var notify_element = $('#' + $(e.target).attr('id'));
+                if (notify_element.text() == 'notify') {
+                    var notify_url = '${request.route_url('notify')}' + '?target_id=' + $(e.target).attr('id').replace('notify-', '');
+                    $.get(notify_url, function() { notify_element.text('de-notify') });
+                } else {
+                    var notify_url = '${request.route_url('notify')}' + '?target_id=' + $(e.target).attr('id').replace('notify-', '') + '&op=del';
+                    $.get(notify_url, function() { notify_element.text('notify') });
+                }
+            });
             $('.follow-link').click(function(e) {
                 var follow_element = $('#' + $(e.target).attr('id'));
                 follow_guid = follow_element.attr('id').replace('follow-', '');

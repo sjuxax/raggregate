@@ -36,6 +36,7 @@ class User(Base):
     about_me = Column(UnicodeText)
     picture = Column(GUID, ForeignKey('user_pictures.id'))
     karma = Column(Integer, default=0)
+    notify_by_mail = Column(Boolean, default=True)
     twitter_origination = Column(Boolean, default=False)
     twitter_oauth_key = Column(UnicodeText)
     twitter_oauth_secret = Column(UnicodeText)
@@ -90,7 +91,12 @@ class User(Base):
         # this is simplistic for now, but one day should use a real roles / permissions system
         return self.is_admin
 
-    def __init__(self, name, password, email = None, real_name = None, temporary = False):
+    def is_user_notified(self, target_id):
+        from raggregate.queries import notify
+        return notify.is_user_notified(self.id, target_id)
+
+    def __init__(self, name, password, email = None, real_name = None,
+                  temporary = False, notify_by_mail = True):
         self.name = name
         self.password = self.hash_pw(password)
         self.email = email
@@ -98,3 +104,4 @@ class User(Base):
             self.real_name = real_name
         if temporary:
             self.temporary = True
+        self.notify_by_mail = notify_by_mail

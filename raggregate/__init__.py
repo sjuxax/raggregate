@@ -61,6 +61,7 @@ def main(global_config, **settings):
     config.add_route('epistle', '/messages/{box}')
     config.add_route('follow', '/follow')
     config.add_route('save', '/save')
+    config.add_route('notify', '/notify')
     config.add_route('search', '/search')
     config.add_route('twit_sign', '/twit_sign')
     config.add_route('user_info', '/user_info')

@@ -12,6 +12,7 @@ from raggregate.queries import submission
 from raggregate.queries import section as section_queries
 from raggregate.queries import subscribe as sub_queries
 from raggregate.queries import motd as motd_queries
+from raggregate.queries import notify as notify_queries
 from raggregate.queries import general
 
 from pyramid.view import view_config
@@ -353,6 +354,7 @@ def full(request):
             v = Vote(sub_id, s['users.id'], 1, "comment", c.id)
             v.direction = 1
             dbsession.add(v)
+            notify_queries.fire_to_listeners(p['comment_parent'], s['users.id'], c.id, request)
             s['message'] = 'Comment added.'
     #@TODO: Stop using SA queries in views, move them to individual models
     story = submission.get_story_by_id(sub_id)

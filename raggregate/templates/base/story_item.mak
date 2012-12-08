@@ -47,10 +47,14 @@ vote_dict = pageargs['vote_dict']
                         saved_term = 'save'
                         if u and s in u.saved:
                             saved_term = 'unsave'
+                        notify_term = 'notify'
+                        if u and u.is_user_notified(s.id):
+                            notify_term = 'de-notify'
                     %>
                     <a href="${request.route_url('full', sub_id=template_filters.get_submission_identifier_for_url(s))}">${s.comment_tally} comments</a> &nbsp;
                     % if logged_in:
                         | &nbsp; <a href="javascript:void(0)" class="save-link" id="save-${s.id}">${saved_term}</a>
+                        &nbsp; | &nbsp; <a href="javascript:void(0)" class="notify-link" id="notify-${s.id}">${notify_term}</a>
                     % endif
                     % if str(s.submitter.id) == request.session['users.id'] or logged_in_admin:
                         &nbsp; | &nbsp; <a href="${request.route_url('list', _query=[('op', 'del'), ('sub_id', str(s.id))])}">delete</a>

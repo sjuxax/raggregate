@@ -226,6 +226,52 @@ def follow(request):
     s['message'] = message
     return {'follows': u.follows, 'vote_dict': vote_dict}
 
+@view_config(renderer='notify.mak', route_name='notify')
+def notify(request):
+    from raggregate.queries import notify as notify_queries
+    s = request.session
+    p = request.session['safe_params']
+    u = None
+    op = 'add'
+    vote_dict = {}
+
+    notifyd = notify_queries.get_notify_by_user_id(s['users.id'])
+    notifyd_ids = [str(i.target_id) for i in notify_queries.get_notify_by_user_id(s['users.id'])]
+    if 'target_id' in p and 'logged_in' in s:
+        dbsession = DBSession()
+
+        uid = s['users.id']
+        to_notify = p['target_id']
+        if 'op' in p:
+            op = p['op']
+        if op == 'add':
+            if to_notify not in notifyd_ids:
+                notify_queries.create_notify(uid, to_notify, s['users.id'])
+            s['message'] = 'Successfully notified {0}'.format(to_notify.title)
+        elif op == 'del':
+            if to_notify in notifyd_ids:
+                notify_queries.delete_notify(user_id = uid, target_id  = to_notify)
+            s['message'] = 'Successfully de-notified {0}'.format(to_notify.title)
+    elif 'logged_in' in s:
+        u = users.get_user_by_id(s['users.id'])
+
+
+    # the template expects a set of stories to render
+    notifyd_stories = [submission.get_story_by_id(i.target_id) for i in notifyd if i.target_type == 'submission']
+    notifyd_comments = [submission.get_comment_by_id(i.target_id) for i in notifyd if i.target_type == 'comment']
+
+    if u:
+        vds = []
+        for i in notifyd_stories:
+            vds.append(users.get_user_votes(s['users.id'], "on_submission", i.id))
+        for vd in vds:
+            if type(vd) == dict:
+                vote_dict.update(vd)
+
+    return {'notifyd_stories': notifyd_stories,
+            'notifyd_comments': notifyd_comments,
+            'vote_dict': vote_dict, }
+
 @view_config(renderer="user_info.mak", route_name='user_info')
 def user_info(request):
     import hashlib
