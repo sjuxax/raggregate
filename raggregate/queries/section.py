@@ -57,11 +57,9 @@ def add_section_picture(orig_filename, new_prefix, up_dir, image_file):
     if not skip_seek:
         image_file.seek(0)
     f = image_file
-    from PIL import Image
-    im = Image.open(f)
-    im.thumbnail((50, 50), Image.ANTIALIAS)
-
-    im.save(full_path, 'JPEG')
+    final_f = open(full_path, 'w')
+    final_f.write(f.read())
+    final_f.close()
 
     from raggregate.models.sectionpicture import SectionPicture
     sp = SectionPicture(orig_filename, new_filename, sha, 0)
