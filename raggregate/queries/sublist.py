@@ -19,3 +19,14 @@ def get_sublist_members(sublist_id):
     for m in members:
         member_list.append(submission_queries.get_story_by_id(m.member_id))
     return member_list
+
+def find_member_in_sublist(member_id, sublist_id):
+    q = dbsession.query(SublistMember).filter(SublistMember.sublist_id == sublist_id)
+    q = q.filter(SublistMember.member_id == member_id)
+    return q.one()
+
+def remove_sublist_member(member_id, sublist_id):
+    s = find_member_in_sublist(member_id, sublist_id)
+    dbsession.delete(s)
+    dbsession.flush()
+    return True

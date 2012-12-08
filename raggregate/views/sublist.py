@@ -32,17 +32,21 @@ def sublist_read(request):
     s = request.session
     r = request
     p = s['safe_post']
+    prm = s['safe_params']
     sub_title = request.matchdict['sub_title']
     dbsession = DBSession()
 
     sublist = sublist_queries.get_sublist_by_title(sub_title)[0]
 
     if 'new_members' in p and p['new_members'] != '':
-        print "POST RECEIVED"
         for l in p['new_members'].splitlines():
             sm = SublistMember(sublist_id = sublist.id, member_id = l,
                            added_by = s['users.id'])
             dbsession.add(sm)
+
+    if 'op' in prm and prm['op'] == 'del' and 'sid' in prm:
+        #@TODO: make sure user has admin auth to do this
+        s = sublist_queries.remove_sublist_member(prm['sid'], sublist.id)
 
     stories = []
     #for l in sublist:

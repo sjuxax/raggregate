@@ -22,6 +22,15 @@
     % endif
     % for s in stories:
         <%include file="story_item.mak" args="story_obj = s, vote_dict = vote_dict" />
+        <br />
+        % if hasattr(sublist, 'added_by') and str(request.session['users.id']) == str(sublist.added_by):
+            <form method="GET" action="${request.current_route_url()}">
+                <input type="hidden" value="${s.id}" name="sid" />
+                <input type="hidden" value="del" name="op" />
+
+                <input type="submit" value="Remove from Sublist"/><br />
+            </form>
+        % endif
     % endfor
     % if next_page:
         <br />
