@@ -7,3 +7,5 @@ raggregate.db
 /.pydevproject
 /raggregate/static/
 /solr/
+*orig
+*bak
