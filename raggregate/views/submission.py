@@ -101,6 +101,11 @@ def submit(request):
 
         dbsession.add(sub)
         dbsession.flush()
+
+        # add notify
+        if general.check_notify_default(s['users.id'], r):
+            notify_queries.create_notify(s['users.id'], sub.id, s['users.id'])
+
         v = Vote(sub.id, s['users.id'], 1, "submission", None)
         v.direction = 1
         dbsession.add(v)
@@ -351,6 +356,10 @@ def full(request):
             c = Comment(sub_id, s['users.id'], p['comment_parent'], prm['body'], in_reply_to = in_reply_to)
             dbsession.add(c)
             dbsession.flush()
+            # if enabled default, subscribe user to own comment.
+            # @TODO: make a preference for users to toggle this
+            if general.check_notify_default(s['users.id'], request):
+                notify_queries.create_notify(s['users.id'], c.id, s['users.id'])
             v = Vote(sub_id, s['users.id'], 1, "comment", c.id)
             v.direction = 1
             dbsession.add(v)

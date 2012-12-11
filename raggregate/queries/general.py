@@ -155,3 +155,13 @@ def gen_uuid():
     import uuid
     import os
     return uuid.UUID(bytes=os.urandom(16))
+
+def check_notify_default(user_id, request):
+    #@TODO: make and check user preference for default notify
+    # for now we are only going off server settings.
+    s = request.registry.settings
+    k = 'site.register_notify_by_default'
+    if k in s and s[k] == 'true':
+        return True
+    else:
+        return False
