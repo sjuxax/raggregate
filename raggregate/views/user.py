@@ -255,11 +255,11 @@ def notify(request):
         if op == 'add':
             if to_notify not in notifyd_ids:
                 notify_queries.create_notify(uid, to_notify, s['users.id'])
-            s['message'] = 'Successfully notified {0}'.format(to_notify.title)
+            s['message'] = 'Successfully notified'
         elif op == 'del':
             if to_notify in notifyd_ids:
                 notify_queries.delete_notify(user_id = uid, target_id  = to_notify)
-            s['message'] = 'Successfully de-notified {0}'.format(to_notify.title)
+            s['message'] = 'Successfully de-notified'
     elif 'logged_in' in s:
         u = users.get_user_by_id(s['users.id'])
 

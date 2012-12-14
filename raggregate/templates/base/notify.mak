@@ -6,3 +6,6 @@
 		% for s in notifyd_comments:
             Comment ${s.id}
         % endfor
+        % if 'message' in request.session:
+            <h3>${request.session['message']}</h3>
+        % endif

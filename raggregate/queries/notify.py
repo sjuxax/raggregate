@@ -32,7 +32,9 @@ def send_mail(user, submitter, submission, new_id, request):
     title = submission.title
     url = request.route_url('full', sub_id = submission.id,
                                 _query=[('comment_perma', new_id)])
-    display_name = user.display_name()
+    unsubscribe_url = request.route_url('notify',
+                                _query={'op':'del', 'target_id': new_id})
+    username = user.name
     to = user.email
 
     # stop if the user doens't have an email
@@ -46,11 +48,15 @@ def send_mail(user, submitter, submission, new_id, request):
     See it here: {url}
 
     Cordially,
-    {site_name}""".format(
-                display_name = display_name,
+    {site_name}
+
+    To unsubscribe, click here: {unsubscribe_url}
+    """.format(
+                username = username,
                 submitter = submitter,
                 url = url,
-                site_name = site_name
+                site_name = site_name,
+                unsubscribe_url = unsubscribe_url
             )
 
     msg = MIMEText(body)
