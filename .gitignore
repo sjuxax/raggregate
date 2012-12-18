@@ -3,6 +3,8 @@
 *egg-info/
 raggregate.db
 *swp
+.DS_Store
+local.ini
 /.project
 /.pydevproject
 /raggregate/static/
