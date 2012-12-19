@@ -2,18 +2,40 @@
 
 % if edit_mode:
     <form method="POST" action="/user_info?user_id=${u.id}" enctype="multipart/form-data">
-        About Me: <textarea name="about_me" cols="50" rows="10">${u.about_me | template_filters.none_as_blank}</textarea><br />
-        My Picture: <input type="file" name="picture" /><br />
-        Email: <input type="text" name="email" value="${u.email | template_filters.none_as_blank}" /><br />
+        <ul class="form-list">
+            <li>
+                <label class="form-label" for="about-me">About Me</label>
+                <textarea id="about-me" name="about_me" cols="50" rows="10">${u.about_me | template_filters.none_as_blank}</textarea>
+            </li>
+            <li>
+                <label class="form-label" for="my-picture">My Picture</label>
+                <input id="my-picture" type="file" name="picture" />
+            </li>
+            <li>
+                <label class="form-label" for="email-address">Email</label>
+                <input id="email-address"type="text" name="email" value="${u.email | template_filters.none_as_blank}" />
+            </li>
+        </ul>
         <input type="submit" value="Update" />
     </form>
     <br />
     <div id="change_pass_form">
         <b>Change Password for ${u.display_name()}</b>
         <form action="${request.route_url('login', _query=[('act', 'update_pw')])}" method="POST">
-            Old Password: <input name="old_password" type="password"><br />
-            New Password: <input name="new_password" type="password"><br />
-            New Password (Confirm): <input name="new_password_confirm" type="password"><br />
+            <ul class="form-list">
+                <li>
+                    <label class="form-label" for="old-password">Old Password</label>
+                    <input id="old-password" name="old_password" type="password">
+                </li>
+                <li>
+                    <label class="form-label" for="new-password">New Password</label>
+                    <input id="new-password" name="new_password" type="password">
+                </li>
+                <li>
+                    <label class="form-label" for="confirm-new-password">Confirm New Password</label>
+                    <input id="confirm-new-password" name="new_password_confirm" type="password">
+                </li>
+            </ul>
             <input type="submit" value="Update Password" />
         </form>
     </div>
@@ -31,10 +53,21 @@ About Me: ${u.about_me | template_filters.render_md,n}
 
 <h3>Send a Message</h3>
 <form method="post" action="/messages/out" id="reply-form">
-    Subject: <input type="text" name="subject" /><br />
-    Message: <input type="textarea" name="body" /><br />
-    To: <span id="new-message-to">${u.display_name()}</span><br />
-    <input type="hidden" name="recipient" id="recipient-hidden" value="${u.id}" /><br />
+    <ul class="form-list">
+        <li>
+            <label class="form-label" for="msg-subject">New Password</label>
+            <input id="msg-subject" type="text" name="subject" />
+        </li>
+        <li>
+            <label class="form-label" for="msg-body">Message</label>
+            <input id="msg-body" type="textarea" name="body" />
+        </li>
+        <li>
+            <label class="form-label" for="new-message-to">Message</label>
+            <span id="new-message-to">${u.display_name()}</span><br />
+            <input type="hidden" name="recipient" id="recipient-hidden" value="${u.id}" /><br />
+        </li>
+    </ul>
     <input type="submit" value="Send Message"></input>
 </form>
 

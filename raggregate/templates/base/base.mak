@@ -80,6 +80,11 @@
         .follows a { color: #0000ff ! important; }
     </style>
 
+    <style type="text/css">
+        .form-list { list-style-type: none; padding-left: 0; }
+        .form-label { min-width: 300px; float: left; }
+    </style>
+
     <script src="http://platform.twitter.com/widgets.js" type="text/javascript"></script>
 % if logged_in:
     <script type="text/javascript">
