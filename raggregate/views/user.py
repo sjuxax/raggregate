@@ -276,13 +276,13 @@ def notify(request):
 def user_info(request):
     import hashlib
     import os
+    from raggregate.queries import user_preference as up
 
     r = request
     ses = request.session
     p = ses['safe_post']
 
     edit_mode = False
-
     user_id = None
 
     if 'user_id' in r.params:
@@ -295,6 +295,7 @@ def user_info(request):
         edit_mode = True
 
     u = users.get_user_by_id(user_id)
+    params = up.get_user_prefs(user_id)
 
     if p and edit_mode:
         dbsession = DBSession()
@@ -311,7 +312,27 @@ def user_info(request):
 
         dbsession.add(u)
 
-    return {'edit_mode': edit_mode, 'u': u}
+    response = {'edit_mode': edit_mode, 'u': u}
+    response.update(params)
+    return response
+
+@view_config(renderer='user_info.mak', route_name='user_preferences')
+def user_preferences(request):
+    from raggregate.queries import user_preference as up
+    from webob.multidict import MultiDict
+
+    user_id = request.session.get('users.id', None)
+    prefs = {}
+
+    if request.POST:
+        prefs['link_to_story'] = request.POST.get('prop-link-directly-to-story', 'off')
+        prefs['reg_for_notifications'] = request.POST.get('prop-auto-reg-for-notifications', 'off')
+        up.set_user_prefs(user_id, prefs)
+    else:
+        prefs = up.get_user_prefs(user_id)
+
+    return prefs
+
 
 @view_config(renderer="ban.mak", route_name="ban")
 def ban(request):

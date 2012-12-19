@@ -133,6 +133,7 @@ def submit(request):
 @view_config(renderer='list.mak', route_name='list')
 @view_config(renderer='list.mak', route_name='home')
 def list(request):
+    from raggregate.queries import user_preference as up
     s = request.session
     p = request.session['safe_post']
     r = request
@@ -144,6 +145,10 @@ def list(request):
     filtered_section = None
     section_found = False
     sections = section_queries.get_sections()
+    direct_link = False
+
+    if s.get('users.id', None):
+        direct_link = True if up.get_user_prefs(s['users.id']).get('link_to_story', 'off') == 'on' else False
 
     if r.params and 'op' in r.params:
         sub_id = r.params['sub_id']
@@ -266,7 +271,8 @@ def list(request):
             'max_stories': max_stories, 'prev_page': prev_page, 'next_page': next_page,
             'sections': sections,
             'filtered_section': section, 'motd': motd,
-            'subscribed_to_list': subscribed_to_list}
+            'subscribed_to_list': subscribed_to_list,
+            'direct_link': direct_link}
 
 @view_config(renderer='vote.mak', route_name='vote')
 def vote(request):

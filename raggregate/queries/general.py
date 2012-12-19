@@ -157,11 +157,17 @@ def gen_uuid():
     return uuid.UUID(bytes=os.urandom(16))
 
 def check_notify_default(user_id, request):
-    #@TODO: make and check user preference for default notify
-    # for now we are only going off server settings.
-    s = request.registry.settings
-    k = 'site.register_notify_by_default'
-    if k in s and s[k] == 'true':
+    """
+    Check to see if the user is setup to receive notifications by default.
+
+    Arguments:
+        user_id - The ID of the user you want to find notification settings for
+        request - The HTTP request object
+    """
+    from raggregate.queries import user_preference as up
+
+    prefs = up.get_user_prefs(user_id)
+    if prefs['reg_for_notifications'] == 'on':
         return True
     else:
         return False

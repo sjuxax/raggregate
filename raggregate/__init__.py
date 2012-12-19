@@ -65,6 +65,7 @@ def main(global_config, **settings):
     config.add_route('search', '/search')
     config.add_route('twit_sign', '/twit_sign')
     config.add_route('user_info', '/user_info')
+    config.add_route('user_preferences', '/user_preferences')
     config.add_route('buttons', '/buttons')
     config.add_route('favicon', '/favicon.ico')
     config.add_route('atom_story', '/atom_story.xml')

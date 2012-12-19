@@ -13,7 +13,7 @@
             </li>
             <li>
                 <label class="form-label" for="email-address">Email</label>
-                <input id="email-address"type="text" name="email" value="${u.email | template_filters.none_as_blank}" />
+                <input id="email-address" type="text" name="email" value="${u.email | template_filters.none_as_blank}" />
             </li>
         </ul>
         <input type="submit" value="Update" />
@@ -55,15 +55,15 @@ About Me: ${u.about_me | template_filters.render_md,n}
 <form method="post" action="/messages/out" id="reply-form">
     <ul class="form-list">
         <li>
-            <label class="form-label" for="msg-subject">New Password</label>
+            <label class="form-label" for="msg-subject">Subject</label>
             <input id="msg-subject" type="text" name="subject" />
         </li>
         <li>
             <label class="form-label" for="msg-body">Message</label>
-            <input id="msg-body" type="textarea" name="body" />
+            <textarea id="msg-body" name="body" cols="50" rows="10"></textarea>
         </li>
         <li>
-            <label class="form-label" for="new-message-to">Message</label>
+            <label class="form-label" for="new-message-to">Message Recipient</label>
             <span id="new-message-to">${u.display_name()}</span><br />
             <input type="hidden" name="recipient" id="recipient-hidden" value="${u.id}" /><br />
         </li>
@@ -84,3 +84,19 @@ About Me: ${u.about_me | template_filters.render_md,n}
                 <br />
             % endfor
             </div>
+
+<h2>Preferences</h2>
+<form id="preferences-form" action="/user_preferences" method="post">
+    <ul class="form-list">
+        <li>
+            <label class="form-label" for="prop-link-directly-to-story">Title Links Directly to Story</label>
+            <input id="prop-link-directly-to-story" name="prop-link-directly-to-story" type="checkbox" ${'checked' if link_to_story == 'on' else ''} />
+        </li>
+        <li>
+            <label class="form-label" for="prop-auto-register-for-notifications">Automatically Register For Notifications</label>
+            <input id="prop-auto-reg-for-notifications" name="prop-auto-reg-for-notifications" type="checkbox" ${'checked' if reg_for_notifications == 'on' else ''} />
+        </li>
+    </ul>
+    <input id="prop-submission" name="prop-submission" type="hidden" value="true" />
+    <input type="submit" value="Update Preferences" />
+</form>
