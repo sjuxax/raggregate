@@ -35,6 +35,11 @@ def send_mail(user, submitter, submission, new_id, request):
     username = user.name
     to = user.email
 
+    # stop if the user doens't have an email
+    # and pretend all is well.
+    if not to:
+        return True
+
     body = """Hi {username},
 
     {submitter} has sent you a reply!
