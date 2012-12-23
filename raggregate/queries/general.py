@@ -167,7 +167,11 @@ def check_notify_default(user_id, request):
     from raggregate.queries import user_preference as up
 
     prefs = up.get_user_prefs(user_id)
-    if prefs['reg_for_notifications'] == 'on':
+    if 'reg_for_notifications' in prefs and prefs['reg_for_notifications'] == 'on':
         return True
+    elif 'reg_for_notifications' not in prefs:
+        if 'register_notify_by_default' in request.registry.settings \
+        and request.registry.settings['register_notify_by_default'] == 'true':
+            return True
     else:
         return False
