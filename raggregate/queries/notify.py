@@ -32,7 +32,7 @@ def send_mail(user, submitter, submission, new_id, request):
     title = submission.title
     url = request.route_url('full', sub_id = submission.id,
                                 _query=[('comment_perma', new_id)])
-    username = user.name
+    display_name = user.display_name()
     to = user.email
 
     # stop if the user doens't have an email
@@ -40,14 +40,14 @@ def send_mail(user, submitter, submission, new_id, request):
     if not to:
         return True
 
-    body = """Hi {username},
+    body = """Hi {display_name},
 
     {submitter} has sent you a reply!
     See it here: {url}
 
     Cordially,
     {site_name}""".format(
-                username = username,
+                display_name = display_name,
                 submitter = submitter,
                 url = url,
                 site_name = site_name
@@ -87,7 +87,7 @@ def fire_to_listeners(parent_id, submitter, new_id, request):
     if isinstance(parent, Comment):
         submission = submission_queries.get_story_by_id(parent.submission_id)
 
-    submitter = user_queries.get_user_by_id(submitter).name
+    submitter = user_queries.get_user_by_id(submitter).display_name()
 
     users = get_users_to_notify(parent_id)
     for recipient in users:
