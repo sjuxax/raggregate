@@ -39,6 +39,33 @@
             <input type="submit" value="Update Password" />
         </form>
     </div>
+
+    <h2>Preferences</h2>
+    <form id="preferences-form" action="/user_preferences" method="post">
+        <ul class="form-list">
+            <li>
+                <label class="form-label" for="prop-link-directly-to-story">Title Links Directly to Story</label>
+                <input id="prop-link-directly-to-story" name="prop-link-directly-to-story" type="checkbox" ${'checked' if link_to_story == 'on' else ''} />
+            </li>
+            <li>
+                <label class="form-label" for="prop-auto-register-for-notifications">Automatically Register For Notifications</label>
+                <%
+                check_notify = None
+                sett = request.registry.settings
+                reg_def_name = 'site.register_notify_by_default'
+                if reg_def_name in sett and sett[reg_def_name] == 'true':
+                    check_notify = True
+                if reg_for_notifications == 'off':
+                    check_notify = False
+                elif reg_for_notifications == 'on':
+                    check_notify = True
+                %>
+                <input id="prop-auto-reg-for-notifications" name="prop-auto-reg-for-notifications" type="checkbox" ${'checked' if check_notify else ''} />
+            </li>
+        </ul>
+        <input id="prop-submission" name="prop-submission" type="hidden" value="true" />
+        <input type="submit" value="Update Preferences" />
+    </form>
 % endif
 
 <h3>${u.display_name()}</h3>
@@ -85,29 +112,3 @@ About Me: ${u.about_me | template_filters.render_md,n}
             % endfor
             </div>
 
-<h2>Preferences</h2>
-<form id="preferences-form" action="/user_preferences" method="post">
-    <ul class="form-list">
-        <li>
-            <label class="form-label" for="prop-link-directly-to-story">Title Links Directly to Story</label>
-            <input id="prop-link-directly-to-story" name="prop-link-directly-to-story" type="checkbox" ${'checked' if link_to_story == 'on' else ''} />
-        </li>
-        <li>
-            <label class="form-label" for="prop-auto-register-for-notifications">Automatically Register For Notifications</label>
-            <%
-            check_notify = None
-            sett = request.registry.settings
-            reg_def_name = 'site.register_notify_by_default'
-            if reg_def_name in sett and sett[reg_def_name] == 'true':
-                check_notify = True
-            if reg_for_notifications == 'off':
-                check_notify = False
-            elif reg_for_notifications == 'on':
-                check_notify = True
-            %>
-            <input id="prop-auto-reg-for-notifications" name="prop-auto-reg-for-notifications" type="checkbox" ${'checked' if check_notify else ''} />
-        </li>
-    </ul>
-    <input id="prop-submission" name="prop-submission" type="hidden" value="true" />
-    <input type="submit" value="Update Preferences" />
-</form>
