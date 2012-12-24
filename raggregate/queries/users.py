@@ -13,6 +13,8 @@ import os
 
 from raggregate.queries import general
 
+from raggregate.login_adapters import LoginAdapterExc
+
 dbsession = sqlahelper.get_session()
 
 def get_user_by_id(id):
