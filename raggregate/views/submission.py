@@ -334,7 +334,6 @@ def full(request):
         if 'comment_id' in prm:
             c = submission.get_comment_by_id(prm['comment_id'])
             if users.is_user_allowed_admin_action(s['users.id'], str(c.id), ):
-                c.body = "[deleted]"
                 c.deleted = True
                 dbsession.add(c)
         s['message'] = 'Comment deleted.'
@@ -410,6 +409,8 @@ def full(request):
     for c in comments['comments']:
         #@TODO: Don't do this on every load on a real deployment
         c.tally_votes()
+        if c.deleted:
+            c.body = '[deleted]'
 
     if page_num > 1:
         prev_page = page_num - 1
