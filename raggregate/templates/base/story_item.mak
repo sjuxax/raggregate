@@ -59,6 +59,9 @@ vote_dict = pageargs['vote_dict']
                     % if str(s.submitter.id) == request.session['users.id'] or logged_in_admin:
                         &nbsp; | &nbsp; <a href="${request.route_url('list', _query=[('op', 'del'), ('sub_id', str(s.id))])}">delete</a>
                     % endif
+                    % if logged_in_admin:
+                        &nbsp; | &nbsp; <a href="${request.route_url('list', _query=[('op', 'hide'), ('sub_id', str(s.id))])}">hide</a>
+                    % endif
                     <br />
                     % if request.route_url('full', sub_id = template_filters.get_submission_identifier_for_url(s)) in request.url:
                         <a href="http://twitter.com/share" data-text="${s.title} - ${site_name}: " data-url="${request.route_url('full', sub_id=str(template_filters.get_submission_identifier_for_url(s)))}" class="twitter-share-button" style="margin-top: 5px;">Tweet</a>

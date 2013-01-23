@@ -152,19 +152,21 @@ def list(request):
 
     if r.params and 'op' in r.params:
         sub_id = r.params['sub_id']
-        if r.params['op'] == 'del':
+        if r.params['op'] == 'del' or r.params['op'] == 'hide':
             try:
                 story_to_del = submission.get_story_by_id(sub_id)
             except sqlalchemy.orm.exc.NoResultFound:
                 story_to_del = None
             if story_to_del:
                 if users.is_user_allowed_admin_action(s['users.id'], str(story_to_del.id), ):
+                    if r.params['op'] == 'del':
                         story_to_del.description = "[deleted]"
                         story_to_del.url = "#"
                         story_to_del.title = "[deleted]"
-                        story_to_del.deleted = True
-                        dbsession.add(story_to_del)
-                        dbsession.flush()
+
+                    story_to_del.deleted = True
+                    dbsession.add(story_to_del)
+                    dbsession.flush()
                 else:
                     print("Illegal deletion attempted on {0}".format(story_to_del.submitter.id))
 
