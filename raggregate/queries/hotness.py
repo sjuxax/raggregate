@@ -38,7 +38,7 @@ def calc_hot_average(hot_point_window = timedelta(hours = 6)):
     """
     Calculate the average point assignment of stories over the last hot_point_window time.
     """
-    story_votes = dbsession.query(Vote.submission_id, func.sum(Vote.points).label('points')).filter(Vote.added_on < general.now_in_utc() and Vote.added_on > (general.now_in_utc() - hot_point_window)).group_by(Vote.submission_id).all()
+    story_votes = dbsession.query(Vote.submission_id, func.sum(Vote.points).label('points')).filter(Vote.added_on < general.now_in_utc(), Vote.added_on > (general.now_in_utc() - hot_point_window)).group_by(Vote.submission_id).all()
 
     aggregate = 0
     count = 0
@@ -82,7 +82,7 @@ def calc_hot_window_score(submission_id, hot_point_window = timedelta(hours = 6)
     @param hot_point_window: timedelta object representing acceptable vote timeframe from now
     """
     try:
-        story_votes = dbsession.query(Vote.submission_id, func.sum(Vote.points).label('points')).filter(Vote.added_on < general.now_in_utc() and Vote.added_on > (general.now_in_utc() - hot_point_window)).filter(Vote.submission_id == submission_id).group_by(Vote.submission_id).one()
+        story_votes = dbsession.query(Vote.submission_id, func.sum(Vote.points).label('points')).filter(Vote.added_on < general.now_in_utc(), Vote.added_on > (general.now_in_utc() - hot_point_window)).filter(Vote.submission_id == submission_id).group_by(Vote.submission_id).one()
     except sqlalchemy.orm.exc.NoResultFound:
         # no votes on this story yet
         return 0
