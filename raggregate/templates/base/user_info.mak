@@ -21,7 +21,7 @@
     <br />
     <div id="change_pass_form">
         <b>Change Password for ${u.display_name()}</b>
-        <form action="${request.route_url('login', _query=[('act', 'update_pw')])}" method="POST">
+        <form action="${request.route_url('login', _query=[('act', 'update_pw'), ('user_id', u.id)])}" method="POST">
             <ul class="form-list">
                 <li>
                     <label class="form-label" for="old-password">Old Password</label>

@@ -101,8 +101,16 @@ def login(request):
                 if p['new_password'] != p['new_password_confirm']:
                     s['message'] = 'New password doesn\'t match confirmation, please try again.'
                 else:
-                    u = users.get_user_by_id(s['users.id'])
-                    if u.verify_pw(p['old_password']):
+                    u = None
+
+                    if s['logged_in_admin']:
+                        if 'user_id' in prm:
+                            u = users.get_user_by_id(prm['user_id'])
+
+                    if u == None:
+                        u = users.get_user_by_id(s['users.id'])
+
+                    if u.verify_pw(p['old_password']) or s['logged_in_admin']:
                         u.password = u.hash_pw(p['new_password'])
                         dbsession.add(u)
                         s['message'] = 'Password updated.'
