@@ -8,6 +8,7 @@ from sqlalchemy.sql import func
 import sqlalchemy
 import uuid
 import sqlahelper
+from datetime import datetime
 
 import os
 
@@ -25,6 +26,18 @@ def get_user_by_id(id):
 
 def get_user_by_name(name):
     return dbsession.query(User).filter(User.name == name).one()
+
+def get_user_by_email(email):
+    try:
+        return dbsession.query(User).filter(User.email == email).one()
+    except sqlalchemy.orm.exc.NoResultFound:
+        return None
+
+def get_user_by_token(token):
+    try:
+        return dbsession.query(User).filter(User.lost_password_token == token).one()
+    except sqlalchemy.orm.exc.NoResultFound:
+        return None
 
 def is_user_allowed_admin_action(user_id, target_id, request = None, target_class = 'user_post',):
     """
@@ -241,3 +254,66 @@ def add_user_picture(orig_filename, new_prefix, up_dir, image_file):
     dbsession.add(up)
     dbsession.flush()
     return up.id
+
+def send_email_to_user(request, to_email, title, body):
+    import smtplib
+    from email.mime.text import MIMEText
+    settings = request.registry.settings
+
+    site_name = settings['site.site_name']
+    from_mail = settings['site.notify_from']
+
+    msg = MIMEText(body)
+    msg['Subject'] = "{0}: {1}".format(site_name, title)
+    msg['From'] = from_mail
+    msg['To'] = to_email
+
+    s = smtplib.SMTP(settings['site.notify_mail_server'])
+    s.sendmail(from_mail, [to_email], msg.as_string())
+    return True
+
+def send_lost_password_verify_email(request, user):
+    # Generate lost password token
+    user.lost_password_token = general.gen_uuid()
+    user.password_token_claim_date = None
+    dbsession.flush()
+
+    url = request.route_url('lost_password', _query=[('token', user.lost_password_token)])
+    title = 'Verify lost password request'
+    site_name = request.registry.settings['site.site_name']
+
+    body = """Hi {username},
+
+To verify your request and receive a new password,
+click this link: {url}
+
+Cordially,
+{site_name}""".format(username = user.name,
+                        url = url,
+                        site_name = site_name)
+    send_email_to_user(request, user.email, title, body)
+    return True
+
+def generate_new_password(request, user):
+    # Generate new password
+    new_password = str(general.gen_uuid())
+    new_password = new_password.replace('-', '')
+    new_password = new_password[:16]
+    user.password = user.hash_pw(new_password)
+    user.password_token_claim_date = datetime.now()
+    dbsession.flush()
+
+    # Email user with new password
+    title = 'New Password'
+    site_name = request.registry.settings['site.site_name']
+
+    body = """Hi {username},
+
+Your new password is: {password}
+
+Cordially,
+{site_name}""".format(username = user.name,
+               password = new_password,
+               site_name = site_name)
+    send_email_to_user(request, user.email, title, body)
+    return True

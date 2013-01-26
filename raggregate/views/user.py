@@ -117,6 +117,12 @@ def login(request):
                         success = True
                     else:
                         s['message'] = 'Old password invalid.'
+            elif request.session['safe_get']['act'] == 'forgot_pass':
+                user = users.get_user_by_email(p['email'])
+                if not user:
+                    s['message'] = "That email isn't registered"
+                else:
+                    users.send_lost_password_verify_email(request, user)
             else:
                 try:
                     u = users.get_user_by_name(username)

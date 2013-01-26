@@ -43,6 +43,8 @@ class User(Base):
     facebook_origination = Column(Boolean, default=False)
     facebook_user_id = Column(UnicodeText)
     is_admin = Column(Boolean, default=False)
+    lost_password_token = Column(GUID)
+    password_token_claim_date = Column(DateTime(timezone=True))
     added_on = Column(DateTime(timezone=True), default=sqlalchemy.sql.func.now())
     added_by = Column(GUID)
 

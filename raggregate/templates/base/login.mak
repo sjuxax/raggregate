@@ -31,6 +31,13 @@
                         <input type="submit" value="Login" />
                     </form>
                 </div>
+                <div id="forgot_pass_form" style="">
+                    <b>Forgot your password?</b>
+                    <form action="${request.route_url('login', _query=[('act', 'forgot_pass')])}" method="POST">
+                        Email: <input type="text" name="email" /><br />
+                        <input type="submit" value="Generate New Password" />
+                    </form>
+                </div>
             % else:
                 Logged in as ${u.name}.
             % endif

@@ -76,6 +76,7 @@ def main(global_config, **settings):
     config.add_route('motd', '/motd')
     config.add_route('sublist', '/sublist/{sub_title}')
     config.add_route('sublistc', '/sublist_create')
+    config.add_route('lost_password', '/lost_password')
 
     config.add_subscriber(subscribers.ban, NewResponse)
     config.add_subscriber(subscribers.user_session_handler, BeforeRender)
