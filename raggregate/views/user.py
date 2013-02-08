@@ -122,6 +122,7 @@ def login(request):
                 if not user:
                     s['message'] = "That email isn't registered"
                 else:
+                    s['message'] = "Check your mail for a confirmation message."
                     users.send_lost_password_verify_email(request, user)
             else:
                 try:
