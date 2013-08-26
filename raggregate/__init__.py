@@ -37,8 +37,8 @@ def main(global_config, **settings):
 
     if 'twitter.app_key' in settings and 'twitter.app_secret' in settings:
         from twython import Twython
-        app_twit = Twython(twitter_token = settings['twitter.app_key'],
-                           twitter_secret = settings['twitter.app_secret'])
+        app_twit = Twython(settings['twitter.app_key'],
+                           settings['twitter.app_secret'])
         config.registry.app_twit = app_twit
 
     config.set_session_factory(session_factory)
