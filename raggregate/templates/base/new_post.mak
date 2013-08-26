@@ -7,6 +7,7 @@
     Description: <textarea name="description" cols="50" rows="10"></textarea><br />
     URL: <input type="text" name="url" value="${new_url_text}" /><br />
     Section: <select name="section_id">
+        <option value="">&lt;choose a section&gt;</option>
         % for section in sections:
             % if 'section' in request.session['safe_get'] and section.name == request.session['safe_get']['section']:
                 <option value="${section.id}" selected="selected">${section.name}</option>

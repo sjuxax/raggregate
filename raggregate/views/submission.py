@@ -62,6 +62,8 @@ def submit(request):
         if 'logged_in' not in s:
             s['message'] = 'Sorry, please log in first'
             return {'stories': [], 'success': False, 'code': 'ENOLOGIN'}
+        if 'section' not in p or p['section'] == '':
+            return {'stories': [], 'success': False, 'code': 'ENOSECTION'}
         if 'url' in p and p['url'] != '' and p['url'] is not None:
             p['url'] = general.strip_all_html(p['url'])
             if not re.match(r'http[s]*:\/\/', p['url']):
