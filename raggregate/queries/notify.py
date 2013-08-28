@@ -34,7 +34,7 @@ def send_mail(user, submitter, submission, new_id, request):
                                 _query=[('comment_perma', new_id)])
     unsubscribe_url = request.route_url('notify',
                                 _query={'op':'del', 'target_id': new_id})
-    username = user.name
+    display_name = user.display_name()
     to = user.email
 
     # stop if the user doens't have an email
@@ -52,7 +52,7 @@ def send_mail(user, submitter, submission, new_id, request):
 
     To unsubscribe, click here: {unsubscribe_url}
     """.format(
-                username = username,
+                display_name = display_name,
                 submitter = submitter,
                 url = url,
                 site_name = site_name,
