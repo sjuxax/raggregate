@@ -78,7 +78,7 @@
     ## I have vague memories of this but think it's on the server side, need to create a def that can
     ## be used in the Mako templates to determine this, would be much better that way.
     % if (logged_in and request.session['users.id'] == str(story.added_by)) or logged_in_admin:
-        <a href="javascript:void(0)" class=" story-edit-link logged-in-only ">edit this description</a><br/>
+        <a href="javascript:void(0)" class=" story-edit-link logged-in-only ">edit this description</a><br />
     % endif
 
     <div id="markdown-explanation-table" style="display: none;">
