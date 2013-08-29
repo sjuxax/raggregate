@@ -72,7 +72,7 @@
         .comment-content p:first-child { margin-top: 0px; }
         .comment-username a:visited { color: #aa00ff; }
         .comment-username a { color: #0000dd; text-decoration:none; }
-        .comment-controls { color: #cccccc; font-size: .85em; }
+        .comment-controls { color: #cccccc; font-size: .85em; margin-top:5px; }
         .comment-heading { font-weight: normal; font-size: .8em; }
         .comment-score { color: #cccccc; font-weight: bold; }
         .comment-controls a { color: #888; text-decoration: none; }
