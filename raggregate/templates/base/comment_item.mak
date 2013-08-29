@@ -31,7 +31,7 @@
             % else:
                 <div class="comment" id="${c.id}" style="margin-left: ${margin}px;">
             % endif
-                    <a name="${c.id}" id="${c.id}-anchor" />
+                    <a name="${c.id}" id="${c.id}-anchor"></a>
                     <div class="comment-votes-picture">
 <%
 # leave this indentation this way please
