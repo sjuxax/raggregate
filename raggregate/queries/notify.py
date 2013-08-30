@@ -60,7 +60,7 @@ def send_mail(user, submitter, submission, new_id, request):
             )
 
     msg = MIMEText(body)
-    msg['Subject'] = "{0}: new reply [{1}]".format(site_name, title)
+    msg['Subject'] = "{0}: new reply [{1}]".format(site_name, title.encode('utf-8'))
     msg['From'] = from_mail
     msg['To'] = to
 
