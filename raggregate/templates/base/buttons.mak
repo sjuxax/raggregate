@@ -4,6 +4,6 @@
 <img src="${static_base}images/button1.png" /><br />
 Code to install this button:
 <div style="margin-left: 20px; background-color: #f6f6f6">
-    &lt;a href=&quot;javascript:void(0)&quot; onclick=&quot;window.location = &apos;${request.route_url('new_post',])}&amp;url=&apos; + encodeURIComponent(window.location) + &apos;&amp;title=&apos; + encodeURIComponent(window.document.title) + &apos;&amp;from=button&apos;&quot;&gt; &lt;img src=&quot;${static_base}images/button1.png&quot; /&gt; &lt;/a&gt;
+    &lt;a href=&quot;javascript:void(0)&quot; onclick=&quot;window.location = &apos;${request.route_url('new_post')}&amp;url=&apos; + encodeURIComponent(window.location) + &apos;&amp;title=&apos; + encodeURIComponent(window.document.title) + &apos;&amp;from=button&apos;&quot;&gt; &lt;img src=&quot;${static_base}images/button1.png&quot; /&gt; &lt;/a&gt;
 </div>
 
