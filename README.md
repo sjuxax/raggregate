@@ -1,3 +1,10 @@
+
+# This software is unmaintained.
+
+*This software has not been maintained for several years. At one point, it served at least 4 active communities, all running well. They've since shut down or moved on.*
+
+*New maintainers and patches are of course welcome, but this software is preserved here primarily for historical purposes.*
+
 --------
 ABOUT RAGGREGATE
 --------
